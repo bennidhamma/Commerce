@@ -1,0 +1,10 @@
+Name: Sawmill
+ImageUrl: sawmill.png
+Description: Gain +1 Wood if any is in the Bank.
+Effect: |
+  if bank["Wood"] > 0
+    current_player.discards.add "Wood"
+    bank["Wood"] -= 1
+  end
+Cost:
+  Wood: 2
