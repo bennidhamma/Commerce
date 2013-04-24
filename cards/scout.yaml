@@ -1,0 +1,13 @@
+Name: Scouts
+ImageUrl: scouts.png
+Description: View the first card in other players hands.
+HasAttack: true
+Effect: |
+  for player in players
+    if player != current_player
+      log current_player, "#{player.name} has #{player.hand[0]"
+    end
+  end
+Cost:
+  Wood: 1
+  Wheat: 1
