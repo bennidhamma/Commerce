@@ -6,6 +6,7 @@ namespace ForgottenArts.Commerce
 	public class PlayerGame
 	{
 		public Player Player {get; set;}
+		public Game Game {get; set;}
 		public int Score {get; set;}
 
 		public List<string> Deck {get; set;}

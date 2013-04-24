@@ -17,6 +17,7 @@ namespace ForgottenArts.Commerce
 
 		public Card ()
 		{
+			Cost = new Dictionary<string, int> ();
 		}
 	}
 }

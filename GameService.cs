@@ -6,7 +6,11 @@ namespace ForgottenArts.Commerce
 	{
 		public Game NewGame(Player host) {
 			var game = new Game();
-			game.Players.Add(host);
+			var hostPlayer = new PlayerGame () {
+				Player = host,
+				Game = game
+			};
+			game.Players.Add(hostPlayer);
 			throw new NotImplementedException();
 		}
 	}

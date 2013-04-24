@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace ForgottenArts.Commerce
 {
@@ -11,13 +12,13 @@ namespace ForgottenArts.Commerce
         public static Dictionary<string,Action> watchMap = new Dictionary<string, Action> ();
 		public static Dictionary<string, Action<string, WatcherChangeTypes>> directoryWatchMap = new Dictionary<string, Action<string, WatcherChangeTypes>> ();
         
-		public static T GetSetting<T> (string key) {
-			return System.Configuration.ConfigurationSettings[key] as T;
+		public static string GetSetting(string key, string def) {
+			return ConfigurationManager.AppSettings[key] ?? def;
 		}
 
 		public static string Server {
 			get {
-				return GetSetting<string> ("ServerId", hostName);
+				return GetSetting("ServerId", hostName);
 			}
 		}
         
@@ -28,7 +29,7 @@ namespace ForgottenArts.Commerce
 		
 		public static string ContentDirectory {
 			get {
-				return GetSetting<string>("ContentDirectory", "../content/");
+				return GetSetting("ContentDirectory", "../content/");
 			}
 		}
 		
@@ -36,7 +37,7 @@ namespace ForgottenArts.Commerce
 		public static string DllPath {
 			get {
 				if (dllPath == null)
-					return GetSetting<string>("DllPath",  "bin/Commerce.dll");
+					return GetSetting("DllPath",  "bin/Commerce.dll");
 				else return 
 					dllPath;
 			}
