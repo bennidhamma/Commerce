@@ -47,6 +47,7 @@ namespace ForgottenArts.Commerce
 			}
 			catch (Exception e)
 			{
+				Console.WriteLine (e);
 			}
 		}
 		

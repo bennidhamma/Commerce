@@ -18,6 +18,13 @@ namespace ForgottenArts.Commerce
 			Hand = new List<string> ();
 			Discards = new List<string> ();
 		}
+
+		public bool Defends () 
+		{
+			//TODO: scan cards in hand, looking for card with defensive actoion
+			// and call it!
+			return false;
+		}
 	}
 }
 

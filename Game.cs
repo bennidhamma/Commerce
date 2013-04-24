@@ -26,6 +26,7 @@ namespace ForgottenArts.Commerce
 			Bank = new Dictionary<string, int> ();
 			Trades = new List<Offer> ();
 			Log = new List<LogEntry> ();
+			CurrentTurn = new Turn ();
 		}
 	}
 }

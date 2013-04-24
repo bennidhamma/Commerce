@@ -1,17 +1,3 @@
-Name: General
-ImageUrl: general.png
-HasAttack: true
-Description: |
-  All other players remove the top card from their hand
-  until they have only three cards remaining.
-Effect: |
-  for player in players
-    next if player == current_player
-    next if player.defends
-    while player.hand.length > 3
-      player.hand.remove_at 0
-    end
-  end
-Cost:
-  Iron: 2
-  Wheat: 2
+Name: Wood 
+ImageUrl: wood.png
+IsResource: true
