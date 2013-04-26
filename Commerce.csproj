@@ -44,7 +44,6 @@
     <Compile Include="CardCatalog.cs" />
     <Compile Include="Scripting\ScriptManager.cs" />
     <Compile Include="Scripting\Config.cs" />
-    <Compile Include="Scripting\Hub.cs" />
     <Compile Include="Scripting\Util.cs" />
   </ItemGroup>
   <ItemGroup>

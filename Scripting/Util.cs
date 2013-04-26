@@ -185,4 +185,10 @@ namespace ForgottenArts.Commerce
 
 		#endregion
 	}
+
+	public static class Util {
+		public static void Shuffle<T>(this List<T> list) {
+			list.Sort((a,b) => Config.Random.Next(-1, 1));
+		}
+	}
 }

@@ -51,12 +51,6 @@ namespace ForgottenArts.Commerce
 			}
 		}
 		
-		Regex literalString = new Regex	(@"(['""]).*?\1", RegexOptions.Compiled);
-		private string CoerceMutableStringHack (string input)
-		{
-			return literalString.Replace (input, "$0.to_clr_string");
-		}
-		
 		private bool started = false;
 		public void Setup (string dllPath)
 		{

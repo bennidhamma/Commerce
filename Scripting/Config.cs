@@ -16,6 +16,19 @@ namespace ForgottenArts.Commerce
 			return ConfigurationManager.AppSettings[key] ?? def;
 		}
 
+		private static Random random;
+		public static Random Random {
+			get {
+				if (random == null) {
+					random = new System.Random ();
+				}
+				return random;
+			}
+			set {
+				random = value;
+			}
+		}
+
 		public static string Server {
 			get {
 				return GetSetting("ServerId", hostName);

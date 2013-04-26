@@ -22,6 +22,7 @@ namespace ForgottenArts.Commerce
 
 		public Game ()
 		{
+			Status = GameState.Starting;
 			Players = new List<PlayerGame> ();
 			Bank = new Dictionary<string, int> ();
 			Trades = new List<Offer> ();

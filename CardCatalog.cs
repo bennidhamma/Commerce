@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace ForgottenArts.Commerce
 {
-	public class CardCatalog
+	public class CardCatalog : IEnumerable<Card>
 	{
 		private Dictionary<string, Card> cards = new Dictionary<string, Card> ();
 
@@ -40,9 +40,29 @@ namespace ForgottenArts.Commerce
 			var card = cards[cardKey];
 			game.CurrentTurn.CurrentCard = cardKey;
 			ScriptManager.Manager.ExecuteCardEffect (player.Game, card);
-			player.Hand.Remove (cardKey);
+			player.Hand.Add (cardKey);
 			game.CurrentTurn.CurrentCard = null;
 		}
+
+		#region IEnumerable implementation
+
+		public IEnumerator<Card> GetEnumerator ()
+		{
+			foreach (Card card in cards.Values)
+				yield return card;
+		}
+
+		#endregion
+
+		#region IEnumerable implementation
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+		{
+			foreach (Card card in cards.Values)
+				yield return card;
+		}
+
+		#endregion
 	}
 }
 
