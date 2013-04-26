@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using ForgottenArts.Commerce;
 
@@ -61,6 +63,29 @@ namespace Tests
 			gr.Start (g);
 
 			Assert.That (g.Status, Is.EqualTo (GameState.Running));
+		}
+
+		[Test]
+		public void BuyTest () {
+			Game g = new Game ();
+			PlayerGame p1 = new PlayerGame ();
+			PlayerGame p2 = new PlayerGame ();
+			p1.Game = g;
+			g.Players.Add (p1);
+			g.Players.Add (p2);
+			
+			GameRunner gr = new GameRunner ();
+			gr.Start (g);
+
+			p1.Hand = new List<string>() {"Wood", "Wood", "Wheat", "Wheat"};
+
+			gr.Buy (g, p1, "Scouts");
+
+			Assert.That(p1.Hand.Contains ("Scouts"));
+
+			Assert.That(p1.Hand.Sum(c=> c == "Wheat" ? 1 : 0), Is.EqualTo (1));
+
+			Assert.That(p1.Hand.Sum(c=> c == "Wood" ? 1 : 0), Is.EqualTo (1));
 		}
 	}
 }

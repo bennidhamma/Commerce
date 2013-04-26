@@ -12,6 +12,15 @@ namespace ForgottenArts.Commerce
 		{
 		}
 
+		public Card this [string cardKey] {
+			get {
+				return cards[cardKey];
+			}
+			set {
+				cards[cardKey] = value;
+			}
+		}
+
 		public void LoadCards (string directory)
 		{
 			var cardType = typeof(Card);
