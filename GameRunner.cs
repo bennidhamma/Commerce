@@ -108,6 +108,30 @@ namespace ForgottenArts.Commerce
 			return false;
 		}
 
+		public void PlayCard (Game game, PlayerGame player, string cardKey)
+		{
+			var card = Cards[cardKey];
+
+			// Is it the current player's turn?
+			if (game.CurrentTurn.Player != player) {
+				throw new InvalidOperationException ("It is not your turn");
+			}
+
+			if (game.CurrentTurn.ActionsRemaining <= 0) {
+				throw new InvalidOperationException ("You don't have any actions remaining");
+			}
+
+			if (!player.Hand.Contains(cardKey)) {
+				throw new InvalidOperationException ("You don't have this card to play");
+			}
+
+			game.CurrentTurn.CurrentCard = cardKey;
+			ScriptManager.Manager.ExecuteCardEffect (player.Game, card);
+			player.Hand.Remove (cardKey);
+			game.CurrentTurn.CurrentCard = null;
+			game.CurrentTurn.ActionsRemaining--;
+		}
+
 		public void Buy (Game game, PlayerGame player, string cardKey)
 		{
 			var card = Cards[cardKey];
@@ -117,7 +141,7 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("It is not your turn");
 			}
 
-			if (game.CurrentTurn.BuysRemaining == 0) {
+			if (game.CurrentTurn.BuysRemaining <= 0) {
 				throw new InvalidOperationException ("You don't have any buys remaining");
 			}
 

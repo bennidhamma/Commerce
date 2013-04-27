@@ -43,16 +43,6 @@ namespace ForgottenArts.Commerce
 			});
 		}
 
-		public void PlayCard (PlayerGame player, string cardKey)
-		{
-			var game = player.Game;
-			var card = cards[cardKey];
-			game.CurrentTurn.CurrentCard = cardKey;
-			ScriptManager.Manager.ExecuteCardEffect (player.Game, card);
-			player.Hand.Add (cardKey);
-			game.CurrentTurn.CurrentCard = null;
-		}
-
 		#region IEnumerable implementation
 
 		public IEnumerator<Card> GetEnumerator ()
