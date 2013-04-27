@@ -65,14 +65,47 @@ namespace ForgottenArts.Commerce
 			NewTurn (game);
 		}
 
-		void NewTurn (Game game)
+		public void NewTurn (Game game)
 		{
 			game.CurrentTurn.ActionsRemaining = StartingActions;
 			game.CurrentTurn.BuysRemaining = StartingBuys;
 			game.CurrentTurn.Gold = 0;
 			game.CurrentTurn.Player = game.Players[game.CurrentTurn.Count % game.Players.Count];
 			game.CurrentTurn.Count++;
+			CheckForGameEnd (game);
 			//TODO: notify new current player it is their turn.
+		}
+
+		public bool CheckForGameEnd (Game game)
+		{
+			foreach (var player in game.Players) {
+				var deck = new List<string>(player.Deck);
+				deck.AddRange (player.Hand);
+				deck.AddRange (player.Discards);
+				deck.Sort ();
+				string suit = null;
+				int longestSuitCount = 0;
+				for (int i = 0; i < deck.Count; i++) {
+					if (suit != deck[i]) {
+						suit = deck[i];
+						longestSuitCount = 0;
+					} 
+					else
+					{
+						if (++longestSuitCount >= NumberOfCardsPerSuit) {
+							// Game is over!
+							game.Win = new Win () {
+								Player = player,
+								Suit = suit
+							};
+							game.Status = GameState.Finished;
+							// TODO: notify players game is over.
+							return true;
+						}
+					}
+				}
+			}
+			return false;
 		}
 
 		public void Buy (Game game, PlayerGame player, string cardKey)

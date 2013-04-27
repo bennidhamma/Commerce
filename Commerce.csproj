@@ -45,6 +45,7 @@
     <Compile Include="Scripting\ScriptManager.cs" />
     <Compile Include="Scripting\Config.cs" />
     <Compile Include="Scripting\Util.cs" />
+    <Compile Include="Win.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

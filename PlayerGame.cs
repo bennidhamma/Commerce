@@ -44,6 +44,16 @@ namespace ForgottenArts.Commerce
 				Hand.Add (Deck.Pop());
 			}
 		}
+
+		public override string ToString ()
+		{
+			if (this.Player != null) {
+				return this.Player.Name;
+			}
+			else {
+				return "Unkown Player";
+			}
+		}
 	}
 }
 

@@ -19,6 +19,7 @@ namespace ForgottenArts.Commerce
 		public Dictionary<string, int> Bank {get; set;}
 		public List<Offer> Trades {get; set;}
 		public List<LogEntry> Log {get; set;}
+		public Win Win {get;set;}
 
 		public Game ()
 		{

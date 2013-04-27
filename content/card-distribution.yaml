@@ -1,6 +1,6 @@
 GameType: Basic
 Resources:
-  - Iron
-  - Wood
-  - Wheat
-  - Stone
+  Iron: 70
+  Wood: 60
+  Wheat: 50
+  Stone: 40
