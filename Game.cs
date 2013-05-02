@@ -3,16 +3,25 @@ using System.Collections.Generic;
 
 namespace ForgottenArts.Commerce
 {
-	public enum GameState {
+	public enum GameState
+	{
 		Starting,
 		Running,
 		Finished
 	}
 
+	public class Invitation 
+	{
+		// Note: if any player declines invitiation, the invite is deleted.
+		// When all players have accepted, the game is created.
+		public int NumberOfPlayers {get; set;}
+		public List<PlayerGame> InvitedPlayers {get; set;}
+		public List<PlayerGame> AcceptedPlayers {get; set;}
+	}
+
 	public class Game
 	{
 		public GameState Status {get; set;}
-		public int NumberOfPlayers {get; set;}
 		public int Round {get; set;}
 		public Turn CurrentTurn {get; set;}
 		public List<PlayerGame> Players {get; set;}

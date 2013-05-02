@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commerce", "Commerce.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{EF797E5E-B23C-4C58-B7AA-F0CD08523462}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{9EAECD4F-5922-4DD8-86B4-AC7C566DED67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -16,6 +18,12 @@ Global
 		{5EB968B6-E517-4459-9B7D-13C6610C51B6}.Debug|x86.Build.0 = Debug|x86
 		{5EB968B6-E517-4459-9B7D-13C6610C51B6}.Release|x86.ActiveCfg = Release|x86
 		{5EB968B6-E517-4459-9B7D-13C6610C51B6}.Release|x86.Build.0 = Release|x86
+		{9EAECD4F-5922-4DD8-86B4-AC7C566DED67}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9EAECD4F-5922-4DD8-86B4-AC7C566DED67}.Debug|x86.Build.0 = Debug|Any CPU
+		{9EAECD4F-5922-4DD8-86B4-AC7C566DED67}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EAECD4F-5922-4DD8-86B4-AC7C566DED67}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{9EAECD4F-5922-4DD8-86B4-AC7C566DED67}.Release|x86.ActiveCfg = Release|Any CPU
+		{9EAECD4F-5922-4DD8-86B4-AC7C566DED67}.Release|x86.Build.0 = Release|Any CPU
 		{EF797E5E-B23C-4C58-B7AA-F0CD08523462}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{EF797E5E-B23C-4C58-B7AA-F0CD08523462}.Debug|x86.Build.0 = Debug|Any CPU
 		{EF797E5E-B23C-4C58-B7AA-F0CD08523462}.Default|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,6 +32,6 @@ Global
 		{EF797E5E-B23C-4C58-B7AA-F0CD08523462}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Commerce.csproj
+		StartupItem = Server\Server.csproj
 	EndGlobalSection
 EndGlobal
