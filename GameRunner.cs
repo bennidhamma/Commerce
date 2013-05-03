@@ -6,6 +6,28 @@ namespace ForgottenArts.Commerce
 {
 	public class GameRunner
 	{
+		private static GameRunner instance = new GameRunner ();
+
+		public static GameRunner Instance {
+			get {
+				return instance;
+			}
+			set {
+				instance = value;
+			}
+		}
+
+		private IRepository repository;
+
+		public IRepository Repository {
+			get {
+				return repository;
+			}
+			set {
+				repository = value;
+			}
+		}
+
 		public int NumberOfCardsPerSuit = 9;
 		public int StartingActions = 1;
 		public int StartingBuys = 1;

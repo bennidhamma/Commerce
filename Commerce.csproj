@@ -45,6 +45,8 @@
     <Compile Include="Scripting\Config.cs" />
     <Compile Include="Scripting\Util.cs" />
     <Compile Include="Win.cs" />
+    <Compile Include="IRepository.cs" />
+    <Compile Include="RedisRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
