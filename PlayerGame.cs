@@ -48,7 +48,7 @@ namespace ForgottenArts.Commerce
 		public override string ToString ()
 		{
 			if (this.Player != null) {
-				return this.Player.Name;
+				return this.Player.DisplayName;
 			}
 			else {
 				return "Unkown Player";

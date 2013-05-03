@@ -4,7 +4,11 @@ namespace ForgottenArts.Commerce
 {
 	public class Player
 	{
-		public string Name {get; set;}
-		public string Email {get; set;}
+		public string PlusId {get; set;}
+		public string Photo {get; set;}
+		public string Gender {get; set;}
+		public string FirstName {get; set;}
+		public string LastName {get; set;}
+		public string DisplayName {get; set;}
 	}
 }

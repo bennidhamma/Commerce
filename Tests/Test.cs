@@ -97,10 +97,10 @@ namespace Tests
 		public void GameEndTest () {
 			Game g = new Game ();
 			PlayerGame p1 = new PlayerGame () {
-				Player = new Player() {Name = "Player 1"}
+				Player = new Player() {DisplayName = "Player 1"}
 			};
 			PlayerGame p2 = new PlayerGame () {
-				Player = new Player() {Name = "Player 2"}
+				Player = new Player() {DisplayName = "Player 2"}
 			};
 			p1.Game = g;
 			g.Players.Add (p1);

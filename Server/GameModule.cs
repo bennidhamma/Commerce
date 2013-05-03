@@ -11,13 +11,12 @@ namespace ForgottenArts.Commerce
 
 	public class GameModule : Nancy.NancyModule	
 	{
-		public GameModule () {
+		public GameModule () : base ("/api") {
 			Get["/"] = p => "Hello World!";
-			Get["/player"] = p => new Player() {
-				Name = "Ben",
-				Email = "foo"
+			Put["/player"] = p => new Player() {
+				DisplayName = "Ben"
 			};
-			Post["/player"] = parameters => {
+			Put["/player/auth"] = parameters => {
 				var p2 = this.Bind<Player> ();
 				return p2;
 			};
