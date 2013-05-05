@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5E0DB31C-D697-4DA5-87B6-6C690EA39484}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SelfHostedServer</RootNamespace>
+    <AssemblyName>SelfHostedServer</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>True</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>True</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Nancy.Serialization.JsonNet">
+      <HintPath>..\lib\Nancy.Serialization.JsonNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="GameModule.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Commerce.csproj">
+      <Project>{5EB968B6-E517-4459-9B7D-13C6610C51B6}</Project>
+      <Name>Commerce</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Nancy\src\Nancy.Hosting.Self\Nancy.Hosting.Self.csproj">
+      <Project>{AA7F66EB-EC2C-47DE-855F-30B3E6EF2134}</Project>
+      <Name>Nancy.Hosting.Self</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Nancy\src\Nancy\Nancy.csproj">
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

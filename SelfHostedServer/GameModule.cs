@@ -20,7 +20,12 @@ namespace ForgottenArts.Commerce
 
 		public GameModule () : base ("/api") {
 			SetupDependencies();
-
+			Options["/player/auth"] = p => {
+				return new Response ()
+				.WithHeader ("Access-Control-Allow-Origin", "*")
+				.WithHeader ("Access-Control-Allow-Headers", "Content-Type")
+				.WithHeader ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+			};
 			Get["/"] = p => "Hello World!";
 			Put["/player"] = p => new Player() {
 				DisplayName = "Ben"
