@@ -20,7 +20,8 @@ namespace ForgottenArts.Commerce
 
 		public GameModule () : base ("/api") {
 			SetupDependencies();
-			Options["/player/auth"] = p => {
+			After += ctx => ctx.Response.WithHeader("Access-Control-Allow-Origin", "*");
+			Options["/{path*}"] = p => {
 				return new Response ()
 				.WithHeader ("Access-Control-Allow-Origin", "*")
 				.WithHeader ("Access-Control-Allow-Headers", "Content-Type")
