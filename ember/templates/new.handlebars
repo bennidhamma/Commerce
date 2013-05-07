@@ -2,7 +2,10 @@
 <h3>Invite up to 3 friends to play with:</h3>
 <ul>
 	{{#each friends}}
-	<li><img src={{image}}>{{name}}<button {{action invite this}}>Invite</button></li>
+	<li>
+			<img {{bindAttr src="image.url"}}>{{displayName}}
+			<button {{action invite this}}>Invite</button>
+	</li>
 	{{/each}}
 </ul>
 <button {{action start}}>Start!</button>

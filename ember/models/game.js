@@ -1,8 +1,4 @@
-var Game = DS.Model.extend({
-
-  host: DS.attr('string')
-
-});
+var Game = Ember.Object.extend({});
 
 module.exports = Game;
 

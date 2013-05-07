@@ -1,14 +1,23 @@
-require ('../vendor/main')
+var Plus = require ('../vendor/main')
 
-var Friend = DS.Model.extend({
+var Friend = Ember.Object.extend({});
 
-  id: DS.attr('string'),
-
-  image: DS.attr('string'),
-
-  name: DS.attr('string')
-
+Friend.reopenClass({
+	findAll: function(process) {
+		Plus.ready(function() {
+			gapi.client.plus.people.list({
+				userId: 'me',
+				orderBy: 'best',
+				collection: 'visible'
+			}).execute(function(resp) {
+				var items = [];
+				for (var i = 0; i < resp.items.length; i++) {
+					items.push(Friend.create(resp.items[i]));
+				}
+				process(items);
+			});
+		});
+	}
 });
 
 module.exports = Friend;
-

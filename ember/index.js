@@ -4,13 +4,13 @@
 require('./vendor/jquery');
 require('./vendor/handlebars');
 require('./vendor/ember');
-require('./vendor/ember-data');
+
 require('./templates');
 
 
 var App = window.App = require('./app');
 
-App.Store = require('./store');
+
 
 App.Friend = require('./models/friend');
 App.Game = require('./models/game');

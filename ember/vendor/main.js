@@ -1,6 +1,26 @@
 var serverUrlBase = 'http://localhost:8080';
 
+var ready = {
+	isReady: false,
+	readyCallbacks: [],
+	setReady: function() {
+		this.isReady = true;
+		for (var i = 0; i < this.readyCallbacks.length; i++) {
+			this.readyCallbacks[i]();
+		}
+	}
+};
+
 var Plus = {
+	ready: function(fn) {
+		if (ready.isReady) {
+			fn();
+		}
+		else {
+			ready.readyCallbacks.push(fn);
+		}
+	},
+
 	authenticate:  function (plus) {
 		/* REST url: PUT /api/player/auth
 		 * { 
@@ -20,6 +40,7 @@ var Plus = {
 			lastName: plus.name.familyName
 		});
 		console.log(payload);
+		ready.setReady();
 		$.ajax({
 			url: serverUrlBase + '/api/player/auth',
 			type: 'PUT',
