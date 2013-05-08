@@ -11,6 +11,8 @@ var ready = {
 	}
 };
 
+var me = null;
+
 var Plus = {
 	ready: function(fn) {
 		if (ready.isReady) {
@@ -20,6 +22,8 @@ var Plus = {
 			ready.readyCallbacks.push(fn);
 		}
 	},
+
+	me: function() { return me; },
 
 	authenticate:  function (plus) {
 		/* REST url: PUT /api/player/auth
@@ -31,6 +35,7 @@ var Plus = {
 		 * }
 		 * returns list of games
 		 */
+		me = plus;
 		var payload = JSON.stringify({
 			plusId: plus.id,
 			photo: plus.image.url,

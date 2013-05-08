@@ -1,11 +1,24 @@
 <h2>Start a new game</h2>
-<h3>Invite up to 3 friends to play with:</h3>
-<ul>
-	{{#each friends}}
-	<li>
-			<img {{bindAttr src="image.url"}}>{{displayName}}
-			<button {{action invite this}}>Invite</button>
-	</li>
-	{{/each}}
-</ul>
-<button {{action start}}>Start!</button>
+<button {{action startGame}}>Start!</button>
+<section class="players">
+  <h3>Players</h3>
+	<ul>
+	{{#each players}}
+		<li>
+				<img {{bindAttr src="image.url"}}>{{displayName}}
+				<button {{action uninvite this}}>Uninvite</button>
+		</li>
+		{{/each}}
+	</ul>
+</section>
+<section class=invitees>
+	<h3>Invite up to 3 friends to play with:</h3>
+	<ul>
+		{{#each friends}}
+		<li>
+				<img {{bindAttr src="image.url"}}>{{displayName}}
+				<button {{action invite this}}>Invite</button>
+		</li>
+		{{/each}}
+	</ul>
+</section>

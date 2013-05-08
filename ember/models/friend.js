@@ -3,6 +3,12 @@ var Plus = require ('../vendor/main')
 var Friend = Ember.Object.extend({});
 
 Friend.reopenClass({
+	me: function(process) {
+		Plus.ready(function() {
+			process(App.Friend.create(Plus.me()));
+		});
+	},
+
 	findAll: function(process) {
 		Plus.ready(function() {
 			gapi.client.plus.people.list({

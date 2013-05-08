@@ -5,7 +5,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   
 
 
-  data.buffer.push("<h2>Welcome to Commerce!</h2>\n<p>Login with Google Plus to get started.</p>\n<span id=\"signinButton\">\n	<span\n	class=\"g-signin\"\n	data-callback=\"signinCallback\"\n	data-clientid=\"680890813233.apps.googleusercontent.com\"\n	data-cookiepolicy=\"single_host_origin\"\n	data-requestvisibleactions=\"http://schemas.google.com/AddActivity\"\n	data-scope=\"https://www.googleapis.com/auth/plus.login\">\n	</span>\n</span>\n");
+  data.buffer.push("<h2>Welcome to Commerce!</h2>\n<p>Login with Google Plus to get started.</p>\n");
   
 });
 
@@ -63,7 +63,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n	<li>\n			<img ");
+  data.buffer.push("\n		<li>\n				<img ");
   hashTypes = {'src': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'src': ("image.url")
@@ -71,21 +71,43 @@ function program1(depth0,data) {
   data.buffer.push(">");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "displayName", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n			<button ");
+  data.buffer.push("\n				<button ");
   hashTypes = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "invite", "", {hash:{},contexts:[depth0,depth0],types:["ID","ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Invite</button>\n	</li>\n	");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "uninvite", "", {hash:{},contexts:[depth0,depth0],types:["ID","ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Uninvite</button>\n		</li>\n		");
   return buffer;
   }
 
-  data.buffer.push("<h2>Start a new game</h2>\n<h3>Invite up to 3 friends to play with:</h3>\n<ul>\n	");
+function program3(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n		<li>\n				<img ");
+  hashTypes = {'src': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'src': ("image.url")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "friends", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "displayName", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n				<button ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "invite", "", {hash:{},contexts:[depth0,depth0],types:["ID","ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Invite</button>\n		</li>\n		");
+  return buffer;
+  }
+
+  data.buffer.push("<h2>Start a new game</h2>\n<button ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "startGame", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Start!</button>\n<section class=\"players\">\n  <h3>Players</h3>\n	<ul>\n	");
+  hashTypes = {};
+  stack1 = helpers.each.call(depth0, "players", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</ul>\n<button ");
+  data.buffer.push("\n	</ul>\n</section>\n<section class=invitees>\n	<h3>Invite up to 3 friends to play with:</h3>\n	<ul>\n		");
   hashTypes = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "start", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Start!</button>\n");
+  stack1 = helpers.each.call(depth0, "friends", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n	</ul>\n</section>\n");
   return buffer;
   
 });

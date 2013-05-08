@@ -12,6 +12,7 @@ var App = window.App = require('./app');
 
 
 
+App.NewController = require('./controllers/new_controller');
 App.Friend = require('./models/friend');
 App.Game = require('./models/game');
 App.NewRoute = require('./routes/new_route');
