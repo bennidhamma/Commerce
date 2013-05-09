@@ -1,6 +1,7 @@
 using System;
 using Nancy;
 using Nancy.ModelBinding;
+using System.Collections.Generic;
 
 namespace ForgottenArts.Commerce
 {
@@ -21,22 +22,50 @@ namespace ForgottenArts.Commerce
 		public GameModule () : base ("/api") {
 			SetupDependencies();
 			After += ctx => ctx.Response.WithHeader("Access-Control-Allow-Origin", "*");
-			Options["/{path*}"] = p => {
-				return new Response ()
+			Options["/{path*}"] = CrossOriginSetup;
+			Put["/player/auth"] = AuthenticatePlayer;
+			Post["/game"] = CreateGame;
+		}
+
+		public dynamic CrossOriginSetup (dynamic parameters)
+		{
+			return new Response ()
 				.WithHeader ("Access-Control-Allow-Origin", "*")
 				.WithHeader ("Access-Control-Allow-Headers", "Content-Type")
 				.WithHeader ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+		}
+
+		public dynamic AuthenticatePlayer (dynamic parameters)
+		{
+			var p2 = this.Bind<Player> ();
+			repository.Put (p2.GetKey(), p2);
+			//TODO: return games.
+			return p2;
+		}
+
+		class NewGameInfo {
+			public string[] Players {get; set;}
+		}
+
+		public dynamic CreateGame (dynamic parameters)
+		{
+			var g = this.Bind<NewGameInfo>();
+			var game = new Game () {
+				Id = repository.NewId()
 			};
-			Get["/"] = p => "Hello World!";
-			Put["/player"] = p => new Player() {
-				DisplayName = "Ben"
-			};
-			Put["/player/auth"] = parameters => {
-				var p2 = this.Bind<Player> ();
-				repository.Put (p2.GetKey(), p2);
-				//TODO: return games.
-				return p2;
-			};
+			
+			foreach (string p in g.Players) {
+				var player = Player.GetOrCreate(p);
+				var playerGame = new PlayerGame () {
+					Player = player,
+					Game = game
+				};
+				game.Players.Add (playerGame);
+			}
+
+			repository.Put (game.GetKey(), game);
+
+			return new {GameId = game.Id};
 		}
 	}
 }

@@ -10,6 +10,13 @@ namespace ForgottenArts.Commerce
 		{
 		}
 
+		public long NewId ()
+		{
+			using (var redisClient = new RedisClient()) {
+				return redisClient.Incr ("uid");
+			}
+		}
+
 		public void Put<T> (string key, T value)
 		{
 			using (var redisClient = new RedisClient()) {

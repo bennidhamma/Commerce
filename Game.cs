@@ -21,6 +21,7 @@ namespace ForgottenArts.Commerce
 
 	public class Game
 	{
+		public long Id {get; set;}
 		public GameState Status {get; set;}
 		public int Round {get; set;}
 		public Turn CurrentTurn {get; set;}
@@ -38,6 +39,16 @@ namespace ForgottenArts.Commerce
 			Trades = new List<Offer> ();
 			Log = new List<LogEntry> ();
 			CurrentTurn = new Turn ();
+		} 
+
+		public string GetKey () 
+		{
+			return GetKey (Id);
+		}
+
+		public static string GetKey (long id)
+		{
+			return "game-" + id;
 		}
 	}
 }

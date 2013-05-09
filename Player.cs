@@ -13,7 +13,24 @@ namespace ForgottenArts.Commerce
 
 		public string GetKey ()
 		{
-			return "player-plus-" + PlusId;
+			return GetKey (PlusId);
+		}
+
+		public static string GetKey (string plusId)
+		{
+			return "player-plus-" + plusId; 
+		}
+
+		public static Player GetOrCreate (string id)
+		{
+			var player = GameRunner.Instance.Repository.Get<Player> (GetKey (id));
+			if (player == null)
+			{
+				player = new Player () {
+					PlusId = id
+				};
+			}
+			return player;
 		}
 	}
 }

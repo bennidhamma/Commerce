@@ -7,7 +7,16 @@ module.exports = Ember.Application.create();
 
 });require.register("application.js", function(module, exports, require, global){
 
+});require.register("config.js", function(module, exports, require, global){
+var config = {
+	serverUrlBase: 'http://localhost:8080'
+};
+
+module.exports = config;
+
 });require.register("controllers/new_controller.js", function(module, exports, require, global){
+var config = require('../config.js');
+
 var NewController = Ember.ObjectController.extend({
 	invite: function(friend) {
 		var players = this.get('content.players').addObject(friend);
@@ -25,7 +34,7 @@ var NewController = Ember.ObjectController.extend({
 								.map(function(p){return p.id})
 		}
 		$.ajax({
-			url: '/api/game',
+			url: config.serverUrlBase + '/api/game',
 			type: 'POST',
 		  dataType: 'json',
 		  contentType: 'application/json',
@@ -39812,7 +39821,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
 })( window );
 });require.register("vendor/main.js", function(module, exports, require, global){
-var serverUrlBase = 'http://localhost:8080';
+var config = require('../config.js');
 
 var ready = {
 	isReady: false,
@@ -39861,7 +39870,7 @@ var Plus = {
 		console.log(payload);
 		ready.setReady();
 		$.ajax({
-			url: serverUrlBase + '/api/player/auth',
+			url: config.serverUrlBase + '/api/player/auth',
 			type: 'PUT',
 			dataType: 'json',
 			contentType: 'application/json',

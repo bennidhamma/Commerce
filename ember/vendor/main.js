@@ -1,4 +1,4 @@
-var serverUrlBase = 'http://localhost:8080';
+var config = require('../config.js');
 
 var ready = {
 	isReady: false,
@@ -47,7 +47,7 @@ var Plus = {
 		console.log(payload);
 		ready.setReady();
 		$.ajax({
-			url: serverUrlBase + '/api/player/auth',
+			url: config.serverUrlBase + '/api/player/auth',
 			type: 'PUT',
 			dataType: 'json',
 			contentType: 'application/json',

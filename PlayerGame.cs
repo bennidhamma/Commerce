@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace ForgottenArts.Commerce
 {
@@ -7,8 +8,8 @@ namespace ForgottenArts.Commerce
 	{
 		public int HandSize = 5;
 
-		public Player Player {get; set;}
-		public Game Game {get; set;}
+		public string PlayerKey {get; set;}
+		public long GameId {get; set;}
 		public int Score {get; set;}
 
 		public Stack<string> Deck {get; set;}
@@ -45,10 +46,38 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		private Player player;
+		[IgnoreDataMember]
+		public Player Player {
+			get {
+				if (player == null) {
+					player = Player.GetOrCreate (this.PlayerKey);
+				}
+				return player;
+			}
+			set {
+				player = value;
+			}
+		}
+
+		private Game game;
+		[IgnoreDataMember]
+		public Game Game {
+			get {
+				if (game == null) {
+					game = GameRunner.Instance.Repository.Get<Game>(Game.GetKey(GameId));
+				}
+				return game;
+			}
+			set {
+				game = value;
+			}
+		}
+
 		public override string ToString ()
 		{
-			if (this.Player != null) {
-				return this.Player.DisplayName;
+			if (Player != null) {
+				return Player.DisplayName;
 			}
 			else {
 				return "Unkown Player";
