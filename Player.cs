@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ForgottenArts.Commerce
 {
@@ -10,6 +11,11 @@ namespace ForgottenArts.Commerce
 		public string FirstName {get; set;}
 		public string LastName {get; set;}
 		public string DisplayName {get; set;}
+
+		public IList<long> GetPlayerGames ()
+		{
+			return GameRunner.Instance.Repository.GetList<long> ("player-games-" + PlusId);
+		}
 
 		public string GetKey ()
 		{

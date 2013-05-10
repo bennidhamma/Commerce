@@ -9,6 +9,7 @@ namespace ForgottenArts.Commerce
 		void Put<T> (string key, T value);
 		T Get<T> (string key);
 		IEnumerable<T> GetAll<T> ();
+		IList<T> GetList<T> (string key);
 	}
 }
 

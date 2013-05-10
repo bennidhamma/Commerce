@@ -25,6 +25,8 @@ namespace ForgottenArts.Commerce
 			Options["/{path*}"] = CrossOriginSetup;
 			Put["/player/auth"] = AuthenticatePlayer;
 			Post["/game"] = CreateGame;
+			Get["/player/{id}/games"] = GetGames;
+			Get["/game/{id}"] = GetGame;
 		}
 
 		public dynamic CrossOriginSetup (dynamic parameters)
@@ -56,17 +58,35 @@ namespace ForgottenArts.Commerce
 			
 			foreach (string p in g.Players) {
 				var player = Player.GetOrCreate(p);
+				var gameList = player.GetPlayerGames();
+				gameList.Add (game.Id);
 				var playerGame = new PlayerGame () {
 					Player = player,
 					Game = game
 				};
 				game.Players.Add (playerGame);
 			}
-
+			GameRunner.Instance.Start (game);
 			repository.Put (game.GetKey(), game);
-
 			return new {GameId = game.Id};
 		}
+
+		dynamic GetGames (dynamic parameters)
+		{
+			var player = Player.GetOrCreate (parameters.id);
+			var gameList = new List<Game> ();
+			foreach (var gameId in player.GetPlayerGames()) {
+				var game = repository.Get<Game>(Game.GetKey(gameId));
+				gameList.Add (game);
+			}
+			return gameList;
+		}
+
+		dynamic GetGame (dynamic arg)
+		{
+			return repository.Get<Game>(Game.GetKey(arg.id));
+		}
+
 	}
 }
 

@@ -61,4 +61,7 @@
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
 </Project>

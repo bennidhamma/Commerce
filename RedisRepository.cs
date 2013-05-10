@@ -1,6 +1,7 @@
 using System;
 using ServiceStack.Redis;
 using System.Collections.Generic;
+using ServiceStack.Redis.Generic;
 
 namespace ForgottenArts.Commerce
 {
@@ -38,6 +39,15 @@ namespace ForgottenArts.Commerce
 			using (var redisClient = new RedisClient()) {
 				var typed = redisClient.As<T> ();
 				return typed.GetAll();
+			}
+		}
+
+		public IList<T> GetList<T> (string key)
+		{
+			using (var redisClient = new RedisClient()) {
+				var typed = redisClient.As<T> ();
+				var list = typed.Lists[key];
+				return list;
 			}
 		}
 	}
