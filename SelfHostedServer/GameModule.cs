@@ -3,7 +3,7 @@ using Nancy;
 using Nancy.ModelBinding;
 using System.Collections.Generic;
 
-namespace ForgottenArts.Commerce
+namespace ForgottenArts.Commerce.Server
 {
 	/* Operations we care about:
 	 *  - associate a g+ user to a Player oject: PUT G+ DTO return Player DTO (for now, just put players).
@@ -45,10 +45,6 @@ namespace ForgottenArts.Commerce
 			return p2;
 		}
 
-		class NewGameInfo {
-			public string[] Players {get; set;}
-		}
-
 		public dynamic CreateGame (dynamic parameters)
 		{
 			var g = this.Bind<NewGameInfo>();
@@ -61,7 +57,7 @@ namespace ForgottenArts.Commerce
 				var gameList = player.GetPlayerGames();
 				gameList.Add (game.Id);
 				var playerGame = new PlayerGame () {
-					Player = player,
+					PlayerKey = player.PlusId,
 					Game = game
 				};
 				game.Players.Add (playerGame);
@@ -74,19 +70,22 @@ namespace ForgottenArts.Commerce
 		dynamic GetGames (dynamic parameters)
 		{
 			var player = Player.GetOrCreate (parameters.id);
-			var gameList = new List<Game> ();
+			var gameList = new List<GameListInfo> ();
 			foreach (var gameId in player.GetPlayerGames()) {
 				var game = repository.Get<Game>(Game.GetKey(gameId));
-				gameList.Add (game);
+				if (game != null) {
+					gameList.Add (new GameListInfo(game));
+				}
 			}
 			return gameList;
 		}
 
 		dynamic GetGame (dynamic arg)
 		{
-			return repository.Get<Game>(Game.GetKey(arg.id));
+			long id = 0;
+			id = arg.id;
+			return repository.Get<Game>(Game.GetKey(id));
 		}
 
 	}
 }
-

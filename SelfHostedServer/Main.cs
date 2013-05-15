@@ -1,6 +1,6 @@
 using System;
 
-namespace SelfHostedServer
+namespace ForgottenArts.Commerce.Server
 {
 	class MainClass
 	{

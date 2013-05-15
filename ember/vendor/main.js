@@ -72,6 +72,10 @@ var Plus = {
 		});
 	},
 
+	list: function (ids) {
+
+	},
+
 	signinCallback: function (authResult) {
 		if (!authResult['access_token']) {
 			return;

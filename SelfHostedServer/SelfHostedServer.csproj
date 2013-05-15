@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5E0DB31C-D697-4DA5-87B6-6C690EA39484}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SelfHostedServer</RootNamespace>
+    <RootNamespace>ForgottenArts.Commerce.Server</RootNamespace>
     <AssemblyName>SelfHostedServer</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -45,6 +45,9 @@
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="GameModule.cs" />
+    <Compile Include="TransferObjects\NewGameInfo.cs" />
+    <Compile Include="TransferObjects\GameListInfo.cs" />
+    <Compile Include="CustomBootstrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -63,5 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TransferObjects\" />
   </ItemGroup>
 </Project>
