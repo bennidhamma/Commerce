@@ -12,6 +12,7 @@ var ready = {
 };
 
 var me = null;
+var friends = {};
 
 var Plus = {
 	ready: function(fn) {
@@ -56,24 +57,6 @@ var Plus = {
 				// list of games!
 			}
 		});
-	},
-
-	loadFriends : function () {
-		gapi.client.plus.people.list({
-			userId: 'me',
-			orderBy: 'best',
-			collection: 'visible'
-		}).execute(function(resp) {
-			for (var i = 0; i < resp.items.length; i++) {
-				var o = new Option(resp.items[i].displayName, resp.items[i].id);
-				o.label = resp.items[i].displayName;
-				$('#friends').append(o);
-			}
-		});
-	},
-
-	list: function (ids) {
-
 	},
 
 	signinCallback: function (authResult) {

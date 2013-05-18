@@ -9,6 +9,27 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   
 });
 
+Ember.TEMPLATES['friend_thumb'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+helpers = helpers || Ember.Handlebars.helpers; data = data || {};
+  var buffer = '', hashTypes, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<img ");
+  hashTypes = {'src': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'src': ("image.url")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashTypes = {'title': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'title': ("displayName")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" />\n");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES['application'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [2,'>= 1.0.0-rc.3'];
 helpers = helpers || Ember.Handlebars.helpers; data = data || {};
@@ -45,12 +66,48 @@ function program5(depth0,data) {
   data.buffer.push("</li>\n			<li>");
   hashTypes = {};
   options = {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["STRING"],hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers.linkTo),stack1 ? stack1.call(depth0, "games", options) : helperMissing.call(depth0, "linkTo", "games", options));
+  stack2 = ((stack1 = helpers.linkTo),stack1 ? stack1.call(depth0, "game_list", options) : helperMissing.call(depth0, "linkTo", "game_list", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("</li>\n		</ul>\n	</div>\n	<span id=\"signinButton\">\n		<span\n		class=\"g-signin\"\n		data-callback=\"signinCallback\"\n		data-clientid=\"680890813233.apps.googleusercontent.com\"\n		data-cookiepolicy=\"single_host_origin\"\n		data-requestvisibleactions=\"http://schemas.google.com/AddActivity\"\n		data-scope=\"https://www.googleapis.com/auth/plus.login\">\n		</span>\n	</span>\n</div>		\n\n");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("\n");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES['game_list'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+helpers = helpers || Ember.Handlebars.helpers; data = data || {};
+  var buffer = '', stack1, hashTypes, self=this, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, options;
+  data.buffer.push("\n	<li>\n		");
+  hashTypes = {};
+  options = {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0],types:["ID","ID"],hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers.linkTo),stack1 ? stack1.call(depth0, "game", "game", options) : helperMissing.call(depth0, "linkTo", "game", "game", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n		<ul>\n			");
+  hashTypes = {'itemViewClass': "STRING"};
+  data.buffer.push(escapeExpression(helpers.each.call(depth0, "game.players", {hash:{
+    'itemViewClass': ("App.FriendThumbView")
+  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n		</ul>\n	</li>\n");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  
+  data.buffer.push("Open");
+  }
+
+  data.buffer.push("<h2>My Games</h2>\n<ul>\n");
+  hashTypes = {};
+  stack1 = helpers.each.call(depth0, "game", "in", "games", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n</ul>\n");
   return buffer;
   
 });

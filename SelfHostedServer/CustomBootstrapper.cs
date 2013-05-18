@@ -2,6 +2,7 @@ using System;
 using Nancy;
 using Nancy.Diagnostics;
 using Nancy.Bootstrapper;
+using ServiceStack.Text;
 
 namespace ForgottenArts.Commerce.Server
 {
@@ -16,6 +17,7 @@ namespace ForgottenArts.Commerce.Server
 		{
 			StaticConfiguration.EnableRequestTracing = true;
 			StaticConfiguration.DisableErrorTraces = false;
+			JsConfig.EmitCamelCaseNames = true;
 		}
 	}
 }

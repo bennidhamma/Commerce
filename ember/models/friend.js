@@ -2,6 +2,8 @@ var Plus = require ('../vendor/main')
 
 var Friend = Ember.Object.extend({});
 
+var friends = {};
+
 Friend.reopenClass({
 	me: function(process) {
 		Plus.ready(function() {
@@ -18,12 +20,54 @@ Friend.reopenClass({
 			}).execute(function(resp) {
 				var items = [];
 				for (var i = 0; i < resp.items.length; i++) {
-					items.push(Friend.create(resp.items[i]));
+					var friend = Friend.create(resp.items[i]);
+					friends[friend.id] = friend;
+					items.push(friend);
 				}
 				process(items);
 			});
 		});
-	}
+	},
+
+	list: function (ids, process) {
+		var response = {};
+
+		var searchRequest = function(id) {
+			return gapi.client.request({
+				path: 'plus/v1/people/' + id
+			});
+		};
+
+		var httpBatch = gapi.client.newHttpBatch();
+
+		var waitFor = 0;
+		for (var i = 0; i < ids.length; i++) {
+			var id = ids[i];
+			if (friends[id]) {
+				response[id] = friends[id];
+			} else {
+				httpBatch.add(searchRequest(ids[i]));
+				waitFor++;
+			}
+		}
+
+		if (waitFor) {
+			httpBatch.execute(function(resp) {
+				for (var k in resp) {
+					var result = resp[k].result;
+					if (!result) {
+						continue;
+					}
+					var friend = Friend.create(result);
+					friends[friend.id] = friend;
+					response[friend.id] = friend;
+				}
+				process(response);
+			});
+		} else {
+			process(response);
+		}
+	},
 });
 
 module.exports = Friend;
