@@ -14,6 +14,14 @@ var config = {
 
 module.exports = config;
 
+});require.register("controllers/game_controller.js", function(module, exports, require, global){
+var GameController = Ember.Controller.extend({
+
+});
+
+module.exports = GameController;
+
+
 });require.register("controllers/game_list_controller.js", function(module, exports, require, global){
 var GameListController = Ember.Controller.extend({
 
@@ -72,11 +80,13 @@ var App = window.App = require('./app');
 
 
 App.NewController = require('./controllers/new_controller');
+App.GameController = require('./controllers/game_controller');
 App.GameListController = require('./controllers/game_list_controller');
 App.GameList = require('./models/game_list');
 App.Friend = require('./models/friend');
 App.Game = require('./models/game');
 App.NewRoute = require('./routes/new_route');
+App.GameRoute = require('./routes/game_route');
 App.GameListRoute = require('./routes/game_list_route');
 App.FriendThumbView = require('./views/friend_thumb_view');
 
@@ -173,10 +183,24 @@ Friend.reopenClass({
 module.exports = Friend;
 
 });require.register("models/game.js", function(module, exports, require, global){
+var _ = require('../vendor/underscore-min')
+var config = require('../config');
+
 var Game = Ember.Object.extend({});
 
-module.exports = Game;
+Game.reopenClass({
+	find: function(id, process) {
+		$.ajax({
+			url: config.serverUrlBase + '/api/game/' + id,
+			contentType: 'application/json',
+			success: function(resp) {
+				process(Game.create(resp));
+			}
+		});
+	}
+});
 
+module.exports = Game;
 
 });require.register("models/game_list.js", function(module, exports, require, global){
 var _ = require('../vendor/underscore-min')
@@ -238,6 +262,23 @@ var GameListRoute = Ember.Route.extend({
 });
 
 module.exports = GameListRoute;
+
+
+});require.register("routes/game_route.js", function(module, exports, require, global){
+var GameRoute = Ember.Route.extend({
+	model: function (params) {
+		return App.Game.create({id: params.game_id});
+	},
+
+	setupController: function (controller, gameSummary) {
+		App.Game.find(gameSummary.id, function (game) {
+			controller.set('content', game);
+		});
+	}
+
+});
+
+module.exports = GameRoute;
 
 
 });require.register("routes/new_route.js", function(module, exports, require, global){
@@ -382,6 +423,30 @@ function program2(depth0,data) {
   data.buffer.push("<h2>My Games</h2>\n<ul class=\"game-list\">\n");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "game", "in", "games", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n</ul>\n");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES['game'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+helpers = helpers || Ember.Handlebars.helpers; data = data || {};
+  var buffer = '', stack1, hashTypes, escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n	<li>");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "card", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("</li>\n");
+  return buffer;
+  }
+
+  data.buffer.push("<h2>Hand</h2>\n<ul class=\"hand\">\n");
+  hashTypes = {};
+  stack1 = helpers.each.call(depth0, "card", "in", "hand", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n</ul>\n");
   return buffer;

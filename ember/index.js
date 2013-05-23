@@ -13,11 +13,13 @@ var App = window.App = require('./app');
 
 
 App.NewController = require('./controllers/new_controller');
+App.GameController = require('./controllers/game_controller');
 App.GameListController = require('./controllers/game_list_controller');
 App.GameList = require('./models/game_list');
 App.Friend = require('./models/friend');
 App.Game = require('./models/game');
 App.NewRoute = require('./routes/new_route');
+App.GameRoute = require('./routes/game_route');
 App.GameListRoute = require('./routes/game_list_route');
 App.FriendThumbView = require('./views/friend_thumb_view');
 
