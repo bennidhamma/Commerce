@@ -1,4 +1,19 @@
 /* Put your CSS here */
 html, body {
-    margin: 20px;
-}
+  margin: 20px; }
+
+.game-list {
+  margin: 0;
+  list-style-type: none; }
+  .game-list li {
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid gray; }
+    .game-list li .friend-thumb {
+      display: inline-block; }
+      .game-list li .friend-thumb img {
+        height: 54px;
+        width: 54px;
+        border: 2px solid white; }
+      .game-list li .friend-thumb img.is-current {
+        border: 2px solid lightgreen; }

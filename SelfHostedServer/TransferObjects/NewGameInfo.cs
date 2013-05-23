@@ -7,4 +7,3 @@ namespace ForgottenArts.Commerce.Server
 		public string[] Players {get; set;}
 	}
 }
-

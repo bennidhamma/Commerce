@@ -15,7 +15,14 @@ GameList.reopenClass({
 						for (var i = 0; i < resp.length; i++) {
 							var game = resp[i];
 							for (var j = 0; j < game.players.length; j++) {
-								game.players[j] = players[game.players[j]];
+								if (game.players[j]) {
+									var playerId = game.players[j];
+									var player = players[playerId];
+									player.isCurrent = game.players[j] == game.currentPlayer;
+									game.players[j] = player;
+								} else {
+									game.players.splice(j, 1);
+								}
 							}
 						}
 						// Send the game list response.

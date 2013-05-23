@@ -1,0 +1,26 @@
+/* Put your CSS here */
+html, body {
+    margin: 20px;
+}
+
+.game-list {
+	margin: 0;
+	list-style-type:none;
+	li {
+		margin-bottom:1em;
+		padding-bottom:1em;
+		border-bottom: 1px solid gray;
+		.friend-thumb { 
+			display: inline-block;
+			img {
+				height:54px;
+				width:54px;
+				border: 2px solid white;
+			}
+
+			img.is-current {
+				border: 2px solid lightgreen;
+			}
+		}
+	}
+}

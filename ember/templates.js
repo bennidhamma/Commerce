@@ -15,12 +15,17 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   var buffer = '', hashTypes, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<img ");
+  data.buffer.push("<img 	");
+  hashTypes = {'class': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'class': ("isCurrent")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n			");
   hashTypes = {'src': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'src': ("image.url")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(" ");
+  data.buffer.push(" \n			");
   hashTypes = {'title': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'title': ("displayName")
@@ -79,22 +84,22 @@ function program5(depth0,data) {
 Ember.TEMPLATES['game_list'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [2,'>= 1.0.0-rc.3'];
 helpers = helpers || Ember.Handlebars.helpers; data = data || {};
-  var buffer = '', stack1, hashTypes, self=this, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  var buffer = '', stack1, hashTypes, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
   var buffer = '', stack1, stack2, hashTypes, options;
   data.buffer.push("\n	<li>\n		");
-  hashTypes = {};
-  options = {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0],types:["ID","ID"],hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers.linkTo),stack1 ? stack1.call(depth0, "game", "game", options) : helperMissing.call(depth0, "linkTo", "game", "game", options));
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n		<ul>\n			");
   hashTypes = {'itemViewClass': "STRING"};
   data.buffer.push(escapeExpression(helpers.each.call(depth0, "game.players", {hash:{
     'itemViewClass': ("App.FriendThumbView")
   },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n		</ul>\n	</li>\n");
+  data.buffer.push("\n		");
+  hashTypes = {};
+  options = {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0],types:["ID","ID"],hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers.linkTo),stack1 ? stack1.call(depth0, "game", "game", options) : helperMissing.call(depth0, "linkTo", "game", "game", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n	</li>\n");
   return buffer;
   }
 function program2(depth0,data) {
@@ -103,7 +108,7 @@ function program2(depth0,data) {
   data.buffer.push("Open");
   }
 
-  data.buffer.push("<h2>My Games</h2>\n<ul>\n");
+  data.buffer.push("<h2>My Games</h2>\n<ul class=\"game-list\">\n");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "game", "in", "games", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
