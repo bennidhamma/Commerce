@@ -23,7 +23,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   data.buffer.push("\n			");
   hashTypes = {'src': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
-    'src': ("image.url")
+    'src': ("imageUrl")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
   data.buffer.push(" \n			");
   hashTypes = {'title': "STRING"};

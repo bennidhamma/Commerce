@@ -85,12 +85,20 @@ require('./routes');
 
 });require.register("models/friend.js", function(module, exports, require, global){
 var Plus = require ('../vendor/main')
+var _ = require('../vendor/underscore-min')
 
 var Friend = Ember.Object.extend({});
 
 var friends = {};
 
+var loadedAll = false;
+
 Friend.reopenClass({
+	fromRaw: function(raw) {
+		raw.imageUrl = raw.image.url;
+		return Friend.create(raw);
+	},
+
 	me: function(process) {
 		Plus.ready(function() {
 			process(App.Friend.create(Plus.me()));
@@ -98,6 +106,11 @@ Friend.reopenClass({
 	},
 
 	findAll: function(process) {
+		if (loadedAll) {
+			process(_.toArray(friends));
+			return;
+		}
+
 		Plus.ready(function() {
 			gapi.client.plus.people.list({
 				userId: 'me',
@@ -106,11 +119,12 @@ Friend.reopenClass({
 			}).execute(function(resp) {
 				var items = [];
 				for (var i = 0; i < resp.items.length; i++) {
-					var friend = Friend.create(resp.items[i]);
+					var friend = Friend.fromRaw(resp.items[i]);
 					friends[friend.id] = friend;
 					items.push(friend);
 				}
 				process(items);
+				loadedAll = true;
 			});
 		});
 	},
@@ -144,7 +158,7 @@ Friend.reopenClass({
 					if (!result) {
 						continue;
 					}
-					var friend = Friend.create(result);
+					var friend = Friend.fromRaw(result);
 					friends[friend.id] = friend;
 					response[friend.id] = friend;
 				}
@@ -178,6 +192,8 @@ GameList.reopenClass({
 				success: function(resp) {
 					// build a unique list of players
 					var uniq = _.union.apply(_, resp.map(function(g) { return g.players }));
+					// filter out null.
+					uniq = _.filter(uniq, function(n) { return n });
 					App.Friend.list(uniq, function(players) {
 						for (var i = 0; i < resp.length; i++) {
 							var game = resp[i];
@@ -185,7 +201,7 @@ GameList.reopenClass({
 								if (game.players[j]) {
 									var playerId = game.players[j];
 									var player = players[playerId];
-									player.isCurrent = game.players[j] == game.currentPlayer;
+									player.set('isCurrent',  game.players[j] == game.currentPlayer);
 									game.players[j] = player;
 								} else {
 									game.players.splice(j, 1);
@@ -278,7 +294,7 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   data.buffer.push("\n			");
   hashTypes = {'src': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
-    'src': ("image.url")
+    'src': ("imageUrl")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
   data.buffer.push(" \n			");
   hashTypes = {'title': "STRING"};

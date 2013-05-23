@@ -1,10 +1,18 @@
 var Plus = require ('../vendor/main')
+var _ = require('../vendor/underscore-min')
 
 var Friend = Ember.Object.extend({});
 
 var friends = {};
 
+var loadedAll = false;
+
 Friend.reopenClass({
+	fromRaw: function(raw) {
+		raw.imageUrl = raw.image.url;
+		return Friend.create(raw);
+	},
+
 	me: function(process) {
 		Plus.ready(function() {
 			process(App.Friend.create(Plus.me()));
@@ -12,6 +20,11 @@ Friend.reopenClass({
 	},
 
 	findAll: function(process) {
+		if (loadedAll) {
+			process(_.toArray(friends));
+			return;
+		}
+
 		Plus.ready(function() {
 			gapi.client.plus.people.list({
 				userId: 'me',
@@ -20,11 +33,12 @@ Friend.reopenClass({
 			}).execute(function(resp) {
 				var items = [];
 				for (var i = 0; i < resp.items.length; i++) {
-					var friend = Friend.create(resp.items[i]);
+					var friend = Friend.fromRaw(resp.items[i]);
 					friends[friend.id] = friend;
 					items.push(friend);
 				}
 				process(items);
+				loadedAll = true;
 			});
 		});
 	},
@@ -58,7 +72,7 @@ Friend.reopenClass({
 					if (!result) {
 						continue;
 					}
-					var friend = Friend.create(result);
+					var friend = Friend.fromRaw(result);
 					friends[friend.id] = friend;
 					response[friend.id] = friend;
 				}

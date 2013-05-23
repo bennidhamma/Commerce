@@ -11,6 +11,8 @@ GameList.reopenClass({
 				success: function(resp) {
 					// build a unique list of players
 					var uniq = _.union.apply(_, resp.map(function(g) { return g.players }));
+					// filter out null.
+					uniq = _.filter(uniq, function(n) { return n });
 					App.Friend.list(uniq, function(players) {
 						for (var i = 0; i < resp.length; i++) {
 							var game = resp[i];
@@ -18,7 +20,7 @@ GameList.reopenClass({
 								if (game.players[j]) {
 									var playerId = game.players[j];
 									var player = players[playerId];
-									player.isCurrent = game.players[j] == game.currentPlayer;
+									player.set('isCurrent',  game.players[j] == game.currentPlayer);
 									game.players[j] = player;
 								} else {
 									game.players.splice(j, 1);
