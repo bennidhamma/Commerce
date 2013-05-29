@@ -39,12 +39,12 @@ namespace Tests
 			g.CurrentTurn.Player = p1;
 			gr.Start (g);
 
-			Assert.That (g.CurrentTurn.ActionsRemaining, Is.EqualTo(1));
+			Assert.That (g.CurrentTurn.Actions, Is.EqualTo(1));
 			p1.Hand.Add ("General");
 			p2.Hand = new List<string>(new string [] {"General", "Marketplace", "Sawmill", "Scout"});
 			gr.PlayCard (g, p1, "General");
 			Assert.That(p1.Hand, Is.Not.Contains("General"));
-			Assert.That (g.CurrentTurn.ActionsRemaining, Is.EqualTo(0));
+			Assert.That (g.CurrentTurn.Actions, Is.EqualTo(0));
 			Assert.That(p2.Hand.Count, Is.EqualTo(3));
 			Assert.That(p2.Hand[0], Is.EqualTo ("Marketplace"));
 			Assert.That(p2.Hand[1], Is.EqualTo ("Sawmill"));

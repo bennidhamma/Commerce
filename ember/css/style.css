@@ -1,19 +1,25 @@
 /* Put your CSS here */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\000032}}
 html, body {
   margin: 20px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\000036}}
 .game-list {
   margin: 0;
   list-style-type: none; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\000039}}
   .game-list li {
     margin-bottom: 1em;
     padding-bottom: 1em;
     border-bottom: 1px solid gray; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000313}}
     .game-list li .friend-thumb {
       display: inline-block; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000315}}
       .game-list li .friend-thumb img {
         height: 54px;
         width: 54px;
         border: 2px solid white; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000321}}
       .game-list li .friend-thumb img.is-current {
         border: 2px solid lightgreen; }

@@ -89,8 +89,8 @@ namespace ForgottenArts.Commerce
 
 		public void NewTurn (Game game)
 		{
-			game.CurrentTurn.ActionsRemaining = StartingActions;
-			game.CurrentTurn.BuysRemaining = StartingBuys;
+			game.CurrentTurn.Actions = StartingActions;
+			game.CurrentTurn.Buys = StartingBuys;
 			game.CurrentTurn.Gold = 0;
 			game.CurrentTurn.Player = game.Players[game.CurrentTurn.Count % game.Players.Count];
 			game.CurrentTurn.Count++;
@@ -139,7 +139,7 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("It is not your turn");
 			}
 
-			if (game.CurrentTurn.ActionsRemaining <= 0) {
+			if (game.CurrentTurn.Actions <= 0) {
 				throw new InvalidOperationException ("You don't have any actions remaining");
 			}
 
@@ -151,7 +151,7 @@ namespace ForgottenArts.Commerce
 			ScriptManager.Manager.ExecuteCardEffect (player.Game, card);
 			player.Hand.Remove (cardKey);
 			game.CurrentTurn.CurrentCard = null;
-			game.CurrentTurn.ActionsRemaining--;
+			game.CurrentTurn.Actions--;
 		}
 
 		public void Buy (Game game, PlayerGame player, string cardKey)
@@ -163,7 +163,7 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("It is not your turn");
 			}
 
-			if (game.CurrentTurn.BuysRemaining <= 0) {
+			if (game.CurrentTurn.Buys <= 0) {
 				throw new InvalidOperationException ("You don't have any buys remaining");
 			}
 
@@ -190,7 +190,7 @@ namespace ForgottenArts.Commerce
 			player.Hand.Add (cardKey);
 
 			// Deduct buy
-			if (--game.CurrentTurn.BuysRemaining <= 0) {
+			if (--game.CurrentTurn.Buys <= 0) {
 				NewTurn (game);
 			}
 		}

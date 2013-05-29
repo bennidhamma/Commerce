@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Nancy;
 using Nancy.ModelBinding;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace ForgottenArts.Commerce.Server
 			Post["/game"] = CreateGame;
 			Get["/player/{id}/games"] = GetGames;
 			Get["/game/{id}"] = GetGame;
+			Get["/game/{id}/cards"] = GetGameCards;
 		}
 
 		public dynamic CrossOriginSetup (dynamic parameters)
@@ -35,6 +37,24 @@ namespace ForgottenArts.Commerce.Server
 				.WithHeader ("Access-Control-Allow-Origin", "*")
 				.WithHeader ("Access-Control-Allow-Headers", "Content-Type")
 				.WithHeader ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+		}
+
+		public dynamic GetGameCards (dynamic arg)
+		{
+			var game = repository.Get<Game>(Game.GetKey(arg.id));
+			if (game == null) {
+				throw new Exception ("Couldn't find game.");
+			}
+			var cardKeys = new HashSet<string> ();
+			foreach (var card in game.Bank.Keys) {
+				cardKeys.Add (card);
+			}
+			foreach (var player in game.Players) {
+				foreach (var card in player.AllCards) {
+					cardKeys.Add (card);
+				}
+			}
+			return from key in cardKeys select GameRunner.Instance.Cards[key];
 		}
 
 		public dynamic AuthenticatePlayer (dynamic parameters)
@@ -82,9 +102,7 @@ namespace ForgottenArts.Commerce.Server
 
 		dynamic GetGame (dynamic arg)
 		{
-			long id = 0;
-			id = arg.id;
-			return repository.Get<Game>(Game.GetKey(id));
+			return repository.Get<Game>(Game.GetKey(arg.id));
 		}
 
 	}

@@ -4,8 +4,16 @@ var GameRoute = Ember.Route.extend({
 	},
 
 	setupController: function (controller, gameSummary) {
+		var route = this;
 		App.Game.find(gameSummary.id, function (game) {
 			controller.set('content', game);
+			route.getCards(game);
+		});
+	},
+
+	getCards: function(game) {
+		App.Card.getForGame(game.id, function(cards) {
+			game.set('cards', cards);
 		});
 	}
 

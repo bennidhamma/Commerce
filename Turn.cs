@@ -6,8 +6,8 @@ namespace ForgottenArts.Commerce
 	{
 		public int Count {get; set;}
 		public PlayerGame Player {get; set;}
-		public int ActionsRemaining {get; set;}
-		public int BuysRemaining {get; set;}
+		public int Actions {get; set;}
+		public int Buys {get; set;}
 		public int Gold {get; set;}
 		public string CurrentCard {get; set;}
 

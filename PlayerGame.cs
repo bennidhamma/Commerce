@@ -22,6 +22,20 @@ namespace ForgottenArts.Commerce
 			Discards = new Stack<string> ();
 		}
 
+		public IEnumerable<string> AllCards {
+			get {
+				foreach (var card in Deck) {
+					yield return card;
+				}
+				foreach (var card in Hand) {
+					yield return card;
+				}
+				foreach (var card in Discards) {
+					yield return card;
+				}
+			}
+		}
+
 		public bool Defends () 
 		{
 			//TODO: scan cards in hand, looking for card with defensive actoion

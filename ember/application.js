@@ -83,6 +83,7 @@ App.NewController = require('./controllers/new_controller');
 App.GameController = require('./controllers/game_controller');
 App.GameListController = require('./controllers/game_list_controller');
 App.GameList = require('./models/game_list');
+App.Card = require('./models/card');
 App.Friend = require('./models/friend');
 App.Game = require('./models/game');
 App.NewRoute = require('./routes/new_route');
@@ -92,6 +93,32 @@ App.FriendThumbView = require('./views/friend_thumb_view');
 
 require('./routes');
 
+
+});require.register("models/card.js", function(module, exports, require, global){
+var _ = require('../vendor/underscore-min')
+var config = require('../config');
+
+var Card = Ember.Object.extend({
+
+});
+
+Card.reopenClass({
+	getForGame: function(gameId, process) {
+		$.ajax({
+			url: config.serverUrlBase + '/api/game/' + gameId + '/cards',
+			contentType: 'application/json',
+			success: function(resp) {
+				var cards = [];
+				for(var i = 0; i < resp.length; i++) {
+					cards.push(Card.create(resp[i]));
+				}
+				process(cards);
+			}
+		});
+	}
+});
+
+module.exports = Card;
 
 });require.register("models/friend.js", function(module, exports, require, global){
 var Plus = require ('../vendor/main')
@@ -271,8 +298,16 @@ var GameRoute = Ember.Route.extend({
 	},
 
 	setupController: function (controller, gameSummary) {
+		var route = this;
 		App.Game.find(gameSummary.id, function (game) {
 			controller.set('content', game);
+			route.getCards(game);
+		});
+	},
+
+	getCards: function(game) {
+		App.Card.getForGame(game.id, function(cards) {
+			game.set('cards', cards);
 		});
 	}
 
