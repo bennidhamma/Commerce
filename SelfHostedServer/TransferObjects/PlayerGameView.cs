@@ -5,6 +5,11 @@ namespace ForgottenArts.Commerce.Server
 {
 	public class PlayerGameView
 	{
+		public long Id {
+			get;
+			set;
+		}
+
 		public List<string> Hand {
 			get;
 			set;
@@ -27,6 +32,7 @@ namespace ForgottenArts.Commerce.Server
 
 		public PlayerGameView (Game game, PlayerGame player)
 		{
+			this.Id = game.Id;
 			this.Hand = player.Hand;
 			this.Discards = player.Discards;
 			this.DeckCount = player.Deck.Count;

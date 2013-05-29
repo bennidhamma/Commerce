@@ -27,7 +27,7 @@ namespace ForgottenArts.Commerce.Server
 			Put["/player/auth"] = AuthenticatePlayer;
 			Post["/game"] = CreateGame;
 			Get["/player/{id}/games"] = GetGames;
-			Get["/game/{id}"] = GetGame;
+			Get["/player/{player}/game/{game}"] = GetGame;
 			Get["/game/{id}/cards"] = GetGameCards;
 		}
 
@@ -102,8 +102,15 @@ namespace ForgottenArts.Commerce.Server
 
 		dynamic GetGame (dynamic arg)
 		{
-			return repository.Get<Game>(Game.GetKey(arg.id));
+			var game = repository.Get<Game>(Game.GetKey(arg.game));
+			PlayerGame player = null;
+			foreach (var p in game.Players) {
+				if (p.PlayerKey == arg.player) {
+					player = p;
+					break;
+				}
+			}
+			return new PlayerGameView (game, player);
 		}
-
 	}
 }

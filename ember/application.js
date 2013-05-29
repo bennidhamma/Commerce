@@ -142,6 +142,13 @@ Friend.reopenClass({
 		});
 	},
 
+	meId: function() {
+		var me = Plus.me();
+		if (me) {
+			return me.id;
+		}
+	},
+
 	findAll: function(process) {
 		if (loadedAll) {
 			process(_.toArray(friends));
@@ -217,12 +224,15 @@ var Game = Ember.Object.extend({});
 
 Game.reopenClass({
 	find: function(id, process) {
-		$.ajax({
-			url: config.serverUrlBase + '/api/game/' + id,
-			contentType: 'application/json',
-			success: function(resp) {
-				process(Game.create(resp));
-			}
+		App.Friend.me(function(me) {
+			$.ajax({
+				url: config.serverUrlBase + '/api/player/' + me.id +
+			 		 	'/game/' + id,
+				contentType: 'application/json',
+				success: function(resp) {
+					process(Game.create(resp));
+				}
+			});
 		});
 	}
 });
@@ -481,7 +491,7 @@ function program1(depth0,data) {
 
   data.buffer.push("<h2>Hand</h2>\n<ul class=\"hand\">\n");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "card", "in", "hand", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "card", "in", "content.hand", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n</ul>\n");
   return buffer;

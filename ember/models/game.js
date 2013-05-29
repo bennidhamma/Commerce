@@ -5,12 +5,15 @@ var Game = Ember.Object.extend({});
 
 Game.reopenClass({
 	find: function(id, process) {
-		$.ajax({
-			url: config.serverUrlBase + '/api/game/' + id,
-			contentType: 'application/json',
-			success: function(resp) {
-				process(Game.create(resp));
-			}
+		App.Friend.me(function(me) {
+			$.ajax({
+				url: config.serverUrlBase + '/api/player/' + me.id +
+			 		 	'/game/' + id,
+				contentType: 'application/json',
+				success: function(resp) {
+					process(Game.create(resp));
+				}
+			});
 		});
 	}
 });

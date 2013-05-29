@@ -19,6 +19,13 @@ Friend.reopenClass({
 		});
 	},
 
+	meId: function() {
+		var me = Plus.me();
+		if (me) {
+			return me.id;
+		}
+	},
+
 	findAll: function(process) {
 		if (loadedAll) {
 			process(_.toArray(friends));
