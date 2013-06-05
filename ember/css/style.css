@@ -23,3 +23,25 @@ html, body {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000321}}
       .game-list li .friend-thumb img.is-current {
         border: 2px solid lightgreen; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000328}}
+.card {
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+  padding: 2px;
+  background: #889;
+  margin-bottom: 5px;
+  width: 120px;
+  height: 180px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000335}}
+  .card header {
+    background: #eee;
+    font-weight: bold;
+    padding: 3px;
+    font-size: 1em;
+    text-align: center;
+    margin-bottom: 2px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000343}}
+  .card img {
+    width: 120px;
+    height: 80px;
+    background: white; }

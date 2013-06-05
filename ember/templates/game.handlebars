@@ -1,6 +1,12 @@
 <h2>Hand</h2>
-<ul class="hand">
-{{#each card in content.hand}}
-	<li>{{card}}</li>
+<section class="hand">
+{{#each content.hand}}
+	{{view App.CardView content=this}}
 {{/each}}
-</ul>
+</section>
+
+{{#if isMyTurn}}
+<section class="your-turn">
+  It is your turn. Double click a card to play it.
+</section>
+{{/if}}

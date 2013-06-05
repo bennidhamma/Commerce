@@ -26,5 +26,24 @@ html, body {
 }
 
 .card {
+	box-shadow:2px 2px 10px rgba(0,0,0,0.4);
+	padding: 2px;
+	background: #889;
+	margin-bottom: 5px;
+	width: 120px;
+	height: 180px;
+  header {
+		background: #eee;
+		font-weight:bold;
+		padding: 3px;
+		font-size: 1em;
+		text-align:center;
+		margin-bottom:2px;
+	}
+	img {
+		width: 120px;
+		height: 80px;
+		background:white;
+	}
 
 }

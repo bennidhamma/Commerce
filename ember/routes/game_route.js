@@ -6,18 +6,17 @@ var GameRoute = Ember.Route.extend({
 	setupController: function (controller, gameSummary) {
 		var route = this;
 		App.Game.find(gameSummary.id, function (game) {
-			controller.set('content', game);
-			route.getCards(game);
+			route.getCards(game, controller);
 		});
 	},
 
-	getCards: function(game) {
-		App.Card.getForGame(game.id, function(cards) {
+	getCards: function(game, controller) {
+		App.Card.getForGame(game, function(cards) {
 			game.set('cards', cards);
+			controller.set('content', game);
 		});
 	}
 
 });
 
 module.exports = GameRoute;
-
