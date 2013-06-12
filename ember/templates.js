@@ -153,7 +153,7 @@ function program5(depth0,data) {
   var buffer = '', hashTypes;
   data.buffer.push("\n<section class=\"action-phase\">\n	It is your turn. Double click a card to play it.\n	Or <button ");
   hashTypes = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "skipActions", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "action", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Actions</button>.\n</section>\n");
   return buffer;
   }
@@ -163,7 +163,7 @@ function program7(depth0,data) {
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n<section class=\"buy-phase\">\n	Double click a card to buy it, or <button ");
   hashTypes = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "skipBuys", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "buy", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Buys</button>.\n	<h2>Bank</h2>\n	<section class=\"bank\">\n	");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "stack", "in", "bank", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
@@ -188,7 +188,7 @@ function program9(depth0,data) {
   hashTypes = {'content': "ID",'cardSource': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
     'content': (""),
-    'cardSource': ("store")
+    'cardSource': ("bank")
   },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("\n			");
   return buffer;

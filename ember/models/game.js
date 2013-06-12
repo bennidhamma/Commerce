@@ -1,19 +1,32 @@
 var _ = require('../vendor/underscore-min')
 var config = require('../config');
 
+
 var Game = Ember.Object.extend({
+	sendCommand: function (command, data, process) {
+			$.ajax({
+				url: config.serverUrlBase + '/api/game/' + this.id + '/' + command,
+				type: 'POST',
+				contentType: 'application/json',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader('Player', App.Friend.meId());
+				},
+				success: process
+			});
+	},
+
 	playCard: function (card, process) {
-		$.ajax({
-			url: config.serverUrlBase + '/api/game/' + this.id + '/playCard',
-			type: 'POST',
-			contentType: 'application/json',
-			dataType: 'json',
-			data: JSON.stringify({card:card}),
-			beforeSend: function(xhr) {
-				xhr.setRequestHeader('Player', App.Friend.meId());
-			},
-			success: process
-		});
+    this.sendCommand('playCard', {card:card}, process);
+	},
+
+	buyCard: function (card, process) {
+    this.sendCommand('buyCard', {card:card}, process);
+  },
+
+  skip: function (phase, process) {
+    this.sendCommand('skip', {phase:phase}, process);
 	}
 });
 

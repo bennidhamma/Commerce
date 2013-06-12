@@ -2,7 +2,7 @@ using System;
 
 namespace ForgottenArts.Commerce.Server
 {
-	public class PlayCardRequest
+	public class CardRequest
 	{
 		public string Card {get; set;}
 	}

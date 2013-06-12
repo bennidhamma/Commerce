@@ -37,8 +37,15 @@ var GameController = Ember.Controller.extend({
 		var game = this.get('content');
 	  switch (cardSource) {
 	  case 'hand':
-			if (this.get('isMyTurn') && this.get('content.currentTurn.actions')) {
+			if (this.get('isActionPhase')) {
 				game.playCard(card, function (game) {
+					self.prepareGame(game);
+				});
+			}
+			break;
+    case 'bank':
+			if (this.get('isBuyPhase')) {
+				game.buyCard(card, function (game) {
 					self.prepareGame(game);
 				});
 			}
@@ -46,6 +53,14 @@ var GameController = Ember.Controller.extend({
 		}
 		console.log ('selectCard', arguments);
 	},
+
+  'skip': function (phase) {
+		var game = this.get('content');
+		var self = this;	
+		game.skip(phase, function (game) {
+			self.prepareGame(game);
+		});
+  },
 
 	'prepareGame': function (game) {
 		var cards = this.get('cards');

@@ -30,6 +30,8 @@ namespace ForgottenArts.Commerce.Server
 			Get["/game/{game}"] = GetGame;
 			Get["/game/{id}/cards"] = GetGameCards;
 			Post["/game/{game}/playCard"] = PlayCard;
+			Post["/game/{game}/buyCard"] = BuyCard;
+			Post["/game/{game}/skip"] = Skip;
 		}
 
 		public dynamic CrossOriginSetup (dynamic parameters)
@@ -105,7 +107,8 @@ namespace ForgottenArts.Commerce.Server
 		{
 			var playerKey = this.Request.Headers["Player"].First();
 			var game = repository.Get<Game>(Game.GetKey(arg.game));
-			var player = game.GetPlayer (playerKey);
+			// HACK HACK HACK - if we are in test mode, not enforcing player, for now always show current player's cards.
+			var player = Config.EnforcePlayer ? game.GetPlayer (playerKey) : game.CurrentTurn.Player;
 			return new PlayerGameView (game, player);
 		}
 
@@ -113,10 +116,35 @@ namespace ForgottenArts.Commerce.Server
 		{
 			var playerKey = this.Request.Headers["Player"].First();
 			var game = repository.Get<Game>(Game.GetKey(arg.game));
-			var card = this.Bind<PlayCardRequest>();
+			var card = this.Bind<CardRequest>();
 			var player = game.GetPlayer(playerKey);
-			GameRunner.Instance.PlayCard(game, player, card.Card);
-			this.repository.Put(game.GetKey(), game);
+			if (GameRunner.Instance.PlayCard(game, player, card.Card)) {
+				this.repository.Put(game.GetKey(), game);
+			}
+			return new PlayerGameView (game, player);
+		}
+
+		dynamic BuyCard (dynamic arg)
+		{
+			var playerKey = this.Request.Headers["Player"].First();
+			var game = repository.Get<Game>(Game.GetKey(arg.game));
+			var card = this.Bind<CardRequest>();
+			var player = game.GetPlayer(playerKey);
+			if (GameRunner.Instance.Buy(game, player, card.Card)) {
+				this.repository.Put(game.GetKey(), game);
+			}
+			return new PlayerGameView (game, player);
+		}
+
+		dynamic Skip (dynamic arg)
+		{
+			var playerKey = this.Request.Headers["Player"].First();
+			var game = repository.Get<Game>(Game.GetKey(arg.game));
+			var skip = this.Bind<SkipRequest>();
+			var player = game.GetPlayer(playerKey);
+			if (GameRunner.Instance.Skip(game, player, skip.Phase)) {
+				this.repository.Put(game.GetKey(), game);
+			}
 			return new PlayerGameView (game, player);
 		}
 	}

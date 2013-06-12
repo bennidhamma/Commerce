@@ -54,8 +54,15 @@ var GameController = Ember.Controller.extend({
 		var game = this.get('content');
 	  switch (cardSource) {
 	  case 'hand':
-			if (this.get('isMyTurn') && this.get('content.currentTurn.actions')) {
+			if (this.get('isActionPhase')) {
 				game.playCard(card, function (game) {
+					self.prepareGame(game);
+				});
+			}
+			break;
+    case 'bank':
+			if (this.get('isBuyPhase')) {
+				game.buyCard(card, function (game) {
 					self.prepareGame(game);
 				});
 			}
@@ -63,6 +70,14 @@ var GameController = Ember.Controller.extend({
 		}
 		console.log ('selectCard', arguments);
 	},
+
+  'skip': function (phase) {
+		var game = this.get('content');
+		var self = this;	
+		game.skip(phase, function (game) {
+			self.prepareGame(game);
+		});
+  },
 
 	'prepareGame': function (game) {
 		var cards = this.get('cards');
@@ -290,19 +305,32 @@ module.exports = Friend;
 var _ = require('../vendor/underscore-min')
 var config = require('../config');
 
+
 var Game = Ember.Object.extend({
+	sendCommand: function (command, data, process) {
+			$.ajax({
+				url: config.serverUrlBase + '/api/game/' + this.id + '/' + command,
+				type: 'POST',
+				contentType: 'application/json',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader('Player', App.Friend.meId());
+				},
+				success: process
+			});
+	},
+
 	playCard: function (card, process) {
-		$.ajax({
-			url: config.serverUrlBase + '/api/game/' + this.id + '/playCard',
-			type: 'POST',
-			contentType: 'application/json',
-			dataType: 'json',
-			data: JSON.stringify({card:card}),
-			beforeSend: function(xhr) {
-				xhr.setRequestHeader('Player', App.Friend.meId());
-			},
-			success: process
-		});
+    this.sendCommand('playCard', {card:card}, process);
+	},
+
+	buyCard: function (card, process) {
+    this.sendCommand('buyCard', {card:card}, process);
+  },
+
+  skip: function (phase, process) {
+    this.sendCommand('skip', {phase:phase}, process);
 	}
 });
 
@@ -595,7 +623,7 @@ function program5(depth0,data) {
   var buffer = '', hashTypes;
   data.buffer.push("\n<section class=\"action-phase\">\n	It is your turn. Double click a card to play it.\n	Or <button ");
   hashTypes = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "skipActions", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "action", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Actions</button>.\n</section>\n");
   return buffer;
   }
@@ -605,7 +633,7 @@ function program7(depth0,data) {
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n<section class=\"buy-phase\">\n	Double click a card to buy it, or <button ");
   hashTypes = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "skipBuys", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "buy", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Buys</button>.\n	<h2>Bank</h2>\n	<section class=\"bank\">\n	");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "stack", "in", "bank", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
@@ -630,7 +658,7 @@ function program9(depth0,data) {
   hashTypes = {'content': "ID",'cardSource': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
     'content': (""),
-    'cardSource': ("store")
+    'cardSource': ("bank")
   },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("\n			");
   return buffer;

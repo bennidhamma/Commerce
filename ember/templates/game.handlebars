@@ -23,19 +23,19 @@
 {{#if isActionPhase}}
 <section class="action-phase">
 	It is your turn. Double click a card to play it.
-	Or <button {{action skipActions}}>Skip Actions</button>.
+	Or <button {{action skip 'action'}}>Skip Actions</button>.
 </section>
 {{/if}}
 
 {{#if isBuyPhase}}
 <section class="buy-phase">
-	Double click a card to buy it, or <button {{action skipBuys}}>Skip Buys</button>.
+	Double click a card to buy it, or <button {{action skip 'buy'}}>Skip Buys</button>.
 	<h2>Bank</h2>
 	<section class="bank">
 	{{#each stack in bank}}
 		<section class=stack>
 			{{#each stack}}
-			{{view App.CardView content=this cardSource="store"}}
+			{{view App.CardView content=this cardSource="bank"}}
 			{{/each}}
 		</section>
 	{{/each}}

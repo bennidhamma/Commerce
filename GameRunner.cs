@@ -4,6 +4,11 @@ using System.Linq;
 
 namespace ForgottenArts.Commerce
 {
+	public enum GamePhase {
+		Action,
+		Buy
+	}
+
 	public class GameRunner
 	{
 		private static GameRunner instance = new GameRunner ();
@@ -116,6 +121,15 @@ namespace ForgottenArts.Commerce
 
 		public void NewTurn (Game game)
 		{
+			if (game.CurrentTurn.Count > 0 && game.CurrentTurn.Player != null) {
+				// Discard cards, draw new cards, shuffling if necessary.
+				var currentPlayer = game.CurrentTurn.Player;
+				while (currentPlayer.Hand.Count > 0) {
+					currentPlayer.Discards.Push (currentPlayer.Hand[0]);
+					currentPlayer.Hand.RemoveAt(0);
+				}
+				currentPlayer.DrawHand ();
+			}
 			game.CurrentTurn.Actions = StartingActions;
 			game.CurrentTurn.Buys = StartingBuys;
 			game.CurrentTurn.Gold = 0;
@@ -157,9 +171,32 @@ namespace ForgottenArts.Commerce
 			return false;
 		}
 
-		public void PlayCard (Game game, PlayerGame player, string cardKey)
+		public bool Skip (Game game, PlayerGame player, GamePhase phase) {
+			// Is it the current player's turn?
+			if (Config.EnforcePlayer && game.CurrentTurn.Player != player) {
+				throw new InvalidOperationException ("It is not your turn");
+			}
+
+			if (game.CurrentTurn.Actions > 0 && phase == GamePhase.Action) {
+				game.CurrentTurn.Actions = 0;
+				return true;
+			}
+
+			if (game.CurrentTurn.Buys > 0 && phase == GamePhase.Buy) {
+				game.CurrentTurn.Buys = 0;
+				return true;
+			}
+
+			return false;
+		}
+
+		public bool PlayCard (Game game, PlayerGame player, string cardKey)
 		{
 			var card = Cards[cardKey];
+
+			if (string.IsNullOrEmpty(card.Effect)) {
+				return false;
+			}
 
 			// Is it the current player's turn?
 			if (Config.EnforcePlayer && game.CurrentTurn.Player != player) {
@@ -179,14 +216,15 @@ namespace ForgottenArts.Commerce
 			player.Hand.Remove (cardKey);
 			game.CurrentTurn.CurrentCard = null;
 			game.CurrentTurn.Actions--;
+			return true;
 		}
 
-		public void Buy (Game game, PlayerGame player, string cardKey)
+		public bool Buy (Game game, PlayerGame player, string cardKey)
 		{
 			var card = Cards[cardKey];
 
 			// Is it the current player's turn?
-			if (game.CurrentTurn.Player != player) {
+			if (Config.EnforcePlayer && game.CurrentTurn.Player != player) {
 				throw new InvalidOperationException ("It is not your turn");
 			}
 
@@ -220,6 +258,8 @@ namespace ForgottenArts.Commerce
 			if (--game.CurrentTurn.Buys <= 0) {
 				NewTurn (game);
 			}
+
+			return true;
 		}
 	}
 }
