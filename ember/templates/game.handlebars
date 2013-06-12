@@ -29,16 +29,16 @@
 
 {{#if isBuyPhase}}
 <section class="buy-phase">
-	<h2>Store</h2>
-	<section class="store">
+	Double click a card to buy it, or <button {{action skipBuys}}>Skip Buys</button>.
+	<h2>Bank</h2>
+	<section class="bank">
 	{{#each stack in bank}}
 		<section class=stack>
-			{{#each card in stack}}
-			{{view App.CardView content=card cardSource="store"}}
+			{{#each stack}}
+			{{view App.CardView content=this cardSource="store"}}
 			{{/each}}
 		</section>
 	{{/each}}
 	</section>
-	Double click a card to buy it, or <button {{action skipBuys}}>Skip Buys</button>.
 </section>
 {{/if}}

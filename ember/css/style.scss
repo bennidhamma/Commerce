@@ -32,6 +32,7 @@ html, body {
 	margin-bottom: 5px;
 	width: 120px;
 	height: 180px;
+  border-radius:4px;
 	display:inline-block;
   header {
 		background: #eee;
@@ -46,5 +47,24 @@ html, body {
 		height: 80px;
 		background:white;
 	}
+	p {
+		font-size: 0.8em;
+		line-height: 15px;
+		padding: 3px;
+		background: white;
+		margin: 3px 0;
+		border-radius: 3px;
+  }
+}
 
+.bank {
+	.stack {
+		display:inline-block;
+		margin-right:10px;
+		.card {
+			position: relative;
+			display:block;
+			margin-bottom: -181px;
+		}
+	}
 }

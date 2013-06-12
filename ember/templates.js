@@ -161,14 +161,14 @@ function program5(depth0,data) {
 function program7(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n<section class=\"buy-phase\">\n	<h2>Store</h2>\n	<section class=\"store\">\n	");
+  data.buffer.push("\n<section class=\"buy-phase\">\n	Double click a card to buy it, or <button ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "skipBuys", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Skip Buys</button>.\n	<h2>Bank</h2>\n	<section class=\"bank\">\n	");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "stack", "in", "bank", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n	</section>\n	Double click a card to buy it, or <button ");
-  hashTypes = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "skipBuys", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Skip Buys</button>.\n</section>\n");
+  data.buffer.push("\n	</section>\n</section>\n");
   return buffer;
   }
 function program8(depth0,data) {
@@ -176,7 +176,7 @@ function program8(depth0,data) {
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n		<section class=stack>\n			");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "card", "in", "stack", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "stack", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n		</section>\n	");
   return buffer;
@@ -187,7 +187,7 @@ function program9(depth0,data) {
   data.buffer.push("\n			");
   hashTypes = {'content': "ID",'cardSource': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
-    'content': ("card"),
+    'content': (""),
     'cardSource': ("store")
   },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("\n			");
@@ -298,6 +298,9 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   data.buffer.push(">\n<p>");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("</p>\n<p>");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "view.cardCost", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</p>\n");
   return buffer;
   
