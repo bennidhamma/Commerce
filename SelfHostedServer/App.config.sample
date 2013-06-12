@@ -3,6 +3,6 @@
   <appSettings>
     <add key="ContentDirectory" value="/home/ben/workspaces/Commerce/content/"/>
     <add key="DllPath" value="/home/ben/workspaces/Commerce/bin/Debug/Commerce.dll"/>
-    <add key="GoogleApiKey" value="AIzaSyDQ0xz6qiMkzPU9aLI5DMwQDp5lUvgF-zU"/>
+    <add key="GoogleApiKey" value="GET IT AND PUT IT HERE"/>
   </appSettings>
 </configuration>
