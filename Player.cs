@@ -26,7 +26,24 @@ namespace ForgottenArts.Commerce
 		{
 			return string.Format ("{0}, {1} {2}", PlusId, FirstName, LastName);
 		}
-		
+
+		public void FetchData () 
+		{
+			var rc = new RestClient("https://www.googleapis.com/plus/v1/");
+			var key = Config.GoogleApiKey;
+			try {
+				dynamic person = rc.Get ("people/" + PlusId + "?key=" + key);
+				this.Photo = person.image.url;
+				this.FirstName = person.name.givenName;
+				this.LastName = person.name.familyName;
+				this.DisplayName = person.displayName;
+				GameRunner.Instance.Repository.Put<Player>(GetKey(), this);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
+		}
 
 		public static string GetKey (string plusId)
 		{
@@ -41,6 +58,9 @@ namespace ForgottenArts.Commerce
 				player = new Player () {
 					PlusId = id
 				};
+			}
+			if (player.DisplayName == null) {
+				player.FetchData ();
 			}
 			return player;
 		}

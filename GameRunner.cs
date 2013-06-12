@@ -119,6 +119,13 @@ namespace ForgottenArts.Commerce
 			NewTurn (game);
 		}
 
+		void MaybeNewTurn (Game game)
+		{
+			if (game.CurrentTurn.Actions == 0 && game.CurrentTurn.Buys == 0) {
+				NewTurn(game);
+			}
+		}
+
 		public void NewTurn (Game game)
 		{
 			if (game.CurrentTurn.Count > 0 && game.CurrentTurn.Player != null) {
@@ -177,13 +184,15 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("It is not your turn");
 			}
 
-			if (game.CurrentTurn.Actions > 0 && phase == GamePhase.Action) {
+			if (phase == GamePhase.Action) {
 				game.CurrentTurn.Actions = 0;
+				MaybeNewTurn(game);
 				return true;
 			}
 
-			if (game.CurrentTurn.Buys > 0 && phase == GamePhase.Buy) {
+			if (phase == GamePhase.Buy) {
 				game.CurrentTurn.Buys = 0;
+				MaybeNewTurn(game);
 				return true;
 			}
 
@@ -216,6 +225,7 @@ namespace ForgottenArts.Commerce
 			player.Hand.Remove (cardKey);
 			game.CurrentTurn.CurrentCard = null;
 			game.CurrentTurn.Actions--;
+			MaybeNewTurn(game);
 			return true;
 		}
 

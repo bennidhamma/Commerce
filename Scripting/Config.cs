@@ -29,6 +29,12 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		public static object GoogleApiKey {
+			get {
+				return GetSetting("GoogleApiKey", "");
+			}
+		}
+
 		public static bool EnforcePlayer {
 			get {
 				return Convert.ToBoolean(GetSetting ("EnforcePlayer", "False"));

@@ -13,7 +13,10 @@ var Game = Ember.Object.extend({
 				beforeSend: function(xhr) {
 					xhr.setRequestHeader('Player', App.Friend.meId());
 				},
-				success: process
+				success: function(resp) {
+					var game = App.Game.create(resp);
+					process(game);
+				}
 			});
 	},
 
