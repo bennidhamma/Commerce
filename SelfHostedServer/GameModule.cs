@@ -27,15 +27,16 @@ namespace ForgottenArts.Commerce.Server
 			Put["/player/auth"] = AuthenticatePlayer;
 			Post["/game"] = CreateGame;
 			Get["/player/{id}/games"] = GetGames;
-			Get["/player/{player}/game/{game}"] = GetGame;
+			Get["/game/{game}"] = GetGame;
 			Get["/game/{id}/cards"] = GetGameCards;
+			Post["/game/{game}/playCard"] = PlayCard;
 		}
 
 		public dynamic CrossOriginSetup (dynamic parameters)
 		{
 			return new Response ()
 				.WithHeader ("Access-Control-Allow-Origin", "*")
-				.WithHeader ("Access-Control-Allow-Headers", "Content-Type")
+				.WithHeader ("Access-Control-Allow-Headers", "Content-Type, Player")
 				.WithHeader ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 		}
 
@@ -102,14 +103,20 @@ namespace ForgottenArts.Commerce.Server
 
 		dynamic GetGame (dynamic arg)
 		{
+			var playerKey = this.Request.Headers["Player"].First();
 			var game = repository.Get<Game>(Game.GetKey(arg.game));
-			PlayerGame player = null;
-			foreach (var p in game.Players) {
-				if (p.PlayerKey == arg.player) {
-					player = p;
-					break;
-				}
-			}
+			var player = game.GetPlayer (playerKey);
+			return new PlayerGameView (game, player);
+		}
+
+		dynamic PlayCard (dynamic arg)
+		{
+			var playerKey = this.Request.Headers["Player"].First();
+			var game = repository.Get<Game>(Game.GetKey(arg.game));
+			var card = this.Bind<PlayCardRequest>();
+			var player = game.GetPlayer(playerKey);
+			GameRunner.Instance.PlayCard(game, player, card.Card);
+			this.repository.Put(game.GetKey(), game);
 			return new PlayerGameView (game, player);
 		}
 	}

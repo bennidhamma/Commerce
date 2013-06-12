@@ -40,9 +40,9 @@ namespace ForgottenArts.Commerce
 
 		public void ExecuteCardEffect (Game game, Card card) 
 		{
-			var script = Engine.CreateScriptSourceFromString (card.Effect);
 			try
 			{
+				var script = Engine.CreateScriptSourceFromString (card.Effect);
 				script.Execute (SetupScope(game));
 			}
 			catch (Exception e)

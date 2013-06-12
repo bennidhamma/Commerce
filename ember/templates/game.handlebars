@@ -1,12 +1,44 @@
+<header>
+<h2>Current Turn</h2>
+<div># Actions: {{content.currentTurn.actions}}</div>
+<div># Buys: {{content.currentTurn.buys}}</div>
+</header>
+
 <h2>Hand</h2>
 <section class="hand">
 {{#each content.hand}}
-	{{view App.CardView content=this}}
+	{{view App.CardView content=this cardSource="hand"}}
 {{/each}}
 </section>
 
-{{#if isMyTurn}}
-<section class="your-turn">
-  It is your turn. Double click a card to play it.
+<h2>Deck Count: {{content.deckCount}}</h2>
+
+<h2>Discards</h2>
+<section class="discards">
+{{#each content.discards}}
+	{{view App.CardView content=this cardSource="discards"}}
+{{/each}}
+</section>
+
+{{#if isActionPhase}}
+<section class="action-phase">
+	It is your turn. Double click a card to play it.
+	Or <button {{action skipActions}}>Skip Actions</button>.
+</section>
+{{/if}}
+
+{{#if isBuyPhase}}
+<section class="buy-phase">
+	<h2>Store</h2>
+	<section class="store">
+	{{#each stack in bank}}
+		<section class=stack>
+			{{#each card in stack}}
+			{{view App.CardView content=card cardSource="store"}}
+			{{/each}}
+		</section>
+	{{/each}}
+	</section>
+	Double click a card to buy it, or <button {{action skipBuys}}>Skip Buys</button>.
 </section>
 {{/if}}

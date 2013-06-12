@@ -18,6 +18,15 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		public long MaxId
+		{
+			get {
+				using (var redisClient = new RedisClient()) {
+					return redisClient.Get<long> ("uid");
+				}
+			}
+		}
+
 		public void Put<T> (string key, T value)
 		{
 			using (var redisClient = new RedisClient()) {
@@ -36,10 +45,7 @@ namespace ForgottenArts.Commerce
 
 		public IEnumerable<T> GetAll<T> ()
 		{
-			using (var redisClient = new RedisClient()) {
-				var typed = redisClient.As<T> ();
-				return typed.GetAll();
-			}
+			throw new NotImplementedException ();
 		}
 
 		public IList<T> GetList<T> (string key)

@@ -51,6 +51,33 @@ namespace ForgottenArts.Commerce
 		{
 		}
 
+		/// <summary>
+		/// Sanitize games, to avoid zombie games and such.
+		/// </summary>
+		public void Sanitize ()
+		{
+			// Get the max id, to know when to stop searching for games.
+			var maxId = Repository.MaxId;
+			for (long i = 0; i <= maxId; i++) {
+				var game = Repository.Get<Game>(Game.GetKey(i));
+				if (game != null) {
+					Sanitize (game);
+				}
+			}
+		}
+
+		public void Sanitize(Game game) 
+		{
+			bool put = false;
+			if (game.CurrentTurn == null || (game.CurrentTurn.Actions == 0 && game.CurrentTurn.Buys == 0)) {
+				NewTurn(game);
+				put = true;
+			}
+			if (put) {
+				Repository.Put(game.GetKey(), game);
+			}
+		}
+
 		public void Start (Game game)
 		{
 			/*
@@ -135,7 +162,7 @@ namespace ForgottenArts.Commerce
 			var card = Cards[cardKey];
 
 			// Is it the current player's turn?
-			if (game.CurrentTurn.Player != player) {
+			if (Config.EnforcePlayer && game.CurrentTurn.Player != player) {
 				throw new InvalidOperationException ("It is not your turn");
 			}
 

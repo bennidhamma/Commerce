@@ -29,6 +29,12 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		public static bool EnforcePlayer {
+			get {
+				return Convert.ToBoolean(GetSetting ("EnforcePlayer", "False"));
+			}
+		}
+
 		public static string Server {
 			get {
 				return GetSetting("ServerId", hostName);
@@ -150,7 +156,7 @@ namespace ForgottenArts.Commerce
 			};
 
 			watcher.Changed += delegate(object sender, FileSystemEventArgs e) {
-                if (watchMap.ContainsKey(e.FullPath))
+				if (watchMap.ContainsKey(e.FullPath))
 				{
 					watchMap[e.FullPath] ();
 					return;

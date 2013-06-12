@@ -14,12 +14,18 @@ Friend.reopenClass({
 	},
 
 	me: function(process) {
+		if (this.meId()) {
+			process(App.Friend.create(Plus.me()));
+		}
 		Plus.ready(function() {
 			process(App.Friend.create(Plus.me()));
 		});
 	},
 
 	meId: function() {
+		if (window.localStorage['player']) {
+			return window.localStorage['player'];
+		}
 		var me = Plus.me();
 		if (me) {
 			return me.id;

@@ -91,7 +91,7 @@ namespace ForgottenArts.Commerce
 		public override string ToString ()
 		{
 			if (Player != null) {
-				return Player.DisplayName;
+				return Player.ToString();
 			}
 			else {
 				return "Unkown Player";

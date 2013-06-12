@@ -50,6 +50,16 @@ namespace ForgottenArts.Commerce
 		{
 			return "game-" + id;
 		}
+
+		public PlayerGame GetPlayer (string playerKey)
+		{
+			foreach (var p in this.Players) {
+				if (p.PlayerKey == playerKey) {
+					return p;
+				}
+			}
+			return null;
+		}
 	}
 }
 

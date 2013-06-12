@@ -49,6 +49,8 @@
     <Compile Include="TransferObjects\GameListInfo.cs" />
     <Compile Include="CustomBootstrapper.cs" />
     <Compile Include="TransferObjects\PlayerGameView.cs" />
+    <Compile Include="TransferObjects\TurnView.cs" />
+    <Compile Include="TransferObjects\PlayCardRequest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

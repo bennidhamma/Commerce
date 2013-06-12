@@ -25,7 +25,12 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
-		Turn CurrentTurn {
+		public TurnView CurrentTurn {
+			get;
+			set;
+		}
+
+		public Dictionary<string, int> Bank {
 			get;
 			set;
 		}
@@ -36,7 +41,8 @@ namespace ForgottenArts.Commerce.Server
 			this.Hand = player.Hand;
 			this.Discards = player.Discards;
 			this.DeckCount = player.Deck.Count;
-			this.CurrentTurn = game.CurrentTurn;
+			this.CurrentTurn = new TurnView(game.CurrentTurn);
+			this.Bank = game.Bank;
 		}
 	}
 }

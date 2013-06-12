@@ -22,6 +22,12 @@ namespace ForgottenArts.Commerce
 			return GetKey (PlusId);
 		}
 
+		public override string ToString ()
+		{
+			return string.Format ("{0}, {1} {2}", PlusId, FirstName, LastName);
+		}
+		
+
 		public static string GetKey (string plusId)
 		{
 			return "player-plus-" + plusId; 
