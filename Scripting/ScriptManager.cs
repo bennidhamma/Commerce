@@ -31,7 +31,7 @@ namespace ForgottenArts.Commerce
 		{
 			var scope = engine.CreateScope ();
 			scope.SetVariable ("game", game);
-			scope.SetVariable ("current_player", game.CurrentTurn.Player);
+			scope.SetVariable ("current_player", game.CurrentPlayer);
 			scope.SetVariable ("players", game.Players);
 			scope.SetVariable ("turn", game.CurrentTurn);
 			scope.SetVariable ("bank", game.Bank);

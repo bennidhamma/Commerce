@@ -12,15 +12,15 @@ namespace ForgottenArts.Commerce.Server
 		public string PlayerPhoto {get; set;}
 		public string PlayerName {get; set;}
 
-		public TurnView (Turn turn)
+		public TurnView (Game game, Turn turn)
 		{
 			this.Actions = turn.Actions;
 			this.Buys = turn.Buys;
 			this.Gold = turn.Gold;
 			this.Count = turn.Count;
-			this.PlayerKey = turn.Player.PlayerKey;
-			this.PlayerPhoto = turn.Player.Player.Photo;
-			this.PlayerName = turn.Player.Player.FirstName;
+			this.PlayerKey = game.CurrentPlayer.Player.PlusId;
+			this.PlayerPhoto = game.CurrentPlayer.Player.Photo;
+			this.PlayerName = game.CurrentPlayer.Player.DisplayName;
 		}
 	}
 }

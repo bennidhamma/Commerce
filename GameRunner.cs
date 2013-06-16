@@ -128,9 +128,9 @@ namespace ForgottenArts.Commerce
 
 		public void NewTurn (Game game)
 		{
-			if (game.CurrentTurn.Count > 0 && game.CurrentTurn.Player != null) {
+			if (game.CurrentTurn.Count > 0 && game.CurrentPlayer != null) {
 				// Discard cards, draw new cards, shuffling if necessary.
-				var currentPlayer = game.CurrentTurn.Player;
+				var currentPlayer = game.CurrentPlayer;
 				while (currentPlayer.Hand.Count > 0) {
 					currentPlayer.Discards.Push (currentPlayer.Hand[0]);
 					currentPlayer.Hand.RemoveAt(0);
@@ -140,7 +140,7 @@ namespace ForgottenArts.Commerce
 			game.CurrentTurn.Actions = StartingActions;
 			game.CurrentTurn.Buys = StartingBuys;
 			game.CurrentTurn.Gold = 0;
-			game.CurrentTurn.Player = game.Players[game.CurrentTurn.Count % game.Players.Count];
+			game.CurrentTurn.PlayerKey = game.Players[game.CurrentTurn.Count % game.Players.Count].PlayerKey;
 			game.CurrentTurn.Count++;
 			CheckForGameEnd (game);
 			//TODO: notify new current player it is their turn.
@@ -180,7 +180,7 @@ namespace ForgottenArts.Commerce
 
 		public bool Skip (Game game, PlayerGame player, GamePhase phase) {
 			// Is it the current player's turn?
-			if (Config.EnforcePlayer && game.CurrentTurn.Player != player) {
+			if (Config.EnforcePlayer && game.CurrentPlayer != player) {
 				throw new InvalidOperationException ("It is not your turn");
 			}
 
@@ -208,7 +208,7 @@ namespace ForgottenArts.Commerce
 			}
 
 			// Is it the current player's turn?
-			if (Config.EnforcePlayer && game.CurrentTurn.Player != player) {
+			if (Config.EnforcePlayer && game.CurrentPlayer != player) {
 				throw new InvalidOperationException ("It is not your turn");
 			}
 
@@ -234,7 +234,7 @@ namespace ForgottenArts.Commerce
 			var card = Cards[cardKey];
 
 			// Is it the current player's turn?
-			if (Config.EnforcePlayer && game.CurrentTurn.Player != player) {
+			if (Config.EnforcePlayer && game.CurrentPlayer != player) {
 				throw new InvalidOperationException ("It is not your turn");
 			}
 
@@ -259,10 +259,11 @@ namespace ForgottenArts.Commerce
 			foreach (var kvp in card.Cost) {
 				int removeCount = 0;
 				player.Hand.RemoveAll (p => p == kvp.Key && removeCount++ < kvp.Value);
+				game.Bank.Add (kvp.Key, kvp.Value);
 			}
 
 			// Add card to hand.
-			player.Hand.Add (cardKey);
+			player.Discards.Push (cardKey);
 
 			// Deduct buy
 			if (--game.CurrentTurn.Buys <= 0) {

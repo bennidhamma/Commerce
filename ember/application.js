@@ -667,7 +667,15 @@ function program9(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<header>\n<h2>Current Turn</h2>\n<div># Actions: ");
+  data.buffer.push("<header>\n	<h2><img ");
+  hashTypes = {'src': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'src': ("content.currentTurn.playerPhoto")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n		");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "content.currentTurn.playerName", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("</h2>\n<div># Actions: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "content.currentTurn.actions", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</div>\n<div># Buys: ");

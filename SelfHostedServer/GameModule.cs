@@ -107,8 +107,7 @@ namespace ForgottenArts.Commerce.Server
 		{
 			var playerKey = this.Request.Headers["Player"].First();
 			var game = repository.Get<Game>(Game.GetKey(arg.game));
-			// HACK HACK HACK - if we are in test mode, not enforcing player, for now always show current player's cards.
-			var player = Config.EnforcePlayer ? game.GetPlayer (playerKey) : game.CurrentTurn.Player;
+			var player = game.GetPlayer (playerKey);
 			return new PlayerGameView (game, player);
 		}
 

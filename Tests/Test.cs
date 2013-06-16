@@ -29,14 +29,14 @@ namespace Tests
 			catalog.LoadCards("cards");
 
 			Game g = new Game ();
-			PlayerGame p1 = new PlayerGame ();
-			PlayerGame p2 = new PlayerGame ();
+			PlayerGame p1 = new PlayerGame () { PlayerKey = "1" };
+			PlayerGame p2 = new PlayerGame () { PlayerKey = "2" };
 			p1.Game = g;
 			g.Players.Add (p1);
 			g.Players.Add (p2);
 			GameRunner gr = new GameRunner ();
 
-			g.CurrentTurn.Player = p1;
+			g.CurrentTurn.PlayerKey = "1";
 			gr.Start (g);
 
 			Assert.That (g.CurrentTurn.Actions, Is.EqualTo(1));

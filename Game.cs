@@ -60,6 +60,13 @@ namespace ForgottenArts.Commerce
 			}
 			return null;
 		}
+
+		public PlayerGame CurrentPlayer {
+			get {
+				var key = CurrentTurn.PlayerKey ?? Players[0].PlayerKey;
+				return GetPlayer(key);
+			}
+		}
 	}
 }
 

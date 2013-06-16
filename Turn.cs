@@ -5,7 +5,7 @@ namespace ForgottenArts.Commerce
 	public class Turn
 	{
 		public int Count {get; set;}
-		public PlayerGame Player {get; set;}
+		public string PlayerKey { get; set; }
 		public int Actions {get; set;}
 		public int Buys {get; set;}
 		public int Gold {get; set;}

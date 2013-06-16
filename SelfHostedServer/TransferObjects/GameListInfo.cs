@@ -16,8 +16,8 @@ namespace ForgottenArts.Commerce.Server
 			this.Id = game.Id;
 			this.Status = game.Status;
 			Players = new List<string> (from p in game.Players select p.PlayerKey);
-			if (game.CurrentTurn != null && game.CurrentTurn.Player != null) {
-				CurrentPlayer = game.CurrentTurn.Player.PlayerKey;
+			if (game.CurrentTurn != null && game.CurrentPlayer != null) {
+				CurrentPlayer = game.CurrentTurn.PlayerKey;
 			}
 		}
 	}

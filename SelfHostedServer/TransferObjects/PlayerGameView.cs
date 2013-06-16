@@ -41,7 +41,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Hand = player.Hand;
 			this.Discards = player.Discards;
 			this.DeckCount = player.Deck.Count;
-			this.CurrentTurn = new TurnView(game.CurrentTurn);
+			this.CurrentTurn = new TurnView(game, game.CurrentTurn);
 			this.Bank = game.Bank;
 		}
 	}

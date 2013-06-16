@@ -1,5 +1,6 @@
 <header>
-<h2>Current Turn</h2>
+	<h2><img {{bindAttr src="content.currentTurn.playerPhoto"}}>
+		{{content.currentTurn.playerName}}</h2>
 <div># Actions: {{content.currentTurn.actions}}</div>
 <div># Buys: {{content.currentTurn.buys}}</div>
 </header>
