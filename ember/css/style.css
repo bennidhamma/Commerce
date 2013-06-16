@@ -33,8 +33,9 @@ html, body {
   width: 120px;
   height: 180px;
   border-radius: 4px;
-  display: inline-block; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000337}}
+  display: inline-block;
+  vertical-align: top; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000338}}
   .card header {
     background: #eee;
     font-weight: bold;
@@ -42,12 +43,12 @@ html, body {
     font-size: 1em;
     text-align: center;
     margin-bottom: 2px; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000345}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000346}}
   .card img {
     width: 120px;
     height: 80px;
     background: white; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000350}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000351}}
   .card p {
     font-size: 0.8em;
     line-height: 15px;
@@ -56,11 +57,11 @@ html, body {
     margin: 3px 0;
     border-radius: 3px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000361}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000362}}
 .bank .stack {
   display: inline-block;
   margin-right: 10px; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000364}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000365}}
   .bank .stack .card {
     position: relative;
     display: block;
