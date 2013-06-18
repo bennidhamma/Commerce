@@ -28,7 +28,6 @@ namespace ForgottenArts.Commerce
 		public List<PlayerGame> Players {get; set;}
 		public Dictionary<string, int> Bank {get; set;}
 		public List<Offer> Trades {get; set;}
-		public List<LogEntry> Log {get; set;}
 		public Win Win {get;set;}
 
 		public Game ()
@@ -37,7 +36,6 @@ namespace ForgottenArts.Commerce
 			Players = new List<PlayerGame> ();
 			Bank = new Dictionary<string, int> ();
 			Trades = new List<Offer> ();
-			Log = new List<LogEntry> ();
 			CurrentTurn = new Turn ();
 		} 
 
@@ -55,6 +53,7 @@ namespace ForgottenArts.Commerce
 		{
 			foreach (var p in this.Players) {
 				if (p.PlayerKey == playerKey) {
+					p.Game = this;
 					return p;
 				}
 			}
@@ -65,6 +64,22 @@ namespace ForgottenArts.Commerce
 			get {
 				var key = CurrentTurn.PlayerKey ?? Players[0].PlayerKey;
 				return GetPlayer(key);
+			}
+		}
+
+		public void Log (PlayerGame player, string message)
+		{
+			var entry = new LogEntry () {
+				Message = message,
+				Timestamp = DateTime.Now
+			};
+			if (player != null) {
+				player.PublishLogEntry (entry);
+			}
+			else {
+				foreach (var p in this.Players) {
+					p.PublishLogEntry (entry);
+				}
 			}
 		}
 	}

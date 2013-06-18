@@ -5,7 +5,7 @@ HasAttack: true
 Effect: |
   for player in players
     if player != current_player
-      log current_player, "#{player.name} has #{player.hand[0]"
+      game.log current_player, "#{player.name} has #{player.hand[0]"
     end
   end
 Cost:

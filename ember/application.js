@@ -85,6 +85,9 @@ var GameController = Ember.Controller.extend({
 		for (var i = 0; i < game.hand.length; i++) {
 			game.hand[i] = cards[game.hand[i]];
 		}
+		for (i = 0; i < game.discards.length; i++) {
+			game.discards[i] = cards[game.discards[i]];
+		}
 		this.set('content', game);
 	}
 });

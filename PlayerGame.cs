@@ -16,10 +16,13 @@ namespace ForgottenArts.Commerce
 		public List<string> Hand {get; set;}
 		public Stack<string> Discards {get; set;}
 
+		public List<LogEntry> Log { get; set; }
+
 		public PlayerGame () {
 			Deck = new Stack<string> ();
 			Hand = new List<string> ();
 			Discards = new Stack<string> ();
+			Log = new List<LogEntry> ();
 		}
 
 		public IEnumerable<string> AllCards {
@@ -86,6 +89,11 @@ namespace ForgottenArts.Commerce
 			set {
 				game = value;
 			}
+		}
+
+		public void PublishLogEntry (LogEntry entry)
+		{
+			this.Log.Add (entry);
 		}
 
 		public override string ToString ()

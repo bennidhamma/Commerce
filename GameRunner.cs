@@ -223,6 +223,7 @@ namespace ForgottenArts.Commerce
 			game.CurrentTurn.CurrentCard = cardKey;
 			ScriptManager.Manager.ExecuteCardEffect (player.Game, card);
 			player.Hand.Remove (cardKey);
+			player.Discards.Push (cardKey);
 			game.CurrentTurn.CurrentCard = null;
 			game.CurrentTurn.Actions--;
 			MaybeNewTurn(game);
