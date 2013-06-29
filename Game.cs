@@ -27,6 +27,7 @@ namespace ForgottenArts.Commerce
 		public Turn CurrentTurn {get; set;}
 		public List<PlayerGame> Players {get; set;}
 		public Dictionary<string, int> Bank {get; set;}
+		public Dictionary<string, int> TradeCards {get; set;}
 		public List<Offer> Trades {get; set;}
 		public Win Win {get;set;}
 
@@ -35,6 +36,7 @@ namespace ForgottenArts.Commerce
 			Status = GameState.Starting;
 			Players = new List<PlayerGame> ();
 			Bank = new Dictionary<string, int> ();
+			TradeCards = new Dictionary<string, int> ();
 			Trades = new List<Offer> ();
 			CurrentTurn = new Turn ();
 		} 
@@ -81,6 +83,17 @@ namespace ForgottenArts.Commerce
 					p.PublishLogEntry (entry);
 				}
 			}
+		}
+
+		public Hex GetHex (int hexId)
+		{
+			foreach (var p in this.Players) {
+				foreach (var h in p.Hexes) {
+					if (h.Id == hexId)
+						return h;
+				}
+			}
+			return null;
 		}
 	}
 }

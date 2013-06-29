@@ -4,6 +4,7 @@ using IronRuby.Builtins;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace ForgottenArts.Commerce
 {
@@ -38,12 +39,78 @@ namespace ForgottenArts.Commerce
 			return scope;
 		}
 
-		public void ExecuteCardEffect (Game game, Card card) 
+		public void ExecuteCardAction (Game game, Card card, CardArgs args) 
 		{
 			try
 			{
-				var script = Engine.CreateScriptSourceFromString (card.Effect);
+				var script = Engine.CreateScriptSourceFromString (card.Action);
+				var scope = SetupScope(game);
+				scope.SetVariable ("hex", args.Hex);
+				script.Execute (scope);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine (e);
+			}
+		}
+
+		public int ExecuteModifyAttack (Game game, Card card) 
+		{
+			try
+			{
+				var script = Engine.CreateScriptSourceFromString (card.ModifyAttack);
 				script.Execute (SetupScope(game));
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine (e);
+			}
+		}
+
+		public int ExecuteModifyDiscovery (Game game, Card card) 
+		{
+			try
+			{
+				var script = Engine.CreateScriptSourceFromString (card.ModifyDiscovery);
+				script.Execute (SetupScope(game));
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine (e);
+			}
+		}
+
+		public void ExecuteModifyPurchaseCard (Game game, Card card, string purchaseCard, Dictionary<string, int> modifications) 
+		{
+			try
+			{
+				var script = Engine.CreateScriptSourceFromString (card.ModifyAttack);
+				script.Execute (SetupScope(game, args));
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine (e);
+			}
+		}
+
+		public void ExecuteCardEffect (Game game, Card card, CardArgs args) 
+		{
+			try
+			{
+				var script = Engine.CreateScriptSourceFromString (card.Action);
+				script.Execute (SetupScope(game, args));
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine (e);
+			}
+		}
+		public void ExecuteCardEffect (Game game, Card card, CardArgs args) 
+		{
+			try
+			{
+				var script = Engine.CreateScriptSourceFromString (card.Action);
+				script.Execute (SetupScope(game, args));
 			}
 			catch (Exception e)
 			{

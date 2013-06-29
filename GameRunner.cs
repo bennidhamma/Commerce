@@ -43,7 +43,9 @@ namespace ForgottenArts.Commerce
 			get {
 				if (cards == null) {
 					cards = new CardCatalog ();
-					cards.LoadCards ("cards");
+					cards.LoadCards ("cards/nation", CardType.Nation);
+					cards.LoadCards ("cards/technology", CardType.Technology);
+					cards.LoadCards ("cards/trade", CardType.Trade);
 				}
 				return cards;
 			}
@@ -199,7 +201,7 @@ namespace ForgottenArts.Commerce
 			return false;
 		}
 
-		public bool PlayCard (Game game, PlayerGame player, string cardKey)
+		public bool PlayCard (Game game, PlayerGame player, string cardKey, int hexId)
 		{
 			var card = Cards[cardKey];
 
@@ -220,8 +222,15 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("You don't have this card to play");
 			}
 
+			CardArgs cardArgs = null;
+			if (card.NeedsHex) {
+				cardArgs = new CardArgs () {
+					Hex = game.GetHex(hexId)
+				};
+			}
+
 			game.CurrentTurn.CurrentCard = cardKey;
-			ScriptManager.Manager.ExecuteCardEffect (player.Game, card);
+			ScriptManager.Manager.ExecuteCardEffect (player.Game, card, cardArgs);
 			player.Hand.Remove (cardKey);
 			player.Discards.Push (cardKey);
 			game.CurrentTurn.CurrentCard = null;

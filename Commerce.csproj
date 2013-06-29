@@ -49,6 +49,8 @@
     <Compile Include="RedisRepository.cs" />
     <Compile Include="RestClient\DynamicDictionary.cs" />
     <Compile Include="RestClient\RestClient.cs" />
+    <Compile Include="Hex.cs" />
+    <Compile Include="Scripting\CardArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -102,18 +104,21 @@
     <Folder Include="content\" />
     <Folder Include="Services\" />
     <Folder Include="RestClient\" />
+    <Folder Include="content\cards\nation\" />
+    <Folder Include="content\cards\technology\" />
+    <Folder Include="content\cards\trade\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="content\card-distribution.yaml" />
-    <None Include="content\cards\general.yaml" />
-    <None Include="content\cards\iron.yaml" />
-    <None Include="content\cards\marketplace.yaml" />
-    <None Include="content\cards\sawmill.yaml" />
-    <None Include="content\cards\scout.yaml" />
-    <None Include="content\cards\stone.yaml" />
-    <None Include="content\cards\wheat.yaml" />
-    <None Include="content\cards\wood.yaml" />
     <None Include="packages.config" />
     <None Include="README.txt" />
+    <None Include="content\cards\nation\marketplace.yaml" />
+    <None Include="content\cards\nation\general.yaml" />
+    <None Include="content\cards\nation\sawmill.yaml" />
+    <None Include="content\cards\nation\scout.yaml" />
+    <None Include="content\cards\trade\iron.yaml" />
+    <None Include="content\cards\trade\stone.yaml" />
+    <None Include="content\cards\trade\wheat.yaml" />
+    <None Include="content\cards\trade\wood.yaml" />
   </ItemGroup>
 </Project>

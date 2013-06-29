@@ -21,11 +21,13 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
-		public void LoadCards (string directory)
+		public void LoadCards (string directory, CardType typeOfCard)
 		{
 			var cardType = typeof(Card);
-			Config.YamlDirectoryOperator ("cards", delegate(dynamic cardObject) {
-				var card = new Card();
+			Config.YamlDirectoryOperator (directory, delegate(dynamic cardObject) {
+				var card = new Card() {
+					Type = typeOfCard
+				};
 				foreach (var key in cardObject.Keys) {
 					switch (key as string) {
 					case "Cost":

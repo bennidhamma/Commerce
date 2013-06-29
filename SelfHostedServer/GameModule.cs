@@ -117,7 +117,7 @@ namespace ForgottenArts.Commerce.Server
 			var game = repository.Get<Game>(Game.GetKey(arg.game));
 			var card = this.Bind<CardRequest>();
 			var player = game.GetPlayer(playerKey);
-			if (GameRunner.Instance.PlayCard(game, player, card.Card)) {
+			if (GameRunner.Instance.PlayCard(game, player, card.Card, card.HexId)) {
 				this.repository.Put(game.GetKey(), game);
 			}
 			return new PlayerGameView (game, player);
