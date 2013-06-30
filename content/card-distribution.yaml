@@ -1,6 +1,50 @@
 GameType: Basic
-Resources:
-  Iron: 70
-  Wood: 60
-  Wheat: 50
-  Stone: 40
+StartingDeck:
+  "One Colonist": 6
+  Ship: 2
+  Colony: 2
+TradingCards:
+  # Level 1
+  - 
+    Timber: 9
+    Wheat: 9
+  # Level 2
+  - 
+    Coffee: 9
+    Rum: 9
+    Famine: 1
+  # Level 3
+  - 
+    Cotton: 9
+    Tea: 9
+    Earthquake: 1
+  # Level 4
+  - 
+    Spices: 9
+    Tobacco: 9
+    Plague: 1
+  # Level 5
+  - 
+    Chocolate: 9
+    Sugar: 9
+    "Resource Shortage": 1  
+  # Level 6
+  - 
+    Silver: 8
+    Furs: 8
+    Treachery: 1
+  # Level 7
+  - 
+    Marble: 7
+    Oil: 7
+    Strike: 1
+  # Level 8
+  - 
+    Whiskey: 9
+    Gems: 9
+    Revolution: 1
+  # Level 9
+  - 
+    Ivory: 9
+    Gold: 9  
+    "Native Uprising": 1

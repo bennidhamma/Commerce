@@ -92,31 +92,6 @@ namespace ForgottenArts.Commerce
 				Console.WriteLine (e);
 			}
 		}
-
-		public void ExecuteCardEffect (Game game, Card card, CardArgs args) 
-		{
-			try
-			{
-				var script = Engine.CreateScriptSourceFromString (card.Action);
-				script.Execute (SetupScope(game, args));
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine (e);
-			}
-		}
-		public void ExecuteCardEffect (Game game, Card card, CardArgs args) 
-		{
-			try
-			{
-				var script = Engine.CreateScriptSourceFromString (card.Action);
-				script.Execute (SetupScope(game, args));
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine (e);
-			}
-		}
 		
 		private bool started = false;
 		public void Setup (string dllPath)

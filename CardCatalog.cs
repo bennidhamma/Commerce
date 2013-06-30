@@ -8,6 +8,8 @@ namespace ForgottenArts.Commerce
 	{
 		private Dictionary<string, Card> cards = new Dictionary<string, Card> ();
 
+		private List<Dictionary<string,int>> tradingCardLevels = new List<Dictionary<string, int>> ();
+
 		public CardCatalog ()
 		{
 		}
@@ -43,6 +45,29 @@ namespace ForgottenArts.Commerce
 				}
 				cards[card.Name] = card;
 			});
+		}
+
+		public void SetupTradingCardLevels (string source)
+		{
+			Config.LoadYamlFile (source, UpdateTradingCardLevels);
+		}
+
+		public void UpdateTradingCardLevels (dynamic gameInfo)
+		{
+			var newTradingCardLevels = new List<Dictionary<string, int>>();
+			foreach (dynamic level in gameInfo.TradingCards) {
+				var dict = new Dictionary<string, int> ();
+				foreach (string key in level.Keys) {
+					int q = Convert.ToInt32 (level[key]);
+					dict[key] = q;
+				}
+				newTradingCardLevels.Add(dict);
+			}
+			tradingCardLevels = newTradingCardLevels;
+		}
+
+		public Dictionary<string, int> GetTradeCardLevel (int level) {
+			return tradingCardLevels[level];
 		}
 
 		#region IEnumerable implementation
