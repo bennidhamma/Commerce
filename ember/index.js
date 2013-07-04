@@ -24,6 +24,7 @@ App.GameRoute = require('./routes/game_route');
 App.GameListRoute = require('./routes/game_list_route');
 App.CardView = require('./views/card_view');
 App.FriendThumbView = require('./views/friend_thumb_view');
+App.HexView = require('./views/hex_view');
 
 require('./routes');
 

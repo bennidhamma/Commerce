@@ -1,3 +1,5 @@
+var Events = require('../vendor/pubsub.js');
+
 var GameController = Ember.Controller.extend({
   'isMyTurn': function () { 
 		return true;
@@ -38,9 +40,16 @@ var GameController = Ember.Controller.extend({
 	  switch (cardSource) {
 	  case 'hand':
 			if (this.get('isActionPhase')) {
-				game.playCard(card, function (game) {
-					self.prepareGame(game);
-				});
+				var cardObject = this.get('cards')[card];
+				if (cardObject.needsHex) {
+					alert('Select a hex (double click)');
+					var handle = Events.subscribe('/hex/selected', function(hexId) {
+						self.playCard(card, hexId);
+						Events.unsubscribe(handle);
+					});
+				} else {
+					this.playCard(card);
+				}
 			}
 			break;
     case 'bank':
@@ -52,6 +61,14 @@ var GameController = Ember.Controller.extend({
 			break;
 		}
 		console.log ('selectCard', arguments);
+	},
+
+	'playCard': function(card, hexId) {
+		var self = this;
+		var game = this.get('content');
+		game.playCard(card, hexId, function (game) {
+			self.prepareGame(game);
+		});
 	},
 
   'skip': function (phase) {

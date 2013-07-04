@@ -35,6 +35,22 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   
 });
 
+Ember.TEMPLATES['hex'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+helpers = helpers || Ember.Handlebars.helpers; data = data || {};
+  var buffer = '', hashTypes, escapeExpression=this.escapeExpression;
+
+
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "currentPopulation", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" / ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "populationLimit", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES['application'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [2,'>= 1.0.0-rc.3'];
 helpers = helpers || Ember.Handlebars.helpers; data = data || {};
@@ -138,18 +154,12 @@ function program1(depth0,data) {
 function program3(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n	<div ");
-  hashTypes = {'class': "STRING"};
-  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
-    'class': (":hex hasColony")
-  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">\n		");
-  hashTypes = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "currentPopulation", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(" / ");
-  hashTypes = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "populationLimit", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n	</div>\n	");
+  data.buffer.push("\n	");
+  hashTypes = {'content': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.HexView", {hash:{
+    'content': ("")
+  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n");
   return buffer;
   }
 
@@ -230,7 +240,7 @@ function program11(depth0,data) {
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "content.hand", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</section>\n\n<h2>Hexes</h2>\n<section class=\"hexes\">\n	");
+  data.buffer.push("\n</section>\n\n<h2>Hexes</h2>\n<section class=\"hexes\">\n");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "content.hexes", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }

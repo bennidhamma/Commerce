@@ -20,8 +20,9 @@ var Game = Ember.Object.extend({
 			});
 	},
 
-	playCard: function (card, process) {
-    this.sendCommand('playCard', {card:card}, process);
+	playCard: function (card, hexId, process) {
+		var args = {card:card, hexId: hexId};
+    this.sendCommand('playCard', args, process);
 	},
 
 	buyCard: function (card, process) {
