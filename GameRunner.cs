@@ -117,8 +117,14 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
-		public void NewTurn (Game game)
+		public void NewTurn (Game game, bool checkForTrades = true)
 		{
+			if (checkForTrades && game.CurrentTurn.Count > 0 && game.CurrentTurn.Count % game.Players.Count == 0)
+			{
+				StartTradingPhase (game);
+				return;
+			}
+
 			if (game.CurrentTurn.Count > 0 && game.CurrentPlayer != null) {
 				// Discard cards, draw new cards, shuffling if necessary.
 				var currentPlayer = game.CurrentPlayer;
@@ -134,6 +140,61 @@ namespace ForgottenArts.Commerce
 			game.CurrentTurn.Count++;
 			CheckForGameEnd (game);
 			//TODO: notify new current player it is their turn.
+		}
+
+		public void StartTradingPhase (Game game)
+		{
+			game.Status = GameState.Trading;
+
+			// Ensure that trade deck is shuffled and in a healthy state.
+			SetupTradeDeck (game);
+
+			// For each player and distribute trade cards, starting with players with the fewest number of colonies.
+			foreach (var player in from p in game.Players orderby p.Hexes.Count(h => h.HasColony) select p) {
+				int colonyCount = player.Hexes.Count (h => h.HasColony);
+				for (int level = 0; level < colonyCount; ++level) {
+					// Continue on to next trade card level if all the trade cards at this level have run out.
+					if (game.TradeCards [level].Count == 0)
+						continue;
+					// Move the trade card from the game trade cards pile to the player pile.
+					player.TradeCards.Add (game.TradeCards [level] [0]);
+					game.TradeCards [level].RemoveAt (0);
+				}
+			}
+
+			// TODO: setup thread to expire trading phase, receive offers, matches, etc.
+
+			// For now, we are done with trading.
+			EndTradingPhase (game);
+		}
+
+		public void EndTradingPhase (Game game)
+		{
+			// Sort players in order of smallest population - colonies count for 5.
+			game.Players = new List<PlayerGame>(game.Players.OrderBy(p => p.Hexes.Sum(h => h.HasColony ? 5 : h.CurrentPopulation)));
+
+			game.Status = GameState.Running;
+			NewTurn (game, false);
+		}
+
+		void SetupTradeDeck (Game game)
+		{
+			if (true || game.TradeCards == null)
+			{
+				game.TradeCards = new List<List<string>> ();
+				for (int level = 0; level < this.cards.NumberOfTradeLevels; ++level) {
+					var cardsAtLevel = cards.GetTradeCardLevel(level);
+					game.TradeCards.Add(new List<string> ());
+					foreach (var kvp in cardsAtLevel) {
+						for (int i = 0; i < kvp.Value; ++i) {
+							game.TradeCards[level].Add (kvp.Key);
+						}
+					}
+				}
+			}
+			for (int i = 0; i < game.TradeCards.Count; i++) {
+				game.TradeCards[i].Shuffle();
+			}
 		}
 
 		public bool CheckForGameEnd (Game game)

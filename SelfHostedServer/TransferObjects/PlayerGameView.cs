@@ -50,6 +50,11 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
+		public List<string> TradeCards {
+			get;
+			set;
+		}
+
 		public PlayerGameView (Game game, PlayerGame player)
 		{
 			this.Id = game.Id;
@@ -61,6 +66,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Log = player.Log;
 			this.Hexes = player.Hexes;
 			this.Gold = player.Gold;
+			this.TradeCards = player.TradeCards;
 		}
 	}
 }

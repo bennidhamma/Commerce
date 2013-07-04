@@ -13,6 +13,8 @@ namespace ForgottenArts.Commerce
 		private Dictionary<string, int> startingDeck = new Dictionary<string, int> ();
 		private Dictionary<string, int> startingBank = new Dictionary<string, int> ();
 
+		public int NumberOfTradeLevels { get { return tradingCardLevels.Count; } }
+
 		public Dictionary<string, int> StartingDeck {
 			get {
 				return startingDeck;
@@ -106,7 +108,7 @@ namespace ForgottenArts.Commerce
 		}
 
 		public Dictionary<string, int> GetTradeCardLevel (int level) {
-			return tradingCardLevels[level - 1];
+			return tradingCardLevels[level];
 		}
 
 		#region IEnumerable implementation

@@ -19,11 +19,6 @@ Card.reopenClass({
 					cards[card.name] = card;
 				}
 
-				// Update game hand.
-				for (var i = 0; i < game.hand.length; i++) {
-					game.hand[i] = cards[game.hand[i]];
-				}
-
 				process(cards);
 			}
 		});

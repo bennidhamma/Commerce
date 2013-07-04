@@ -91,6 +91,7 @@ var GameController = Ember.Controller.extend({
 		for (i = 0; i < game.discards.length; i++) {
 			game.discards[i] = cards[game.discards[i]];
 		}
+		game.set('discards', game.get('discards').toArray().reverse());
 		this.set('content', game);
 	},
 

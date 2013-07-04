@@ -27,7 +27,7 @@ namespace Tests
 		{
 			CardCatalog catalog = new CardCatalog();
 			catalog.SetupGameInfo ("card-distribution.yaml");
-			Assert.That (catalog.GetTradeCardLevel (1)["Timber"], Is.EqualTo(9));
+			Assert.That (catalog.GetTradeCardLevel (0)["Timber"], Is.EqualTo(9));
 		}
 
 		[Test()]

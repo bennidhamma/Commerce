@@ -89,6 +89,13 @@ html, body {
   }
 }
 
+.discards {
+	margin-left: 80px;
+	.card {
+		margin-left: -80px;
+	}
+}
+
 .bank {
 	.stack {
 		display:inline-block;

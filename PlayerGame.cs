@@ -17,7 +17,7 @@ namespace ForgottenArts.Commerce
 		public List<string> Hand {get; set;}
 		public Stack<string> Discards {get; set;}
 
-		public Stack<string> TradeCards {get; set;}
+		public List<string> TradeCards {get; set;}
 		public List<string> TechnologyCards {get; set;}
 
 		public List<Hex> Hexes {get; set;}
@@ -26,7 +26,7 @@ namespace ForgottenArts.Commerce
 
 		public PlayerGame () {
 			Deck = new Stack<string> ();
-			TradeCards = new Stack<string> ();
+			TradeCards = new List<string> ();
 			TechnologyCards = new List<string> ();
 			Hand = new List<string> ();
 			Discards = new Stack<string> ();

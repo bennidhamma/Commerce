@@ -7,6 +7,7 @@ namespace ForgottenArts.Commerce
 	{
 		Starting,
 		Running,
+		Trading,
 		Finished
 	}
 
@@ -27,7 +28,7 @@ namespace ForgottenArts.Commerce
 		public Turn CurrentTurn {get; set;}
 		public List<PlayerGame> Players {get; set;}
 		public Dictionary<string, int> Bank {get; set;}
-		public Dictionary<string, int> TradeCards {get; set;}
+		public List<List<string>> TradeCards {get; set;}
 		public List<string> Trash {get; set;}
 		public List<Offer> Trades {get; set;}
 		public Win Win {get;set;}
@@ -37,7 +38,6 @@ namespace ForgottenArts.Commerce
 			Status = GameState.Starting;
 			Players = new List<PlayerGame> ();
 			Bank = new Dictionary<string, int> ();
-			TradeCards = new Dictionary<string, int> ();
 			Trades = new List<Offer> ();
 			CurrentTurn = new Turn ();
 		} 

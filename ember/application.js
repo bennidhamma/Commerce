@@ -108,6 +108,7 @@ var GameController = Ember.Controller.extend({
 		for (i = 0; i < game.discards.length; i++) {
 			game.discards[i] = cards[game.discards[i]];
 		}
+		game.set('discards', game.get('discards').toArray().reverse());
 		this.set('content', game);
 	},
 
@@ -222,11 +223,6 @@ Card.reopenClass({
 				for(var i = 0; i < resp.length; i++) {
 					var card = Card.create(resp[i]);
 					cards[card.name] = card;
-				}
-
-				// Update game hand.
-				for (var i = 0; i < game.hand.length; i++) {
-					game.hand[i] = cards[game.hand[i]];
 				}
 
 				process(cards);
@@ -473,7 +469,7 @@ var GameRoute = Ember.Route.extend({
 	getCards: function(game, controller) {
 		App.Card.getForGame(game, function(cards) {
 			controller.set('cards', cards);
-			controller.set('content', game);
+			controller.prepareGame(game);
 		});
 	}
 

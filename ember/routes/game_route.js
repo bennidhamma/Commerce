@@ -13,7 +13,7 @@ var GameRoute = Ember.Route.extend({
 	getCards: function(game, controller) {
 		App.Card.getForGame(game, function(cards) {
 			controller.set('cards', cards);
-			controller.set('content', game);
+			controller.prepareGame(game);
 		});
 	}
 
