@@ -47,16 +47,15 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
-		public void Trash (string source, string card)
+		public void AddHex (int populationLimit, int currentPopulation = 0)
 		{
-			if (source == "Hand") {
-				if (Hand.Remove(card)) {
-					this.Game.Trash.Add(card);
-				}
-			}
-			else {
-				throw new NotImplementedException ();
-			}
+			var hex = new Hex () {
+				Id = GameRunner.Instance.Repository.NewId (),
+				PopulationLimit = populationLimit,
+				CurrentPopulation = currentPopulation,
+				HasColony = false
+			};
+			this.Hexes.Add (hex);
 		}
 
 		public bool Defends () 

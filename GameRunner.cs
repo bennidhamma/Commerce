@@ -41,12 +41,6 @@ namespace ForgottenArts.Commerce
 
 		public CardCatalog Cards {
 			get {
-				if (cards == null) {
-					cards = new CardCatalog ();
-					cards.LoadCards ("cards/nation", CardType.Nation);
-					cards.LoadCards ("cards/technology", CardType.Technology);
-					cards.LoadCards ("cards/trade", CardType.Trade);
-				}
 				return cards;
 			}
 			set {
@@ -145,33 +139,7 @@ namespace ForgottenArts.Commerce
 
 		public bool CheckForGameEnd (Game game)
 		{
-			foreach (var player in game.Players) {
-				var deck = new List<string>(player.Deck);
-				deck.AddRange (player.Hand);
-				deck.AddRange (player.Discards);
-				deck.Sort ();
-				string suit = null;
-				int longestSuitCount = 0;
-				for (int i = 0; i < deck.Count; i++) {
-					if (suit != deck[i]) {
-						suit = deck[i];
-						longestSuitCount = 0;
-					} 
-					else
-					{
-						if (++longestSuitCount >= NumberOfCardsPerSuit) {
-							// Game is over!
-							game.Win = new Win () {
-								Player = player,
-								Suit = suit
-							};
-							game.Status = GameState.Finished;
-							// TODO: notify players game is over.
-							return true;
-						}
-					}
-				}
-			}
+			// TODO: check for signal that a player has advanced to a new age.
 			return false;
 		}
 
@@ -198,9 +166,10 @@ namespace ForgottenArts.Commerce
 
 		public bool PlayCard (Game game, PlayerGame player, string cardKey, int hexId)
 		{
-			var card = Cards[cardKey];
+			var card = Cards [cardKey];
 
-			if (string.IsNullOrEmpty(card.Action)) {
+			if (string.IsNullOrEmpty (card.Action)) {
+				Console.WriteLine ("Card has no action: " + cardKey);
 				return false;
 			}
 
@@ -213,21 +182,25 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("You don't have any actions remaining");
 			}
 
-			if (!player.Hand.Contains(cardKey)) {
+			if (!player.Hand.Contains (cardKey)) {
 				throw new InvalidOperationException ("You don't have this card to play");
 			}
 
-			CardArgs cardArgs = null;
+			CardArgs cardArgs =  new CardArgs ();
 			if (card.NeedsHex) {
-				cardArgs = new CardArgs () {
-					Hex = game.GetHex(hexId)
-				};
+				cardArgs.Hex = game.GetHex(hexId);
 			}
 
 			game.CurrentTurn.CurrentCard = cardKey;
 			ScriptManager.Manager.ExecuteCardAction (player.Game, card, cardArgs);
-			player.Hand.Remove (cardKey);
-			player.Discards.Push (cardKey);
+			// Need to deal with situations like Ship cards getting Trashed during the execution.
+			if (cardArgs.TrashCard) {
+				game.Trash.Add (cardKey);
+				player.Hand.Remove (cardKey);
+			} else if (cardArgs.DiscardCard) {
+				player.Hand.Remove (cardKey);
+				player.Discards.Push (cardKey);
+			}
 			game.CurrentTurn.CurrentCard = null;
 			game.CurrentTurn.Actions--;
 			MaybeNewTurn(game);
@@ -247,25 +220,11 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("You don't have any buys remaining");
 			}
 
-			// Can the player afford it?
-			int fallShort = 0;
-			foreach (var kvp in card.Cost) {
-				fallShort += Math.Max (kvp.Value - player.Hand.Sum(c=> c == kvp.Key ? 1 : 0), 0);
+			if (card.Cost > game.CurrentTurn.Gold) {
+				throw new InvalidOperationException ("Not enough gold to purchase card");
 			}
 
-			if (fallShort < game.CurrentTurn.Gold) {
-				throw new InvalidOperationException ("Not enough resources to purchase card");
-			}
-			else {
-				game.CurrentTurn.Gold -= fallShort;
-			}
-
-			// Deduct resource costs.
-			foreach (var kvp in card.Cost) {
-				int removeCount = 0;
-				player.Hand.RemoveAll (p => p == kvp.Key && removeCount++ < kvp.Value);
-				game.Bank.Add (kvp.Key, kvp.Value);
-			}
+			game.CurrentTurn.Gold -= card.Cost;
 
 			// Add card to hand.
 			player.Discards.Push (cardKey);

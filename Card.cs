@@ -17,7 +17,7 @@ namespace ForgottenArts.Commerce
 		public string Description {get; set;}
 		public bool HasAttack {get; set;}
 		public bool NeedsHex {get; set;}
-		public Dictionary<string,int> Cost {get; set;}
+		public int Cost {get; set;}
 
 		// Action applies to Nation cards.
 		public string Action {get; set;}
@@ -30,11 +30,6 @@ namespace ForgottenArts.Commerce
 		// These apply to Trade cards.
 		public int TradeLevel {get; set;}
 		public string CalamityEffect {get; set;}
-
-		public Card ()
-		{
-			Cost = new Dictionary<string, int> ();
-		}
 	}
 }
 

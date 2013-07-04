@@ -9,6 +9,9 @@ namespace ForgottenArts.Commerce.Server
 			Config.SetupContentWatcher ();
 			var host = new Nancy.Hosting.Self.NancyHost (new Uri("http://localhost:8080"));
 			host.Start ();
+			var cards = new CardCatalog ();
+			cards.Load ();
+			GameRunner.Instance.Cards = cards;
 			ScriptManager.Manager.Setup (Config.DllPath);
 			GameRunner.Instance.Sanitize();
 			Console.ReadLine();

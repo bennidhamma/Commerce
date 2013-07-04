@@ -1,7 +1,7 @@
 Name: One Colonist
 ImageUrl: one-colonist.png
 Description: Choose a hex to land one colonist.
-HasAttack: false
+NeedsHex: true
 Action: |
   hex.add_colonist 1
 Cost: 10

@@ -10,6 +10,11 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
+		public List<Hex> Hexes {
+			get;
+			set;
+		}
+
 		public List<string> Hand {
 			get;
 			set;
@@ -35,6 +40,11 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
+		List<LogEntry> Log {
+			get;
+			set;
+		}
+
 		public PlayerGameView (Game game, PlayerGame player)
 		{
 			this.Id = game.Id;
@@ -43,6 +53,8 @@ namespace ForgottenArts.Commerce.Server
 			this.DeckCount = player.Deck.Count;
 			this.CurrentTurn = new TurnView(game, game.CurrentTurn);
 			this.Bank = game.Bank;
+			this.Log = player.Log;
+			this.Hexes = player.Hexes;
 		}
 	}
 }

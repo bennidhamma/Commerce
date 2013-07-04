@@ -46,6 +46,7 @@ namespace ForgottenArts.Commerce
 				var script = Engine.CreateScriptSourceFromString (card.Action);
 				var scope = SetupScope(game);
 				scope.SetVariable ("hex", args.Hex);
+				scope.SetVariable ("args", args);
 				script.Execute (scope);
 			}
 			catch (Exception e)

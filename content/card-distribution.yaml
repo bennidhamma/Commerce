@@ -3,13 +3,11 @@ StartingBank:
   "One Colonist": 9
   Ship: 9
   Colony: 9
-  Soldier: 9
-  Cannon: 9
   Marketplace: 9
   Sawmill: 9
 StartingDeck:
-  "One Colonist": 6
-  Ship: 2
+  "One Colonist": 2
+  Ship: 6
   Colony: 2
 TradingCards:
   # Level 1

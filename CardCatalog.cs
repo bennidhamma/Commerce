@@ -35,6 +35,13 @@ namespace ForgottenArts.Commerce
 		{
 		}
 
+		public void Load () {
+			LoadCards ("cards/nation", CardType.Nation);
+			LoadCards ("cards/technology", CardType.Technology);
+			LoadCards ("cards/trade", CardType.Trade);
+			SetupGameInfo ("card-distribution.yaml");
+		}
+
 		public Card this [string cardKey] {
 			get {
 				return cards[cardKey];
@@ -55,9 +62,8 @@ namespace ForgottenArts.Commerce
 					try {
 						var prop = cardType.GetProperty (key);
 						prop.SetValue (card, Convert.ChangeType(cardObject[key], prop.PropertyType), null);
-						break;
 					}
-					catch (Exception e) {
+					catch {
 						Console.WriteLine ("Unable to parse property " + key);
 					}
 				}

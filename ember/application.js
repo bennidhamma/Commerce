@@ -784,8 +784,8 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</p>\n<p>");
   hashTypes = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "view.cardCost", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</p>\n");
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "cost", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" gold</p>\n");
   return buffer;
   
 });
@@ -40447,12 +40447,6 @@ var CardView = Ember.View.extend({
   templateName: 'card',
 
   classNames: ['card'],
-
-  cardCost: function () {
-		var cost = this.get('context.cost');
-		return _.map(cost, function(v, k) { return v + ' ' + k; })
-		.join(', ');
-  }.property('context.cost'),
 
 	doubleClick: function(event) {
 		console.log ('card double clicked', event.currentTarget,
