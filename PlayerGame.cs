@@ -11,6 +11,7 @@ namespace ForgottenArts.Commerce
 		public string PlayerKey {get; set;}
 		public long GameId {get; set;}
 		public int Score {get; set;}
+		public int Gold {get; set;}
 
 		public Stack<string> Deck {get; set;}
 		public List<string> Hand {get; set;}

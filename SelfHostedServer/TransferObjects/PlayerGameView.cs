@@ -45,6 +45,11 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
+		public int Gold {
+			get;
+			set;
+		}
+
 		public PlayerGameView (Game game, PlayerGame player)
 		{
 			this.Id = game.Id;
@@ -55,6 +60,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Bank = game.Bank;
 			this.Log = player.Log;
 			this.Hexes = player.Hexes;
+			this.Gold = player.Gold;
 		}
 	}
 }

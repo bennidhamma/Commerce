@@ -130,7 +130,6 @@ namespace ForgottenArts.Commerce
 			}
 			game.CurrentTurn.Actions = StartingActions;
 			game.CurrentTurn.Buys = StartingBuys;
-			game.CurrentTurn.Gold = 0;
 			game.CurrentTurn.PlayerKey = game.Players[game.CurrentTurn.Count % game.Players.Count].PlayerKey;
 			game.CurrentTurn.Count++;
 			CheckForGameEnd (game);
@@ -222,11 +221,11 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("You don't have any buys remaining");
 			}
 
-			if (card.Cost > game.CurrentTurn.Gold) {
+			if (card.Cost > game.CurrentPlayer.Gold) {
 				throw new InvalidOperationException ("Not enough gold to purchase card");
 			}
 
-			game.CurrentTurn.Gold -= card.Cost;
+			game.CurrentPlayer.Gold -= card.Cost;
 
 			// Add card to hand.
 			player.Discards.Push (cardKey);

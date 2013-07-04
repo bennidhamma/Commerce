@@ -18,6 +18,8 @@ module.exports = config;
 var Events = require('../vendor/pubsub.js');
 
 var GameController = Ember.Controller.extend({
+	'notification': '',
+
   'isMyTurn': function () { 
 		return true;
 	},
@@ -59,10 +61,11 @@ var GameController = Ember.Controller.extend({
 			if (this.get('isActionPhase')) {
 				var cardObject = this.get('cards')[card];
 				if (cardObject.needsHex) {
-					alert('Select a hex (double click)');
+					this.notify('Select a hex', 0);
 					var handle = Events.subscribe('/hex/selected', function(hexId) {
 						self.playCard(card, hexId);
 						Events.unsubscribe(handle);
+						self.unnotify();
 					});
 				} else {
 					this.playCard(card);
@@ -106,7 +109,21 @@ var GameController = Ember.Controller.extend({
 			game.discards[i] = cards[game.discards[i]];
 		}
 		this.set('content', game);
+	},
+
+  'notify': function (message, duration) {
+		this.set('notification', message);
+		if (duration) {
+			$('.notification-bar').slideDown().delay(duration).slideUp();
+		} else {
+			$('.notification-bar').slideDown();
+		}
+	},
+
+	'unnotify': function () {
+		$('.notification-bar').slideUp();
 	}
+		
 });
 
 module.exports = GameController;
@@ -717,7 +734,10 @@ function program11(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<header>\n	<h2><img ");
+  data.buffer.push("<section class=notification-bar style=display:none>\n	");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "notification", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n</section>\n\n<header>\n	<h2><img ");
   hashTypes = {'src': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'src': ("content.currentTurn.playerPhoto")
@@ -731,7 +751,10 @@ function program11(depth0,data) {
   data.buffer.push("</div>\n<div># Buys: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "content.currentTurn.buys", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</div>\n</header>\n\n<h2>Hand</h2>\n<section class=\"hand\">\n");
+  data.buffer.push("</div>\n</header>\n\n<h2>Gold: ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "content.gold", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("</h2>\n<h2>Hand</h2>\n<section class=\"hand\">\n");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "content.hand", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }

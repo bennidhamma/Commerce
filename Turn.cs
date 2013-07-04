@@ -8,7 +8,6 @@ namespace ForgottenArts.Commerce
 		public string PlayerKey { get; set; }
 		public int Actions {get; set;}
 		public int Buys {get; set;}
-		public int Gold {get; set;}
 
 		// Current Card is useful for defensive scripts to know if they can 
 		// deflect an attack.

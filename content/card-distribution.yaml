@@ -5,10 +5,12 @@ StartingBank:
   Colony: 9
   Marketplace: 9
   Sawmill: 9
+  Gold: 9
 StartingDeck:
-  "One Colonist": 2
-  Ship: 6
+  "One Colonist": 4
+  Ship: 2
   Colony: 2
+  Gold: 2
 TradingCards:
   # Level 1
   - 
@@ -52,5 +54,5 @@ TradingCards:
   # Level 9
   - 
     Ivory: 9
-    Gold: 9  
+    "Gold Bullion": 9  
     "Native Uprising": 1

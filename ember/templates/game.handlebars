@@ -1,3 +1,7 @@
+<section class=notification-bar style=display:none>
+	{{notification}}
+</section>
+
 <header>
 	<h2><img {{bindAttr src="content.currentTurn.playerPhoto"}}>
 		{{content.currentTurn.playerName}}</h2>
@@ -5,6 +9,7 @@
 <div># Buys: {{content.currentTurn.buys}}</div>
 </header>
 
+<h2>Gold: {{content.gold}}</h2>
 <h2>Hand</h2>
 <section class="hand">
 {{#each content.hand}}

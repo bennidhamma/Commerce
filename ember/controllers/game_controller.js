@@ -1,6 +1,8 @@
 var Events = require('../vendor/pubsub.js');
 
 var GameController = Ember.Controller.extend({
+	'notification': '',
+
   'isMyTurn': function () { 
 		return true;
 	},
@@ -42,10 +44,11 @@ var GameController = Ember.Controller.extend({
 			if (this.get('isActionPhase')) {
 				var cardObject = this.get('cards')[card];
 				if (cardObject.needsHex) {
-					alert('Select a hex (double click)');
+					this.notify('Select a hex', 0);
 					var handle = Events.subscribe('/hex/selected', function(hexId) {
 						self.playCard(card, hexId);
 						Events.unsubscribe(handle);
+						self.unnotify();
 					});
 				} else {
 					this.playCard(card);
@@ -89,7 +92,21 @@ var GameController = Ember.Controller.extend({
 			game.discards[i] = cards[game.discards[i]];
 		}
 		this.set('content', game);
+	},
+
+  'notify': function (message, duration) {
+		this.set('notification', message);
+		if (duration) {
+			$('.notification-bar').slideDown().delay(duration).slideUp();
+		} else {
+			$('.notification-bar').slideDown();
+		}
+	},
+
+	'unnotify': function () {
+		$('.notification-bar').slideUp();
 	}
+		
 });
 
 module.exports = GameController;
