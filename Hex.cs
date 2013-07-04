@@ -8,6 +8,11 @@ namespace ForgottenArts.Commerce
 		public int PopulationLimit {get; set;}
 		public int CurrentPopulation {get; set;}
 		public bool HasColony {get; set;}
+
+		public void AddColonist (int count = 1)
+		{
+			CurrentPopulation++;
+		}
 	}
 }
 

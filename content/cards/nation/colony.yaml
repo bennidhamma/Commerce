@@ -4,7 +4,7 @@ Description: |
   Builds a colony on a hex. Needs at least 6 colonists.
 NeedsHex: true
 Action: |
-  if hex.population_limit >= 6 and not hex.has_colony
+  if hex.current_population >= 6 and not hex.has_colony
     hex.has_colony = true
     game.log("#{current_player.player.display_name} built a colony.")
   end

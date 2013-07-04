@@ -1,7 +1,8 @@
 Name: One Colonist
 ImageUrl: one-colonist.png
-Description: Choose a hex to land one colonist.
+Description: Choose a hex to land one colonist. +1 Action.
 NeedsHex: true
 Action: |
-  hex.add_colonist 1
+  hex.add_colonist
+  turn.actions += 1
 Cost: 10

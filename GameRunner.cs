@@ -192,7 +192,9 @@ namespace ForgottenArts.Commerce
 			}
 
 			game.CurrentTurn.CurrentCard = cardKey;
-			ScriptManager.Manager.ExecuteCardAction (player.Game, card, cardArgs);
+			if (!ScriptManager.Manager.ExecuteCardAction (player.Game, card, cardArgs)) {
+				return false;
+			}
 			// Need to deal with situations like Ship cards getting Trashed during the execution.
 			if (cardArgs.TrashCard) {
 				game.Trash.Add (cardKey);

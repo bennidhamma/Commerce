@@ -40604,7 +40604,7 @@ var Events = require('../vendor/pubsub.js');
 
 var HexView = Ember.View.extend({
 	templateName: 'hex',
-	classNameBindings: ['hasColony'],
+	classNameBindings: ['context.hasColony'],
 	classNames: ['hex'],
 
 	doubleClick: function(event) {
