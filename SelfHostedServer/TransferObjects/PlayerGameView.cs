@@ -40,7 +40,7 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
-		List<LogEntry> Log {
+		public List<LogEntry> Log {
 			get;
 			set;
 		}

@@ -1,7 +1,7 @@
 Name: Colony
 ImageUrl: colony.png
 Description: | 
-  Builds a colony on a hex if there are at least 6 colonists.
+  Builds a colony on a hex. Needs at least 6 colonists.
 NeedsHex: true
 Action: |
   if hex.population_limit >= 6 and not hex.has_colony

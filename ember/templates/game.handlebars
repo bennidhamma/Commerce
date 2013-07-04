@@ -12,6 +12,15 @@
 {{/each}}
 </section>
 
+<h2>Hexes</h2>
+<section class="hexes">
+	{{#each content.hexes}}
+	<div {{bindAttr class=":hex hasColony"}}>
+		{{currentPopulation}} / {{populationLimit}}
+	</div>
+	{{/each}}	
+</section>
+
 <h2>Deck Count: {{content.deckCount}}</h2>
 
 <h2>Discards</h2>
