@@ -1,0 +1,24 @@
+Name: Ship
+ImageUrl: ship.png
+Description: Roll on the Discovery Table.
+HasAttack: false
+Effect: |
+  roll = 1 + rand(100)
+  pop = 1 + rand(6)
+  # Allow other cards to modify discovery roll.
+  case roll
+  when 1..10
+    current_player.trash "Hand", "Ship"
+    log = "lost a ship"
+  when 11..60
+    log = "found nothing"
+  when 61..90
+    current_player.add_hex pop
+    log = "found a hex"
+  else
+    current_player.add hex pop (1 + rand(6))
+    log = "found a hex with friendly natives"
+  end
+  game.log("#{current_player.player.display_name} " +
+    "rolled on the discovery table and " + log)  
+Cost: 50

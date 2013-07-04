@@ -19,22 +19,22 @@ namespace Tests
 		public void LoadCardsTest ()
 		{
 			CardCatalog catalog = new CardCatalog();
-			catalog.LoadCards("cards/nation");
+			catalog.LoadCards("cards/nation", CardType.Nation);
 		}
 
 		[Test()]
 		public void LoadTradingCardsTest ()
 		{
 			CardCatalog catalog = new CardCatalog();
-			catalog.SetupTradingCardLevels ("card-distribution.yaml");
-			Assert.That (catalog.GetTradeCardLevel (1)["TImber"], Is.EqualTo(9));
+			catalog.SetupGameInfo ("card-distribution.yaml");
+			Assert.That (catalog.GetTradeCardLevel (1)["Timber"], Is.EqualTo(9));
 		}
 
 		[Test()]
 		public void PlayCardTest ()
 		{
 			CardCatalog catalog = new CardCatalog();
-			catalog.LoadCards("cards");
+			catalog.LoadCards("cards/nation", CardType.Nation);
 
 			Game g = new Game ();
 			PlayerGame p1 = new PlayerGame () { PlayerKey = "1" };

@@ -1,0 +1,11 @@
+Name: Colony
+ImageUrl: colony.png
+Description: | 
+  Builds a colony on a hex if there are at least 6 colonists.
+HasAttack: false
+Action: |
+  if hex.population_limit >= 6 and not hex.has_city
+    hex.has_city = true
+    game.log("#{current_player.player.display_name} built a city.")
+  end
+Cost: 50

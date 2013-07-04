@@ -1,8 +1,7 @@
 Name: Marketplace
 ImageUrl: marketplace.png
 Description: +1 Buy, +1 Action
-Effect: |
+Action: |
   turn.actions += 1
   turn.buys += 1
-Cost: 
-  Wood: 1
+Cost: 40

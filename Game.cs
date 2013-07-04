@@ -28,6 +28,7 @@ namespace ForgottenArts.Commerce
 		public List<PlayerGame> Players {get; set;}
 		public Dictionary<string, int> Bank {get; set;}
 		public Dictionary<string, int> TradeCards {get; set;}
+		public List<string> Trash {get; set;}
 		public List<Offer> Trades {get; set;}
 		public Win Win {get;set;}
 
@@ -67,6 +68,11 @@ namespace ForgottenArts.Commerce
 				var key = CurrentTurn.PlayerKey ?? Players[0].PlayerKey;
 				return GetPlayer(key);
 			}
+		}
+
+		public void Log (string message)
+		{
+			Log (null, message);
 		}
 
 		public void Log (PlayerGame player, string message)

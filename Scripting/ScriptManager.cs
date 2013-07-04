@@ -59,12 +59,13 @@ namespace ForgottenArts.Commerce
 			try
 			{
 				var script = Engine.CreateScriptSourceFromString (card.ModifyAttack);
-				script.Execute (SetupScope(game));
+				return script.Execute (SetupScope(game));
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine (e);
 			}
+			return 0;
 		}
 
 		public int ExecuteModifyDiscovery (Game game, Card card) 
@@ -72,12 +73,13 @@ namespace ForgottenArts.Commerce
 			try
 			{
 				var script = Engine.CreateScriptSourceFromString (card.ModifyDiscovery);
-				script.Execute (SetupScope(game));
+				return script.Execute (SetupScope(game));
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine (e);
 			}
+			return 0;
 		}
 
 		public void ExecuteModifyPurchaseCard (Game game, Card card, string purchaseCard, Dictionary<string, int> modifications) 
@@ -85,7 +87,9 @@ namespace ForgottenArts.Commerce
 			try
 			{
 				var script = Engine.CreateScriptSourceFromString (card.ModifyAttack);
-				script.Execute (SetupScope(game, args));
+				var scope = SetupScope(game);
+				scope.SetVariable ("mods", modifications);
+				script.Execute (SetupScope(game));
 			}
 			catch (Exception e)
 			{

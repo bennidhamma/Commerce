@@ -1,4 +1,12 @@
 GameType: Basic
+StartingBank:
+  "One Colonist": 9
+  Ship: 9
+  Colony: 9
+  Soldier: 9
+  Cannon: 9
+  Marketplace: 9
+  Sawmill: 9
 StartingDeck:
   "One Colonist": 6
   Ship: 2

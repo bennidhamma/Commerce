@@ -4,7 +4,7 @@ HasAttack: true
 Description: |
   Other players remove cards from the top of their hand
   until they have only three cards left.
-Effect: |
+Action: |
   for player in players
     next if player == current_player
     next if player.defends
@@ -12,5 +12,4 @@ Effect: |
       player.hand.remove_at 0
     end
   end
-Cost:
-  Iron: 2
+Cost: 30

@@ -47,6 +47,18 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		public void Trash (string source, string card)
+		{
+			if (source == "Hand") {
+				if (Hand.Remove(card)) {
+					this.Game.Trash.Add(card);
+				}
+			}
+			else {
+				throw new NotImplementedException ();
+			}
+		}
+
 		public bool Defends () 
 		{
 			//TODO: scan cards in hand, looking for card with defensive actoion
