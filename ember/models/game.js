@@ -1,3 +1,4 @@
+var Events = require('../vendor/pubsub.js');
 var _ = require('../vendor/underscore-min')
 var config = require('../config');
 
@@ -15,22 +16,26 @@ var Game = Ember.Object.extend({
 				},
 				success: function(resp) {
 					var game = App.Game.create(resp);
-					process(game);
+					Events.publish('/game/update', [game]);
 				}
 			});
 	},
 
 	playCard: function (card, hexId, process) {
 		var args = {card:card, hexId: hexId};
-    this.sendCommand('playCard', args, process);
+    this.sendCommand('playCard', args);
 	},
 
 	buyCard: function (card, process) {
-    this.sendCommand('buyCard', {card:card}, process);
+    this.sendCommand('buyCard', {card:card});
   },
 
   skip: function (phase, process) {
-    this.sendCommand('skip', {phase:phase}, process);
+    this.sendCommand('skip', {phase:phase});
+	},
+
+	redeem: function (cards) {
+		this.sendCommand('redeem', {cards: cards});
 	}
 });
 

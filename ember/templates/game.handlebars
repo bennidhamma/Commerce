@@ -29,6 +29,9 @@
 	{{#each content.tradeCards}}
 		{{view App.CardView content=this cardSource="tradeCards"}}
 	{{/each}}
+	{{#if hasCardsToRedeem}}
+	<button {{action redeem}}>Redeem Trade Cards</button>
+	{{/if}}
 </section>
 
 <h2>Deck Count: {{content.deckCount}}</h2>

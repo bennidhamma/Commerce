@@ -32,6 +32,7 @@ namespace ForgottenArts.Commerce.Server
 			Post["/game/{game}/playCard"] = PlayCard;
 			Post["/game/{game}/buyCard"] = BuyCard;
 			Post["/game/{game}/skip"] = Skip;
+			Post["/game/{game}/redeem"] = Redeem;
 		}
 
 		public dynamic CrossOriginSetup (dynamic parameters)
@@ -116,40 +117,45 @@ namespace ForgottenArts.Commerce.Server
 			return new PlayerGameView (game, player);
 		}
 
-		dynamic PlayCard (dynamic arg)
+		PlayerGameView GenericAction<T>(long gameId, Func<Game, PlayerGame, T, bool> func)
 		{
 			var playerKey = this.Request.Headers["Player"].First();
-			var game = repository.Get<Game>(Game.GetKey(arg.game));
-			var card = this.Bind<CardRequest>();
+			var game = repository.Get<Game>(Game.GetKey(gameId));
 			var player = game.GetPlayer(playerKey);
-			if (GameRunner.Instance.PlayCard(game, player, card.Card, card.HexId)) {
+			var request = this.Bind<T>();
+			if (func(game, player, request)) {
 				this.repository.Put(game.GetKey(), game);
 			}
 			return new PlayerGameView (game, player);
+		}
+
+		dynamic PlayCard (dynamic arg)
+		{
+			PlayerGameView result = GenericAction<CardRequest>((long)arg.game, delegate(Game game, PlayerGame player, CardRequest card) {
+				return GameRunner.Instance.PlayCard(game, player, card.Card, card.HexId);
+			});
+			return result;
 		}
 
 		dynamic BuyCard (dynamic arg)
 		{
-			var playerKey = this.Request.Headers["Player"].First();
-			var game = repository.Get<Game>(Game.GetKey(arg.game));
-			var card = this.Bind<CardRequest>();
-			var player = game.GetPlayer(playerKey);
-			if (GameRunner.Instance.Buy(game, player, card.Card)) {
-				this.repository.Put(game.GetKey(), game);
-			}
-			return new PlayerGameView (game, player);
+			return GenericAction<CardRequest>((long)arg.game, delegate(Game game, PlayerGame player, CardRequest card) {
+				return GameRunner.Instance.Buy(game, player, card.Card);
+			});
 		}
 
 		dynamic Skip (dynamic arg)
 		{
-			var playerKey = this.Request.Headers["Player"].First();
-			var game = repository.Get<Game>(Game.GetKey(arg.game));
-			var skip = this.Bind<SkipRequest>();
-			var player = game.GetPlayer(playerKey);
-			if (GameRunner.Instance.Skip(game, player, skip.Phase)) {
-				this.repository.Put(game.GetKey(), game);
-			}
-			return new PlayerGameView (game, player);
+			return GenericAction<SkipRequest>((long)arg.game, delegate(Game game, PlayerGame player, SkipRequest skip) {
+				return GameRunner.Instance.Skip(game, player, skip.Phase);
+			});
+		}
+
+		dynamic Redeem (dynamic arg)
+		{
+			return GenericAction<RedeemRequest>((long)arg.game, delegate(Game game, PlayerGame player, RedeemRequest redeem) {
+				return GameRunner.Instance.RedeemTradeCards(game, player, redeem.Cards);
+			});
 		}
 	}
 }

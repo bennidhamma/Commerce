@@ -33,12 +33,14 @@ var CardView = Ember.View.extend({
 		return items;
 	},
 
-	doubleClick: function(event) {
-		console.log ('card double clicked', event.currentTarget,
-			this.get('cardSource'));
+	click: function(event) {
+		var card = this.get('context');
+		var name = card.get('name');
+		var cardSource = this.get('cardSource');
+		console.log ('card double clicked', event.currentTarget, cardSource);
 
-		this.get('controller').send('selectCard', this.get('context.name'), 
-			this.get('cardSource'));
+		this.get('controller').send('selectCard', name, cardSource,
+				event.currentTarget);
 	}
 });
 

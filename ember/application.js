@@ -19,7 +19,13 @@ var Events = require('../vendor/pubsub.js');
 var _ = require('../vendor/underscore-min')
 
 var GameController = Ember.Controller.extend({
-	'notification': '',
+	notification: '',
+
+	cardsToRedeem: [],
+
+	hasCardsToRedeem: function () {
+		return this.cardsToRedeem.length;
+	}.property('cardsToRedeem.@each'),
 
   'isMyTurn': function () { 
 		return true;
@@ -54,7 +60,7 @@ var GameController = Ember.Controller.extend({
 		return ret;
 	}.property('content.bank'),
 
-	'selectCard': function (card, cardSource) {
+	'selectCard': function (card, cardSource, elem) {
 		var self = this;
 		var game = this.get('content');
 	  switch (cardSource) {
@@ -75,32 +81,50 @@ var GameController = Ember.Controller.extend({
 			break;
     case 'bank':
 			if (this.get('isBuyPhase')) {
-				game.buyCard(card, function (game) {
-					self.prepareGame(game);
-				});
+				game.buyCard(card);
 			}
 			break;
+		case 'tradeCards':
+			if (this.get('isMyTurn')) {
+				elem = $(elem);
+				if (elem.hasClass('selected')) {
+					elem.removeClass('selected');
+					var idx = this.cardsToRedeem.indexOf(card);
+					if (idx > -1) {
+						this.cardsToRedeem.removeAt(idx);
+					}
+				} else {
+					this.cardsToRedeem.pushObject(card);
+					elem.addClass('selected');
+				}
+			}
 		}
-		console.log ('selectCard', arguments);
 	},
 
 	'playCard': function(card, hexId) {
 		var self = this;
 		var game = this.get('content');
-		game.playCard(card, hexId, function (game) {
-			self.prepareGame(game);
-		});
+		game.playCard(card, hexId);
+	},
+
+	'redeem': function() {
+		if (!this.get('isMyTurn')) {
+			return;
+		}
+		var game = this.get('content');
+		game.redeem(this.cardsToRedeem);
+		this.set('cardsToRedeem', []);
+		$('.card.Trade.selected').removeClass('selected');
 	},
 
   'skip': function (phase) {
 		var game = this.get('content');
 		var self = this;	
-		game.skip(phase, function (game) {
-			self.prepareGame(game);
-		});
+		game.skip(phase);
   },
 
 	'prepareGame': function (game) {
+		this.set('cardsToRedeem', []);
 		var cards = this.get('cards');
 		// Update game hand.
 		for (var i = 0; i < game.hand.length; i++) {
@@ -350,6 +374,7 @@ Friend.reopenClass({
 module.exports = Friend;
 
 });require.register("models/game.js", function(module, exports, require, global){
+var Events = require('../vendor/pubsub.js');
 var _ = require('../vendor/underscore-min')
 var config = require('../config');
 
@@ -367,22 +392,26 @@ var Game = Ember.Object.extend({
 				},
 				success: function(resp) {
 					var game = App.Game.create(resp);
-					process(game);
+					Events.publish('/game/update', [game]);
 				}
 			});
 	},
 
 	playCard: function (card, hexId, process) {
 		var args = {card:card, hexId: hexId};
-    this.sendCommand('playCard', args, process);
+    this.sendCommand('playCard', args);
 	},
 
 	buyCard: function (card, process) {
-    this.sendCommand('buyCard', {card:card}, process);
+    this.sendCommand('buyCard', {card:card});
   },
 
   skip: function (phase, process) {
-    this.sendCommand('skip', {phase:phase}, process);
+    this.sendCommand('skip', {phase:phase});
+	},
+
+	redeem: function (cards) {
+		this.sendCommand('redeem', {cards: cards});
 	}
 });
 
@@ -468,6 +497,8 @@ module.exports = GameListRoute;
 
 
 });require.register("routes/game_route.js", function(module, exports, require, global){
+var Events = require('../vendor/pubsub.js');
+
 var GameRoute = Ember.Route.extend({
 	model: function (params) {
 		return App.Game.create({id: params.game_id});
@@ -475,6 +506,12 @@ var GameRoute = Ember.Route.extend({
 
 	setupController: function (controller, gameSummary) {
 		var route = this;
+		
+		// Listen for game updates.
+		Events.subscribe('/game/update', function(game) {
+			controller.prepareGame(game);
+		});
+
 		App.Game.find(gameSummary.id, function (game) {
 			route.getCards(game, controller);
 		});
@@ -701,6 +738,16 @@ function program5(depth0,data) {
 function program7(depth0,data) {
   
   var buffer = '', hashTypes;
+  data.buffer.push("\n	<button ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "redeem", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Redeem Trade Cards</button>\n	");
+  return buffer;
+  }
+
+function program9(depth0,data) {
+  
+  var buffer = '', hashTypes;
   data.buffer.push("\n	");
   hashTypes = {'content': "ID",'cardSource': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
@@ -711,7 +758,7 @@ function program7(depth0,data) {
   return buffer;
   }
 
-function program9(depth0,data) {
+function program11(depth0,data) {
   
   var buffer = '', hashTypes;
   data.buffer.push("\n<section class=\"action-phase\">\n	It is your turn. Double click a card to play it.\n	Or <button ");
@@ -721,7 +768,7 @@ function program9(depth0,data) {
   return buffer;
   }
 
-function program11(depth0,data) {
+function program13(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n<section class=\"buy-phase\">\n	Double click a card to buy it, or <button ");
@@ -729,22 +776,22 @@ function program11(depth0,data) {
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "buy", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Buys</button>.\n	<h2>Bank</h2>\n	<section class=\"bank\">\n	");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "stack", "in", "bank", {hash:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "stack", "in", "bank", {hash:{},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n	</section>\n</section>\n");
   return buffer;
   }
-function program12(depth0,data) {
+function program14(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n		<section class=stack>\n			");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "stack", {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "stack", {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n		</section>\n	");
   return buffer;
   }
-function program13(depth0,data) {
+function program15(depth0,data) {
   
   var buffer = '', hashTypes;
   data.buffer.push("\n			");
@@ -789,20 +836,24 @@ function program13(depth0,data) {
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "content.tradeCards", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n	");
+  hashTypes = {};
+  stack1 = helpers['if'].call(depth0, "hasCardsToRedeem", {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n</section>\n\n<h2>Deck Count: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "content.deckCount", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</h2>\n\n<h2>Discards</h2>\n<section class=\"discards\">\n");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "content.discards", {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "content.discards", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n</section>\n\n");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "isActionPhase", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "isActionPhase", {hash:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "isBuyPhase", {hash:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "isBuyPhase", {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   return buffer;
@@ -40730,12 +40781,14 @@ var CardView = Ember.View.extend({
 		return items;
 	},
 
-	doubleClick: function(event) {
-		console.log ('card double clicked', event.currentTarget,
-			this.get('cardSource'));
+	click: function(event) {
+		var card = this.get('context');
+		var name = card.get('name');
+		var cardSource = this.get('cardSource');
+		console.log ('card double clicked', event.currentTarget, cardSource);
 
-		this.get('controller').send('selectCard', this.get('context.name'), 
-			this.get('cardSource'));
+		this.get('controller').send('selectCard', name, cardSource,
+				event.currentTarget);
 	}
 });
 

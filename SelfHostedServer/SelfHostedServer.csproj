@@ -52,6 +52,7 @@
     <Compile Include="TransferObjects\TurnView.cs" />
     <Compile Include="TransferObjects\CardRequest.cs" />
     <Compile Include="TransferObjects\SkipRequest.cs" />
+    <Compile Include="TransferObjects\RedeemRequest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

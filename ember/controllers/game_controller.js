@@ -2,7 +2,13 @@ var Events = require('../vendor/pubsub.js');
 var _ = require('../vendor/underscore-min')
 
 var GameController = Ember.Controller.extend({
-	'notification': '',
+	notification: '',
+
+	cardsToRedeem: [],
+
+	hasCardsToRedeem: function () {
+		return this.cardsToRedeem.length;
+	}.property('cardsToRedeem.@each'),
 
   'isMyTurn': function () { 
 		return true;
@@ -37,7 +43,7 @@ var GameController = Ember.Controller.extend({
 		return ret;
 	}.property('content.bank'),
 
-	'selectCard': function (card, cardSource) {
+	'selectCard': function (card, cardSource, elem) {
 		var self = this;
 		var game = this.get('content');
 	  switch (cardSource) {
@@ -58,32 +64,50 @@ var GameController = Ember.Controller.extend({
 			break;
     case 'bank':
 			if (this.get('isBuyPhase')) {
-				game.buyCard(card, function (game) {
-					self.prepareGame(game);
-				});
+				game.buyCard(card);
 			}
 			break;
+		case 'tradeCards':
+			if (this.get('isMyTurn')) {
+				elem = $(elem);
+				if (elem.hasClass('selected')) {
+					elem.removeClass('selected');
+					var idx = this.cardsToRedeem.indexOf(card);
+					if (idx > -1) {
+						this.cardsToRedeem.removeAt(idx);
+					}
+				} else {
+					this.cardsToRedeem.pushObject(card);
+					elem.addClass('selected');
+				}
+			}
 		}
-		console.log ('selectCard', arguments);
 	},
 
 	'playCard': function(card, hexId) {
 		var self = this;
 		var game = this.get('content');
-		game.playCard(card, hexId, function (game) {
-			self.prepareGame(game);
-		});
+		game.playCard(card, hexId);
+	},
+
+	'redeem': function() {
+		if (!this.get('isMyTurn')) {
+			return;
+		}
+		var game = this.get('content');
+		game.redeem(this.cardsToRedeem);
+		this.set('cardsToRedeem', []);
+		$('.card.Trade.selected').removeClass('selected');
 	},
 
   'skip': function (phase) {
 		var game = this.get('content');
 		var self = this;	
-		game.skip(phase, function (game) {
-			self.prepareGame(game);
-		});
+		game.skip(phase);
   },
 
 	'prepareGame': function (game) {
+		this.set('cardsToRedeem', []);
 		var cards = this.get('cards');
 		// Update game hand.
 		for (var i = 0; i < game.hand.length; i++) {

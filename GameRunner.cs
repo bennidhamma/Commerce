@@ -298,6 +298,40 @@ namespace ForgottenArts.Commerce
 
 			return true;
 		}
+
+		public bool RedeemTradeCards (Game game, PlayerGame player, List<string> cards)
+		{
+			// Ensure the player has all the cards.
+			if (cards.Except (player.TradeCards).Count () > 0) {
+				throw new InvalidOperationException ("Invalid list of cards to redeem.");
+			}
+
+			// Sort the cards.
+			cards.Sort ();
+
+			string currentCard = null;
+			int count = 0;
+			Card cardObject = null;
+
+			foreach (string card in cards) {
+				if (card != currentCard) {
+					if (currentCard != null) {
+						cardObject = this.cards [currentCard];
+						player.Gold += cardObject.TradeLevel * count * count;
+					}
+					count = 1;
+					currentCard = card;
+				} else {
+					count++;
+				}
+				player.TradeCards.Remove(card);
+			}
+
+			// Flush the last set.
+			cardObject = this.cards[currentCard];
+			player.Gold += cardObject.TradeLevel * count * count;
+
+			return true;
+		}
 	}
 }
-
