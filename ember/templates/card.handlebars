@@ -1,4 +1,23 @@
+{{#if view.setValues1}}
+<section class="set set1">
+{{#each view.setValues1}}<span class=set-value>{{this}}</span>{{/each}}
+</section>
+{{/if}}
 <header>{{name}}</header>
 <img {{bindAttr src="relImageUrl"}}>
+{{#if description}}
 <p>{{description}}</p>
+{{/if}}
+{{#if cost}}
 <p>{{cost}} gold</p>
+{{/if}}
+{{#if view.setValues3}}
+<section class="set set3">
+{{#each view.setValues3}}<span class=set-value>{{this}}</span>{{/each}}
+</section>
+{{/if}}
+{{#if view.setValues2}}
+<section class="set set2">
+{{#each view.setValues2}}<span class=set-value>{{this}}</span>{{/each}}
+</section>
+{{/if}}

@@ -84,11 +84,16 @@ namespace ForgottenArts.Commerce
 			var newTradingCardLevels = new List<Dictionary<string, int>>();
 			foreach (dynamic level in gameInfo.TradingCards) {
 				var dict = new Dictionary<string, int> ();
+				newTradingCardLevels.Add(dict);
 				foreach (string key in level.Keys) {
 					int q = Convert.ToInt32 (level[key]);
 					dict[key] = q;
+					// Only calamity cards are actually defined. Other commodities are
+					// created implicitly by virtue of existence in the config yaml.
+					if (!cards.ContainsKey(key)) {
+						CreateTradeCard(key, newTradingCardLevels.Count, q);
+					}
 				}
-				newTradingCardLevels.Add(dict);
 			}
 			tradingCardLevels = newTradingCardLevels;
 
@@ -105,6 +110,22 @@ namespace ForgottenArts.Commerce
 				startBank[key] = Convert.ToInt32(gameInfo.StartingBank[key]);
 			}
 			startingBank = startBank;
+		}
+
+		public void CreateTradeCard (string key, int level, int quantity)
+		{
+			var tradeValues = new List<int>();
+			for (int i = 1; i <= quantity; i++) {
+				tradeValues.Add(level * i * i);
+			}
+			var card = new Card () {
+				Type = CardType.Trade,
+				Name = key,
+				ImageUrl = key + ".png",
+				TradeValues = tradeValues,
+				TradeLevel = level
+			};
+			cards[key] = card;
 		}
 
 		public Dictionary<string, int> GetTradeCardLevel (int level) {

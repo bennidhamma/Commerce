@@ -45,6 +45,9 @@ namespace ForgottenArts.Commerce
 				foreach (var card in Discards) {
 					yield return card;
 				}
+				foreach (var card in TradeCards) {
+					yield return card;
+				}
 			}
 		}
 

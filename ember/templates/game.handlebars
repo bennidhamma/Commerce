@@ -24,6 +24,13 @@
 {{/each}}	
 </section>
 
+<h2>Trade Cards</h2>
+<section class="trade-cards">
+	{{#each content.tradeCards}}
+		{{view App.CardView content=this cardSource="tradeCards"}}
+	{{/each}}
+</section>
+
 <h2>Deck Count: {{content.deckCount}}</h2>
 
 <h2>Discards</h2>

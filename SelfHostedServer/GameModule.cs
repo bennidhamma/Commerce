@@ -52,6 +52,11 @@ namespace ForgottenArts.Commerce.Server
 			foreach (var card in game.Bank.Keys) {
 				cardKeys.Add (card);
 			}
+			foreach (var cardSet in game.TradeCards) {
+				foreach (var card in cardSet) {
+					cardKeys.Add (card);
+				}
+			}
 			foreach (var player in game.Players) {
 				foreach (var card in player.AllCards) {
 					cardKeys.Add (card);

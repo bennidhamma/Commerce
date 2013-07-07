@@ -1,4 +1,5 @@
 var Events = require('../vendor/pubsub.js');
+var _ = require('../vendor/underscore-min')
 
 var GameController = Ember.Controller.extend({
 	'notification': '',
@@ -88,10 +89,23 @@ var GameController = Ember.Controller.extend({
 		for (var i = 0; i < game.hand.length; i++) {
 			game.hand[i] = cards[game.hand[i]];
 		}
+
+		// Update discards -- some trickiness with getting the order right.
 		for (i = 0; i < game.discards.length; i++) {
 			game.discards[i] = cards[game.discards[i]];
 		}
 		game.set('discards', game.get('discards').toArray().reverse());
+
+		// Update trade cards.
+		for (i = 0; i < game.tradeCards.length; i++) {
+			game.tradeCards[i] = cards[game.tradeCards[i]];
+		}
+		var tradeCards = game.get('tradeCards').toArray();
+		tradeCards = _.sortBy(tradeCards, function(c) {
+			return c.tradeLevel + '.' + c.Name;
+		});
+		game.set('tradeCards', tradeCards);
+
 		this.set('content', game);
 	},
 

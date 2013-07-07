@@ -87,6 +87,22 @@ html, body {
 		margin: 3px 0;
 		border-radius: 3px;
   }
+
+	section.set {
+		.set-value {
+			width: 23%;
+			border: 1px solid black;
+			background: white;
+			display:inline-block;
+			font-size: 0.8em;
+			font-weight:bold;
+			text-align:center;
+		}
+
+		&.set3 {
+			text-align:right;
+		}
+	}
 }
 
 .discards {
