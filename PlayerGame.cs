@@ -20,6 +20,9 @@ namespace ForgottenArts.Commerce
 		public List<string> TradeCards {get; set;}
 		public List<string> TechnologyCards {get; set;}
 
+		public List<Match> ProposedMatches {get; set; }
+		public List<Match> ReceivedMatches {get; set; }
+
 		public List<Hex> Hexes {get; set;}
 
 		public List<LogEntry> Log { get; set; }
@@ -32,6 +35,8 @@ namespace ForgottenArts.Commerce
 			Discards = new Stack<string> ();
 			Log = new List<LogEntry> ();
 			Hexes = new List<Hex> ();
+			ProposedMatches = new List<Match> ();
+			ReceivedMatches = new List<Match> ();
 		}
 
 		public IEnumerable<string> AllCards {
@@ -86,6 +91,24 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		public bool HasTradeCards (List<string> cards)
+		{
+			// There's probably a more optimal way to do this.
+			var tradeCards = new List<string>(this.TradeCards);
+			foreach (string card in cards) {
+				if (!tradeCards.Contains(card)) {
+					return false;
+				}
+				tradeCards.Remove(card);
+			}
+			return true;
+		}
+
+		public void ReceiveMatch (Match match)
+		{
+			throw new NotImplementedException ();
+		}
+
 		private Player player;
 		[IgnoreDataMember]
 		public Player Player {
@@ -127,6 +150,16 @@ namespace ForgottenArts.Commerce
 			else {
 				return "Unkown Player";
 			}
+		}
+
+		public string GetKey ()
+		{
+			return (Game.Id + "-" + PlayerKey);
+		}
+
+		public static string MakeKey (long gameId, string playerKey)
+		{
+			return gameId + "-" + playerKey;
 		}
 	}
 }

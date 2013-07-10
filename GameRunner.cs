@@ -299,10 +299,72 @@ namespace ForgottenArts.Commerce
 			return true;
 		}
 
+
+		// By current convention, the first two cards are visible, and the third is invisible.
+		public bool ListOffer (Game game, PlayerGame player, List<string> cards)
+		{
+			if (game.Status != GameState.Trading)
+			{
+				throw new InvalidOperationException ("Cannot list offers because the game is not in a trading phase!");
+			}
+
+			if (!player.HasTradeCards(cards)) {
+				throw new InvalidOperationException ("Player cannot list these cards because he or she does not have them.");
+			}
+
+			if (cards.Count != 3)
+			{
+				throw new InvalidOperationException ("Trade Offers can only consist of three cards.");
+			}
+
+			var offer = new Offer () {
+				Id = repository.NewId (),
+				PlayerKey = player.PlayerKey,
+				Cards = cards
+			};
+
+			game.Trades.Add (offer);
+
+			return true;
+		}
+
+		public bool SuggestMatch (Game game, PlayerGame player, Offer myOffer, PlayerGame otherPlayer, Offer otherOffer)
+		{
+			if (game.Status != GameState.Trading)
+			{
+				throw new InvalidOperationException ("Cannot list offers because the game is not in a trading phase!");
+			}
+
+			// This check should be unusual because we are in a trade phase where cards cannot be redeemed and the only
+			// thing that should remove trade cards is accepting a match.
+			if (!player.HasTradeCards (myOffer.Cards) || !otherPlayer.HasTradeCards(otherOffer.Cards)) {
+				throw new InvalidOperationException ("Players do not possess trade cards for this trade.");
+			}
+
+			if (player.PlayerKey != myOffer.PlayerKey || otherPlayer.PlayerKey != otherOffer.PlayerKey) {
+				throw new InvalidOperationException ("These offers do not match these players.");
+			}
+
+			var match = new Match () {
+				MatchProposer = player.PlayerKey,
+				ProposerOfferId = myOffer.Id,
+				MatchReceiver = otherPlayer.PlayerKey,
+				ReceiverOfferId = otherOffer.Id
+			};
+
+			player.ProposedMatches.Add (match);
+
+			otherPlayer.ReceiveMatch (match);
+
+			return true;
+		}
+
 		public bool RedeemTradeCards (Game game, PlayerGame player, List<string> cards)
 		{
+			// TODO: ensure it is the current player's turn (or not?)
+
 			// Ensure the player has all the cards.
-			if (cards.Except (player.TradeCards).Count () > 0) {
+			if (!player.HasTradeCards(cards)) {
 				throw new InvalidOperationException ("Invalid list of cards to redeem.");
 			}
 

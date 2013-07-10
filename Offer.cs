@@ -5,12 +5,9 @@ namespace ForgottenArts.Commerce
 {
 	public class Offer
 	{
-		public Player Player {get; set;}
+		public long Id {get; set;}
+		public string PlayerKey {get; set;}
 		public List<string> Cards {get; set;}
-
-		public Offer ()
-		{
-		}
 	}
 }
 

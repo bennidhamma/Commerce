@@ -117,7 +117,7 @@ namespace ForgottenArts.Commerce.Server
 			return new PlayerGameView (game, player);
 		}
 
-		PlayerGameView GenericAction<T>(long gameId, Func<Game, PlayerGame, T, bool> func)
+		string GenericAction<T>(long gameId, Func<Game, PlayerGame, T, bool> func)
 		{
 			var playerKey = this.Request.Headers["Player"].First();
 			var game = repository.Get<Game>(Game.GetKey(gameId));
@@ -125,16 +125,18 @@ namespace ForgottenArts.Commerce.Server
 			var request = this.Bind<T>();
 			if (func(game, player, request)) {
 				this.repository.Put(game.GetKey(), game);
+				if (PlayerSocketServer.Instance != null) {
+					PlayerSocketServer.Instance.Send(new PlayerGameView (game, player), "updateGame", game);
+				}
 			}
-			return new PlayerGameView (game, player);
+			return string.Empty;
 		}
 
 		dynamic PlayCard (dynamic arg)
 		{
-			PlayerGameView result = GenericAction<CardRequest>((long)arg.game, delegate(Game game, PlayerGame player, CardRequest card) {
+			return GenericAction<CardRequest>((long)arg.game, delegate(Game game, PlayerGame player, CardRequest card) {
 				return GameRunner.Instance.PlayCard(game, player, card.Card, card.HexId);
 			});
-			return result;
 		}
 
 		dynamic BuyCard (dynamic arg)

@@ -9,7 +9,8 @@ module.exports = Ember.Application.create();
 
 });require.register("config.js", function(module, exports, require, global){
 var config = {
-	serverUrlBase: 'http://localhost:8080'
+	serverUrlBase: 'http://localhost:8080',
+	socketBase: 'ws://localhost:8082'
 };
 
 module.exports = config;
@@ -241,6 +242,56 @@ App.HexView = require('./views/hex_view');
 require('./routes');
 
 
+});require.register("io/socket.js", function(module, exports, require, global){
+var Events = require('../vendor/pubsub.js');
+var config = require('../config');
+
+var gameId_ = null;
+var playerKey_ = null;
+var socket = null;
+
+function setPlayer () {
+	var message = {
+		gameId: gameId_,
+		playerKey: playerKey_
+	};
+	send('setPlayer', JSON.stringify(message));
+}
+
+function send (channel, message) {
+	message = channel + '\n' + message;
+	socket.send(message);
+}
+
+function receiveMessage (event) {
+	var message = JSON.parse(event.data);
+
+	switch(message.channel) {
+	case "updateGame":
+		var game = App.Game.create(message.body);
+		Events.publish('/game/update', [game]);
+		break;
+	default:
+		console.error('unknown message received', message);
+	}
+}
+
+function connect (gameId, playerKey) {
+	gameId_ = gameId;
+	playerKey_ = playerKey;
+  if (!socket) {
+		socket = new WebSocket(config.socketBase);
+		socket.onopen = setPlayer;
+		socket.onmessage = receiveMessage;
+	} else {
+		setPlayer();
+	}
+}
+
+module.exports = {
+	connect: connect
+};
+
 });require.register("models/card.js", function(module, exports, require, global){
 var _ = require('../vendor/underscore-min')
 var config = require('../config');
@@ -391,6 +442,7 @@ var Game = Ember.Object.extend({
 					xhr.setRequestHeader('Player', App.Friend.meId());
 				},
 				success: function(resp) {
+					return;
 					var game = App.Game.create(resp);
 					Events.publish('/game/update', [game]);
 				}
@@ -498,6 +550,7 @@ module.exports = GameListRoute;
 
 });require.register("routes/game_route.js", function(module, exports, require, global){
 var Events = require('../vendor/pubsub.js');
+var socket = require('../io/socket.js');
 
 var GameRoute = Ember.Route.extend({
 	model: function (params) {
@@ -513,6 +566,7 @@ var GameRoute = Ember.Route.extend({
 		});
 
 		App.Game.find(gameSummary.id, function (game) {
+			socket.connect(gameSummary.id, App.Friend.meId());
 			route.getCards(game, controller);
 		});
 	},

@@ -15,6 +15,7 @@ var Game = Ember.Object.extend({
 					xhr.setRequestHeader('Player', App.Friend.meId());
 				},
 				success: function(resp) {
+					return;
 					var game = App.Game.create(resp);
 					Events.publish('/game/update', [game]);
 				}

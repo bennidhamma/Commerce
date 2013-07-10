@@ -1,4 +1,5 @@
 var Events = require('../vendor/pubsub.js');
+var socket = require('../io/socket.js');
 
 var GameRoute = Ember.Route.extend({
 	model: function (params) {
@@ -14,6 +15,7 @@ var GameRoute = Ember.Route.extend({
 		});
 
 		App.Game.find(gameSummary.id, function (game) {
+			socket.connect(gameSummary.id, App.Friend.meId());
 			route.getCards(game, controller);
 		});
 	},

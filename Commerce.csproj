@@ -51,6 +51,9 @@
     <Compile Include="RestClient\RestClient.cs" />
     <Compile Include="Hex.cs" />
     <Compile Include="Scripting\CardArgs.cs" />
+    <Compile Include="Match.cs" />
+    <Compile Include="Socket\SocketServer.cs" />
+    <Compile Include="Socket\PlayerSocket.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -97,6 +100,12 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="WebSocket">
+      <HintPath>lib\WebSocket.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="lib\" />
@@ -107,6 +116,7 @@
     <Folder Include="content\cards\nation\" />
     <Folder Include="content\cards\technology\" />
     <Folder Include="content\cards\trade\" />
+    <Folder Include="Socket\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="content\card-distribution.yaml" />
