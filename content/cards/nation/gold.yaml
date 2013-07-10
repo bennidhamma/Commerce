@@ -1,0 +1,7 @@
+Name: Gold
+ImageUrl: gold.png
+Description: | 
+  Gain 10 gold.
+Action: |
+  current_player.gold += 10
+Cost: 50
