@@ -134,29 +134,29 @@ namespace ForgottenArts.Commerce.Server
 
 		dynamic PlayCard (dynamic arg)
 		{
-			return GenericAction<CardRequest>((long)arg.game, delegate(Game game, PlayerGame player, CardRequest card) {
-				return GameRunner.Instance.PlayCard(game, player, card.Card, card.HexId);
+			return GenericAction<CardRequest>((long)arg.game, (game, player, card) => {
+				GameRunner.Instance.PlayCard(game, player, card.Card, card.HexId);
 			});
 		}
 
 		dynamic BuyCard (dynamic arg)
 		{
-			return GenericAction<CardRequest>((long)arg.game, delegate(Game game, PlayerGame player, CardRequest card) {
-				return GameRunner.Instance.Buy(game, player, card.Card);
+			return GenericAction<CardRequest>((long)arg.game, (game, player, card) => {
+				GameRunner.Instance.Buy(game, player, card.Card);
 			});
 		}
 
 		dynamic Skip (dynamic arg)
 		{
-			return GenericAction<SkipRequest>((long)arg.game, delegate(Game game, PlayerGame player, SkipRequest skip) {
-				return GameRunner.Instance.Skip(game, player, skip.Phase);
+			return GenericAction<SkipRequest>((long)arg.game, (game, player, skip) => {
+				GameRunner.Instance.Skip(game, player, skip.Phase);
 			});
 		}
 
 		dynamic Redeem (dynamic arg)
 		{
-			return GenericAction<RedeemRequest>((long)arg.game, delegate(Game game, PlayerGame player, RedeemRequest redeem) {
-				return GameRunner.Instance.RedeemTradeCards(game, player, redeem.Cards);
+			return GenericAction<RedeemRequest>((long)arg.game, (game, player, redeem) => {
+				GameRunner.Instance.RedeemTradeCards(game, player, redeem.Cards);
 			});
 		}
 	}
