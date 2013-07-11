@@ -43,7 +43,13 @@ namespace ForgottenArts.Commerce
 
 		public static string Server {
 			get {
-				return GetSetting("ServerId", hostName);
+				return GetSetting("Server", hostName);
+			}
+		}
+
+		public static int HttpPort {
+			get {
+				return Convert.ToInt32(GetSetting("HttpPort", "8080"));
 			}
 		}
         
