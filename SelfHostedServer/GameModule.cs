@@ -87,7 +87,8 @@ namespace ForgottenArts.Commerce.Server
 				gameList.Add (game.Id);
 				var playerGame = new PlayerGame () {
 					PlayerKey = player.PlusId,
-					Game = game
+					Game = game,
+					GameId = game.Id
 				};
 				game.Players.Add (playerGame);
 			}
@@ -117,47 +118,50 @@ namespace ForgottenArts.Commerce.Server
 			return new PlayerGameView (game, player);
 		}
 
-		string GenericAction<T>(long gameId, Func<Game, PlayerGame, T, bool> func)
+		dynamic GenericAction<T>(long gameId, Func<Game, PlayerGame, T, bool> func)
 		{
 			var playerKey = this.Request.Headers["Player"].First();
 			var game = repository.Get<Game>(Game.GetKey(gameId));
 			var player = game.GetPlayer(playerKey);
 			var request = this.Bind<T>();
-			if (func(game, player, request)) {
-				this.repository.Put(game.GetKey(), game);
-				if (PlayerSocketServer.Instance != null) {
-					PlayerSocketServer.Instance.Send(new PlayerGameView (game, player), "updateGame", game);
+			try
+			{
+				if (func(game, player, request)) {
+					this.repository.Put(game.GetKey(), game);
+					if (PlayerSocketServer.Instance != null) {
+						PlayerSocketServer.Instance.Send(new PlayerGameView (game, player), "updateGame", game);
+					}
 				}
+				return string.Empty;
 			}
-			return string.Empty;
+			catch (InvalidOperationException e)
+			{
+				return new {error = e.Message};
+			}
 		}
 
 		dynamic PlayCard (dynamic arg)
 		{
-			return GenericAction<CardRequest>((long)arg.game, (game, player, card) => {
-				GameRunner.Instance.PlayCard(game, player, card.Card, card.HexId);
-			});
+			return GenericAction<CardRequest>((long)arg.game, (game, player, card) => 
+				GameRunner.Instance.PlayCard(game, player, card.Card, card.HexId));
 		}
 
 		dynamic BuyCard (dynamic arg)
 		{
-			return GenericAction<CardRequest>((long)arg.game, (game, player, card) => {
-				GameRunner.Instance.Buy(game, player, card.Card);
-			});
+			return GenericAction<CardRequest>((long)arg.game, (game, player, card) =>
+				GameRunner.Instance.Buy(game, player, card.Card));
 		}
 
 		dynamic Skip (dynamic arg)
 		{
-			return GenericAction<SkipRequest>((long)arg.game, (game, player, skip) => {
-				GameRunner.Instance.Skip(game, player, skip.Phase);
-			});
+			return GenericAction<SkipRequest>((long)arg.game, (game, player, skip) =>
+				GameRunner.Instance.Skip(game, player, skip.Phase));
 		}
 
 		dynamic Redeem (dynamic arg)
 		{
-			return GenericAction<RedeemRequest>((long)arg.game, (game, player, redeem) => {
-				GameRunner.Instance.RedeemTradeCards(game, player, redeem.Cards);
-			});
+			return GenericAction<RedeemRequest>((long)arg.game, (game, player, redeem) =>
+				GameRunner.Instance.RedeemTradeCards(game, player, redeem.Cards));
 		}
 	}
 }

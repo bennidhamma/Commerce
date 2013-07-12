@@ -144,7 +144,7 @@ var GameController = Ember.Controller.extend({
 		}
 		var tradeCards = game.get('tradeCards').toArray();
 		tradeCards = _.sortBy(tradeCards, function(c) {
-			return c.tradeLevel + '.' + c.Name;
+			return c.tradeLevel + '.' + c.name;
 		});
 		game.set('tradeCards', tradeCards);
 
@@ -442,9 +442,12 @@ var Game = Ember.Object.extend({
 					xhr.setRequestHeader('Player', App.Friend.meId());
 				},
 				success: function(resp) {
-					return;
-					var game = App.Game.create(resp);
-					Events.publish('/game/update', [game]);
+					if (resp && resp.error) {
+						Events.publish('error', [resp.error]);
+					}	
+				},
+				error: function (resp) {
+					console.log ('error sending ' + command, resp);
 				}
 			});
 	},
@@ -563,6 +566,11 @@ var GameRoute = Ember.Route.extend({
 		// Listen for game updates.
 		Events.subscribe('/game/update', function(game) {
 			controller.prepareGame(game);
+		});
+
+		// List for errors.
+		Events.subscribe('error', function(message) {
+			controller.notify(message, 5000);
 		});
 
 		App.Game.find(gameSummary.id, function (game) {

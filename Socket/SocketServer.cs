@@ -98,15 +98,31 @@ namespace ForgottenArts.Commerce
 
 		public void Send (object message, string channel, Game game)
 		{
+			var data = PrepareMessage(message, channel);
 			foreach (var player in game.Players) {
-				Send (message, channel, player);
+				if (player != null) {
+					Send (data, player);
+				}
 			}
 		}
 		
 		public void Send (object message, string channel, PlayerGame player)
 		{
+			if (player == null) {
+				log.Warn("Sending to null player");
+				return;
+			}
 			var key = player.GetKey ();
-			string data = PrepareMessage (message, channel);
+			if (SocketsByPlayers.ContainsKey (key))
+			{
+				string data = PrepareMessage (message, channel);
+				SocketsByPlayers[key].SendText (data);
+			}
+		}
+
+		public void Send (string data, PlayerGame player)
+		{
+			var key = player.GetKey ();
 			if (SocketsByPlayers.ContainsKey (key))
 			{
 				SocketsByPlayers[key].SendText (data);

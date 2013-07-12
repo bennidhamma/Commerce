@@ -74,6 +74,13 @@ namespace ForgottenArts.Commerce
 				NewTurn(game);
 				put = true;
 			}
+			foreach (var player in game.Players)
+			{
+				if (player.GameId != game.Id) {
+					player.GameId = game.Id;
+					put = true;
+				}
+			}
 			if (put) {
 				Repository.Put(game.GetKey(), game);
 			}

@@ -154,7 +154,7 @@ namespace ForgottenArts.Commerce
 
 		public string GetKey ()
 		{
-			return (Game.Id + "-" + PlayerKey);
+			return (GameId + "-" + PlayerKey);
 		}
 
 		public static string MakeKey (long gameId, string playerKey)

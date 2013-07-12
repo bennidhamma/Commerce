@@ -14,6 +14,11 @@ var GameRoute = Ember.Route.extend({
 			controller.prepareGame(game);
 		});
 
+		// List for errors.
+		Events.subscribe('error', function(message) {
+			controller.notify(message, 5000);
+		});
+
 		App.Game.find(gameSummary.id, function (game) {
 			socket.connect(gameSummary.id, App.Friend.meId());
 			route.getCards(game, controller);
