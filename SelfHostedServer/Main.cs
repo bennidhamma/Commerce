@@ -10,7 +10,7 @@ namespace ForgottenArts.Commerce.Server
 			Config.SetupContentWatcher ();
 
 			// Setup Nancy host.
-			var host = new Nancy.Hosting.Self.NancyHost (new Uri("http://localhost:8080"));
+			var host = new Nancy.Hosting.Self.NancyHost (new Uri("http://" + Config.Server + ":" + Config.HttpPort));
 			host.Start ();
 
 			// Setup socket server
