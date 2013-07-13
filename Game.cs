@@ -24,6 +24,7 @@ namespace ForgottenArts.Commerce
 	{
 		public long Id {get; set;}
 		public GameState Status {get; set;}
+		public DateTime PhaseStart {get; set;}
 		public int Round {get; set;}
 		public Turn CurrentTurn {get; set;}
 		public List<PlayerGame> Players {get; set;}
@@ -32,6 +33,7 @@ namespace ForgottenArts.Commerce
 		public List<string> Trash {get; set;}
 		public List<Offer> Trades {get; set;}
 		public Win Win {get;set;}
+		public int TradeDurationInSeconds {get; set;}
 
 		public Game ()
 		{

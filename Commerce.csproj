@@ -54,6 +54,7 @@
     <Compile Include="Match.cs" />
     <Compile Include="Socket\SocketServer.cs" />
     <Compile Include="Socket\PlayerSocket.cs" />
+    <Compile Include="PhaseTerminator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

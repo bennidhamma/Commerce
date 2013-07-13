@@ -16,6 +16,15 @@ namespace ForgottenArts.Commerce
 			return ConfigurationManager.AppSettings[key] ?? def;
 		}
 
+		public static int GetInt(string key, int def) {
+			var val = ConfigurationManager.AppSettings[key];
+			if (val != null) {
+				return Convert.ToInt32 (val);
+			} else {
+				return def;
+			}
+		}
+
 		private static Random random;
 		public static Random Random {
 			get {
@@ -49,7 +58,20 @@ namespace ForgottenArts.Commerce
 
 		public static int HttpPort {
 			get {
-				return Convert.ToInt32(GetSetting("HttpPort", "8080"));
+				return GetInt("HttpPort", 8080);
+			}
+		}
+
+		public static int PhaseTerminationHeartbeat {
+			get {
+				return GetInt("PhaseTerminationHeartbeat", 60000);
+			}
+		}
+
+		public static int DefaultTradeDurationSeconds {
+			get {
+				// Default to 5 minutes.
+				return GetInt("DefaultTradeDurationSeconds", 60 * 5);
 			}
 		}
         

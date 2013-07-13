@@ -57,12 +57,20 @@ namespace ForgottenArts.Commerce
 		/// </summary>
 		public void Sanitize ()
 		{
-			// Get the max id, to know when to stop searching for games.
-			var maxId = Repository.MaxId;
-			for (long i = 0; i <= maxId; i++) {
-				var game = Repository.Get<Game>(Game.GetKey(i));
-				if (game != null) {
-					Sanitize (game);
+			foreach (var game in Games) {
+				Sanitize (game);
+			}
+		}
+
+		public IEnumerable<Game> Games {
+			get {
+				// Get the max id, to know when to stop searching for games.
+				var maxId = Repository.MaxId;
+				for (long i = 0; i <= maxId; i++) {
+					var game = Repository.Get<Game>(Game.GetKey(i));
+					if (game != null) {
+						yield return game;
+					}
 				}
 			}
 		}
@@ -157,6 +165,7 @@ namespace ForgottenArts.Commerce
 		public void StartTradingPhase (Game game)
 		{
 			game.Status = GameState.Trading;
+			game.PhaseStart = DateTime.Now;
 
 			// Ensure that trade deck is shuffled and in a healthy state.
 			SetupTradeDeck (game);
@@ -173,11 +182,6 @@ namespace ForgottenArts.Commerce
 					game.TradeCards [level].RemoveAt (0);
 				}
 			}
-
-			// TODO: setup thread to expire trading phase, receive offers, matches, etc.
-
-			// For now, we are done with trading.
-			EndTradingPhase (game);
 		}
 
 		public void EndTradingPhase (Game game)
@@ -186,6 +190,7 @@ namespace ForgottenArts.Commerce
 			game.Players = new List<PlayerGame>(game.Players.OrderBy(p => p.Hexes.Sum(h => h.HasColony ? 5 : h.CurrentPopulation)));
 
 			game.Status = GameState.Running;
+			game.PhaseStart = DateTime.Now;
 			NewTurn (game, false);
 		}
 

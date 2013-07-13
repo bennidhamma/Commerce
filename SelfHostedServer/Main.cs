@@ -28,6 +28,10 @@ namespace ForgottenArts.Commerce.Server
 			// Sanitize games.
 			GameRunner.Instance.Sanitize();
 
+			// Setup phase terminator
+			PhaseTerminator.Instance = new PhaseTerminator ();
+			PhaseTerminator.Instance.Start ();
+
 			// Wait for interrupt.
 			Console.ReadLine();
 			host.Stop ();
