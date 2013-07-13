@@ -43,7 +43,7 @@ namespace ForgottenArts.Commerce
 
 		public static string Server {
 			get {
-				return GetSetting("Server", hostName);
+				return GetSetting("Server", "localhost");
 			}
 		}
 

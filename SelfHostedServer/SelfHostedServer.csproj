@@ -53,6 +53,9 @@
     <Compile Include="TransferObjects\CardRequest.cs" />
     <Compile Include="TransferObjects\SkipRequest.cs" />
     <Compile Include="TransferObjects\RedeemRequest.cs" />
+    <Compile Include="TransferObjects\OfferRequest.cs" />
+    <Compile Include="TransferObjects\SuggestMatchRequest.cs" />
+    <Compile Include="TransferObjects\OfferMatchRequest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

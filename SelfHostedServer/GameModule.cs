@@ -29,10 +29,18 @@ namespace ForgottenArts.Commerce.Server
 			Get["/player/{id}/games"] = GetGames;
 			Get["/game/{game}"] = GetGame;
 			Get["/game/{id}/cards"] = GetGameCards;
+
+			// Player phase endpoints.
 			Post["/game/{game}/playCard"] = PlayCard;
 			Post["/game/{game}/buyCard"] = BuyCard;
 			Post["/game/{game}/skip"] = Skip;
 			Post["/game/{game}/redeem"] = Redeem;
+
+			// Trade phase endpoints
+			Post["/game/{game}/offer"] = PostOffer;
+			Post["/game/{game}/match/suggest"] = SuggestMatch;
+			Post["/game/{game}/match/accept"] = AcceptMatch;
+			Post["/game/{game}/match/cancel"] = CancelMatch;
 		}
 
 		public dynamic CrossOriginSetup (dynamic parameters)
@@ -143,25 +151,63 @@ namespace ForgottenArts.Commerce.Server
 		dynamic PlayCard (dynamic arg)
 		{
 			return GenericAction<CardRequest>((long)arg.game, (game, player, card) => 
-				GameRunner.Instance.PlayCard(game, player, card.Card, card.HexId));
+				GameRunner.Instance.PlayCard (game, player, card.Card, card.HexId));
 		}
 
 		dynamic BuyCard (dynamic arg)
 		{
 			return GenericAction<CardRequest>((long)arg.game, (game, player, card) =>
-				GameRunner.Instance.Buy(game, player, card.Card));
+				GameRunner.Instance.Buy (game, player, card.Card));
 		}
 
 		dynamic Skip (dynamic arg)
 		{
 			return GenericAction<SkipRequest>((long)arg.game, (game, player, skip) =>
-				GameRunner.Instance.Skip(game, player, skip.Phase));
+				GameRunner.Instance.Skip (game, player, skip.Phase));
 		}
 
 		dynamic Redeem (dynamic arg)
 		{
 			return GenericAction<RedeemRequest>((long)arg.game, (game, player, redeem) =>
-				GameRunner.Instance.RedeemTradeCards(game, player, redeem.Cards));
+				GameRunner.Instance.RedeemTradeCards (game, player, redeem.Cards));
+		}
+
+		dynamic PostOffer (dynamic arg)
+		{
+			return GenericAction<OfferRequest>((long)arg.game, (game, player, offer) =>
+				GameRunner.Instance.ListOffer (game, player, offer.Cards));
+		}
+
+		dynamic SuggestMatch (dynamic arg)
+		{
+			return GenericAction<SuggestMatchRequest>((long)arg.game, (game, player, suggest) => {
+				var offer1 = game.Trades.Find(o => o.Id == suggest.MyOfferId);
+				var offer2 = game.Trades.Find(o => o.Id == suggest.OtherOfferId);
+				PlayerGame otherPlayer = null;
+				if (offer2 != null) {
+					otherPlayer = game.GetPlayer (offer2.PlayerKey);
+				}
+				return GameRunner.Instance.SuggestMatch (game, player, offer1, otherPlayer, offer2);
+			});
+		}
+
+		dynamic AcceptMatch (dynamic arg)
+		{
+			return GenericAction<OfferMatchRequest>((long)arg.game, (game, player, req) => {
+				var match = player.ReceivedMatches.Find (m => m.MatchId == req.MatchId);
+				return GameRunner.Instance.AcceptMatch (game, player, match);
+			});
+		}
+
+		dynamic CancelMatch (dynamic arg)
+		{
+			return GenericAction<OfferMatchRequest>((long)arg.game, (game, player, req) => {
+				var match = player.ReceivedMatches.Find (m => m.MatchId == req.MatchId);
+				if (match == null) {
+					match = player.ProposedMatches.Find (m => m.MatchId == req.MatchId);
+				}
+				return GameRunner.Instance.CancelMatch (game, player, match);
+			});  
 		}
 	}
 }

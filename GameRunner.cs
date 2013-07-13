@@ -82,8 +82,13 @@ namespace ForgottenArts.Commerce
 				}
 			}
 			if (put) {
-				Repository.Put(game.GetKey(), game);
+				Save (game);
 			}
+		}
+
+		public void Save (Game game)
+		{
+			Repository.Put(game.GetKey(), game);
 		}
 
 		public void Start (Game game)
@@ -186,7 +191,7 @@ namespace ForgottenArts.Commerce
 
 		void SetupTradeDeck (Game game)
 		{
-			if (true || game.TradeCards == null)
+			if (game.TradeCards == null)
 			{
 				game.TradeCards = new List<List<string>> ();
 				for (int level = 0; level < this.cards.NumberOfTradeLevels; ++level) {
@@ -353,10 +358,10 @@ namespace ForgottenArts.Commerce
 			}
 
 			var match = new Match () {
-				MatchProposer = player.PlayerKey,
-				ProposerOfferId = myOffer.Id,
-				MatchReceiver = otherPlayer.PlayerKey,
-				ReceiverOfferId = otherOffer.Id
+				MatchId = repository.NewId(),
+				GameId = game.Id,
+				Offer1 = myOffer,
+				Offer2 = otherOffer
 			};
 
 			player.ProposedMatches.Add (match);
@@ -364,6 +369,78 @@ namespace ForgottenArts.Commerce
 			otherPlayer.ReceiveMatch (match);
 
 			return true;
+		}
+
+		public bool AcceptMatch (Game game, PlayerGame player, Match match)
+		{
+			// Ensure that this player is the second player.
+			if (player.PlayerKey != match.Offer2.PlayerKey) {
+				throw new InvalidOperationException ("Only the second player in a match can accept it.");
+			}
+
+			var firstPlayer = game.GetPlayer (match.Offer1.PlayerKey);
+			if (firstPlayer == null || !firstPlayer.ProposedMatches.Exists (m => m.MatchId == match.MatchId)) {
+				throw new InvalidOperationException ("First player is invalid or does not have the match");
+			}
+
+			if (!player.ReceivedMatches.Exists (m=> m.MatchId == match.MatchId)) {
+				throw new InvalidOperationException ("Second player does not have the match");
+			}
+
+			if (!player.HasTradeCards(match.Offer2.Cards) || !firstPlayer.HasTradeCards(match.Offer1.Cards))
+			{
+				// Need to validate offers prior to execution to ensure players have the cards.
+				ValidateOffers (game);
+				throw new InvalidOperationException ("Players do not have the cards for this trade.");
+			}
+		
+			// Execute trade.
+			foreach (string card in match.Offer1.Cards)
+			{
+				GiveTradeCard(firstPlayer, player, card);
+			}
+
+			foreach (string card in match.Offer2.Cards)
+			{
+				GiveTradeCard(player, firstPlayer, card);
+			}
+
+			// We always want to save, but if we do in validate offers, we can skip in the caller.
+			return !ValidateOffers (game);
+		}
+
+		public bool CancelMatch (Game game, PlayerGame player, Match match)
+		{
+			var firstPlayer = game.GetPlayer (match.Offer1.PlayerKey);
+			var secondPlayer = game.GetPlayer (match.Offer2.PlayerKey);
+
+			if (player.PlayerKey != firstPlayer.PlayerKey || player.PlayerKey != secondPlayer.PlayerKey) {
+				throw new InvalidOperationException ("Cannot cancel a match that isn't yours.");
+			}
+
+			int c = firstPlayer.ProposedMatches.RemoveAll (m => m.MatchId == match.MatchId);
+			c += secondPlayer.ReceivedMatches.RemoveAll (m => m.MatchId == match.MatchId);
+
+			return c > 0;
+		}
+
+		public void GiveTradeCard(PlayerGame a, PlayerGame b, string card)
+		{
+			a.TradeCards.Remove (card);
+			b.TradeCards.Add (card);
+		}
+
+		bool ValidateOffers (Game game)
+		{
+			int numRemoved = game.Trades.RemoveAll (o => {
+				var p = game.GetPlayer (o.PlayerKey);
+				return !p.HasTradeCards(o.Cards);
+			});
+			if (numRemoved > 0) {
+				Save (game);
+				return true;
+			}
+			return false;
 		}
 
 		public bool RedeemTradeCards (Game game, PlayerGame player, List<string> cards)

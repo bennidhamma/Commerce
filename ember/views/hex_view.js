@@ -5,7 +5,7 @@ var HexView = Ember.View.extend({
 	classNameBindings: ['context.hasColony'],
 	classNames: ['hex'],
 
-	doubleClick: function(event) {
+	click: function(event) {
 		console.log('hex double clicked', event.currentTarget);
 		Events.publish('/hex/selected', [this.get('context.id')], this);
 	}

@@ -106,7 +106,8 @@ namespace ForgottenArts.Commerce
 
 		public void ReceiveMatch (Match match)
 		{
-			throw new NotImplementedException ();
+			this.ReceivedMatches.Add (match);
+			PlayerSocketServer.Instance.Send (match, "match", this);
 		}
 
 		private Player player;
