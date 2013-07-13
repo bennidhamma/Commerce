@@ -30,6 +30,8 @@ namespace ForgottenArts.Commerce
 		SocketServer wss;
 		
 		List<PlayerSocket> Sockets = new List<PlayerSocket> ();
+
+		// TODO: support multiple sockets per player.
 		Dictionary<string, PlayerSocket> SocketsByPlayers = new Dictionary<string, PlayerSocket> ();
 		
 		public PlayerSocketServer ()

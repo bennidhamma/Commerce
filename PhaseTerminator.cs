@@ -26,6 +26,7 @@ namespace ForgottenArts.Commerce
 				}
 				if ((DateTime.Now - game.PhaseStart).Seconds > duration) {
 					GameRunner.Instance.EndTradingPhase (game);
+					GameRunner.Instance.Save (game);
 				}
 			}
 		}

@@ -22,6 +22,7 @@ namespace ForgottenArts.Commerce
 
 		public List<Match> ProposedMatches {get; set; }
 		public List<Match> ReceivedMatches {get; set; }
+		public bool DoneTrading { get; set; }
 
 		public List<Hex> Hexes {get; set;}
 
@@ -141,6 +142,11 @@ namespace ForgottenArts.Commerce
 		public void PublishLogEntry (LogEntry entry)
 		{
 			this.Log.Add (entry);
+		}
+
+		public void Send (object message, string channel)
+		{
+			PlayerSocketServer.Instance.Send (message, channel, this);
 		}
 
 		public override string ToString ()

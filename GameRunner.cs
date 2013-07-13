@@ -189,6 +189,15 @@ namespace ForgottenArts.Commerce
 			// Sort players in order of smallest population - colonies count for 5.
 			game.Players = new List<PlayerGame>(game.Players.OrderBy(p => p.Hexes.Sum(h => h.HasColony ? 5 : h.CurrentPopulation)));
 
+			// Remove all offers and matches.
+			game.Trades.Clear ();
+			game.Matches.Clear ();
+			foreach (var player in game.Players) {
+				player.ProposedMatches.Clear ();
+				player.ReceivedMatches.Clear ();
+				player.DoneTrading = false;
+			}
+
 			game.Status = GameState.Running;
 			game.PhaseStart = DateTime.Now;
 			NewTurn (game, false);
@@ -341,15 +350,17 @@ namespace ForgottenArts.Commerce
 			};
 
 			game.Trades.Add (offer);
+			Save (game);
+			PlayerSocketServer.Instance.Send (offer, "newOffer", game);
 
-			return true;
+			return false;
 		}
 
 		public bool SuggestMatch (Game game, PlayerGame player, Offer myOffer, PlayerGame otherPlayer, Offer otherOffer)
 		{
 			if (game.Status != GameState.Trading)
 			{
-				throw new InvalidOperationException ("Cannot list offers because the game is not in a trading phase!");
+				throw new InvalidOperationException ("Cannot suggest matches because the game is not in a trading phase!");
 			}
 
 			// This check should be unusual because we are in a trade phase where cards cannot be redeemed and the only
@@ -370,14 +381,21 @@ namespace ForgottenArts.Commerce
 			};
 
 			player.ProposedMatches.Add (match);
-
 			otherPlayer.ReceiveMatch (match);
+			game.Matches.Add (match);
+			Save (game);
+			PlayerSocketServer.Instance.Send (match, "newMatch", game);
 
-			return true;
+			return false;
 		}
 
 		public bool AcceptMatch (Game game, PlayerGame player, Match match)
 		{
+			if (game.Status != GameState.Trading)
+			{
+				throw new InvalidOperationException ("Cannot accept matches because the game is not in a trading phase!");
+			}
+
 			// Ensure that this player is the second player.
 			if (player.PlayerKey != match.Offer2.PlayerKey) {
 				throw new InvalidOperationException ("Only the second player in a match can accept it.");
@@ -410,23 +428,54 @@ namespace ForgottenArts.Commerce
 				GiveTradeCard(player, firstPlayer, card);
 			}
 
-			// We always want to save, but if we do in validate offers, we can skip in the caller.
-			return !ValidateOffers (game);
+			// Send trade card updates.
+			firstPlayer.Send (firstPlayer.TradeCards, "updateTradeCards");
+			player.Send (player.TradeCards, "updateTradeCards");
+
+			// Remove match will also trigger a save.
+			RemoveMatch (game, match, firstPlayer, player);
+
+			return false;
+		}
+
+		void RemoveMatch (Game game, Match match, PlayerGame firstPlayer, PlayerGame secondPlayer)
+		{
+			firstPlayer.ProposedMatches.RemoveAll (m => m.MatchId == match.MatchId);
+			secondPlayer.ReceivedMatches.RemoveAll (m => m.MatchId == match.MatchId);
+			game.Matches.RemoveAll (m => m.MatchId == match.MatchId);
+			Save (game);
+			PlayerSocketServer.Instance.Send (match.MatchId, "removeMatch", game);
 		}
 
 		public bool CancelMatch (Game game, PlayerGame player, Match match)
 		{
+			if (game.Status != GameState.Trading)
+			{
+				throw new InvalidOperationException ("Cannot cancel matches because the game is not in a trading phase!");
+			}
+
 			var firstPlayer = game.GetPlayer (match.Offer1.PlayerKey);
 			var secondPlayer = game.GetPlayer (match.Offer2.PlayerKey);
 
 			if (player.PlayerKey != firstPlayer.PlayerKey || player.PlayerKey != secondPlayer.PlayerKey) {
 				throw new InvalidOperationException ("Cannot cancel a match that isn't yours.");
 			}
+			RemoveMatch (game, match, firstPlayer, secondPlayer);
+			return false;
+		}
 
-			int c = firstPlayer.ProposedMatches.RemoveAll (m => m.MatchId == match.MatchId);
-			c += secondPlayer.ReceivedMatches.RemoveAll (m => m.MatchId == match.MatchId);
-
-			return c > 0;
+		public bool DoneTrading (Game game, PlayerGame player)
+		{
+			if (game.Status != GameState.Trading) {
+				throw new InvalidOperationException ("Cannot mark trading done if not in trade phase");
+			}
+			
+			player.DoneTrading = true;
+			// If there is only 1 or fewer people not done trading, end the trading phase.
+			if (game.Players.Count(p => !p.DoneTrading) <= 1) {
+				EndTradingPhase (game);
+			}
+			return true;
 		}
 
 		public void GiveTradeCard(PlayerGame a, PlayerGame b, string card)

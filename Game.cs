@@ -32,6 +32,8 @@ namespace ForgottenArts.Commerce
 		public List<List<string>> TradeCards {get; set;}
 		public List<string> Trash {get; set;}
 		public List<Offer> Trades {get; set;}
+		public List<Match> Matches { get; set; }
+
 		public Win Win {get;set;}
 		public int TradeDurationInSeconds {get; set;}
 
@@ -41,6 +43,7 @@ namespace ForgottenArts.Commerce
 			Players = new List<PlayerGame> ();
 			Bank = new Dictionary<string, int> ();
 			Trades = new List<Offer> ();
+			Matches = new List<Match> ();
 			CurrentTurn = new Turn ();
 		} 
 

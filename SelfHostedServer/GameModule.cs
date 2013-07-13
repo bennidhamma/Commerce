@@ -41,6 +41,7 @@ namespace ForgottenArts.Commerce.Server
 			Post["/game/{game}/match/suggest"] = SuggestMatch;
 			Post["/game/{game}/match/accept"] = AcceptMatch;
 			Post["/game/{game}/match/cancel"] = CancelMatch;
+			Post["/game/{game}/trading/done"] = DoneTrading;
 		}
 
 		public dynamic CrossOriginSetup (dynamic parameters)
@@ -137,7 +138,9 @@ namespace ForgottenArts.Commerce.Server
 				if (func(game, player, request)) {
 					this.repository.Put(game.GetKey(), game);
 					if (PlayerSocketServer.Instance != null) {
-						PlayerSocketServer.Instance.Send(new PlayerGameView (game, player), "updateGame", game);
+						foreach (var p in game.Players) {
+							PlayerSocketServer.Instance.Send(new PlayerGameView (game, p), "updateGame", p);
+						}
 					}
 				}
 				return string.Empty;
@@ -208,6 +211,12 @@ namespace ForgottenArts.Commerce.Server
 				}
 				return GameRunner.Instance.CancelMatch (game, player, match);
 			});  
+		}
+
+		dynamic DoneTrading (dynamic arg)
+		{
+			return GenericAction<EmptyRequest>((long)arg.game, (game, player, empty) =>
+				GameRunner.Instance.DoneTrading (game, player));
 		}
 	}
 }
