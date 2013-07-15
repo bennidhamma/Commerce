@@ -21,7 +21,7 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
-		public DateTime PhaseStart {
+		public DateTime TradeEnd {
 			get;
 			set;
 		}
@@ -42,8 +42,7 @@ namespace ForgottenArts.Commerce.Server
 			this.TradeCardCounts = from p in game.Players select new Tuple<string, int> (p.PlayerKey, p.TradeCards.Count);
 			this.Trades = game.Trades;
 			this.Matches = game.Matches;
-			this.PhaseStart = game.PhaseStart;
-			this.Duration = game.TradeDurationInSeconds;
+			this.TradeEnd = game.TradeEnd;
 		}
 	}
 }

@@ -139,7 +139,19 @@ namespace ForgottenArts.Commerce.Server
 					this.repository.Put(game.GetKey(), game);
 					if (PlayerSocketServer.Instance != null) {
 						foreach (var p in game.Players) {
-							PlayerSocketServer.Instance.Send(new PlayerGameView (game, p), "updateGame", p);
+							object message = null;
+							string channel = string.Empty;
+							switch (game.Status) {
+							case GameState.Trading:
+								message = new TradeView (game, p);
+								channel = "tradeUpdate";
+								break;
+							default:
+								message = new PlayerGameView (game, p);
+								channel = "gameUpdate";
+								break;
+							}
+							PlayerSocketServer.Instance.Send(message, channel, p);
 						}
 					}
 				}

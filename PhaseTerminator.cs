@@ -24,7 +24,7 @@ namespace ForgottenArts.Commerce
 				if (duration == 0) {
 					duration = Config.DefaultTradeDurationSeconds;
 				}
-				if ((DateTime.Now - game.PhaseStart).Seconds > duration) {
+				if (game.TradeEnd < DateTime.Now) {
 					GameRunner.Instance.EndTradingPhase (game);
 					GameRunner.Instance.Save (game);
 				}

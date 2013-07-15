@@ -267,7 +267,8 @@ function receiveMessage (event) {
 	var message = JSON.parse(event.data);
 
 	switch(message.channel) {
-	case "updateGame":
+	case "gameUpdate":
+	case "tradeUpdate":
 		var game = App.Game.create(message.body);
 		Events.publish('/game/update', [game]);
 		break;

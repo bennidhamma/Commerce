@@ -162,10 +162,17 @@ namespace ForgottenArts.Commerce
 			//TODO: notify new current player it is their turn.
 		}
 
+		private void ExtendTradeTime (Game game)
+		{
+			game.TradeEnd = DateTime.Now;
+			game.TradeEnd.AddSeconds (game.TradeDurationInSeconds > 0 ? game.TradeDurationInSeconds : 
+				Config.DefaultTradeDurationSeconds);
+		}
+
 		public void StartTradingPhase (Game game)
 		{
 			game.Status = GameState.Trading;
-			game.PhaseStart = DateTime.Now;
+			ExtendTradeTime (game);
 
 			// Ensure that trade deck is shuffled and in a healthy state.
 			SetupTradeDeck (game);
@@ -199,7 +206,6 @@ namespace ForgottenArts.Commerce
 			}
 
 			game.Status = GameState.Running;
-			game.PhaseStart = DateTime.Now;
 			NewTurn (game, false);
 		}
 
@@ -431,6 +437,8 @@ namespace ForgottenArts.Commerce
 			// Send trade card updates.
 			firstPlayer.Send (firstPlayer.TradeCards, "updateTradeCards");
 			player.Send (player.TradeCards, "updateTradeCards");
+
+			ExtendTradeTime (game);
 
 			// Remove match will also trigger a save.
 			RemoveMatch (game, match, firstPlayer, player);
