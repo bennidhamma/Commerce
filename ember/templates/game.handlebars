@@ -2,6 +2,7 @@
 	{{notification}}
 </section>
 
+{{#unless isTrading}}
 <header>
 	<h2><img {{bindAttr src="content.currentTurn.playerPhoto"}}>
 		{{content.currentTurn.playerName}}</h2>
@@ -65,3 +66,18 @@
 	</section>
 </section>
 {{/if}}
+
+{{else}}
+<!-- Ths is the trading phase. -->
+<h2>Trading Phase - Your Trade Cards</h2>
+<section class="trade-cards">
+	{{#each content.tradeCards}}
+		{{view App.CardView content=this cardSource="tradeCards"}}
+	{{/each}}
+	{{#if hasCardsToRedeem}}
+	<button {{action redeem}}>Redeem Trade Cards</button>
+	{{/if}}
+</section>
+
+
+{{/unless}}

@@ -10,6 +10,11 @@ var GameController = Ember.Controller.extend({
 		return this.cardsToRedeem.length;
 	}.property('cardsToRedeem.@each'),
 
+	'isTrading' : function () {
+		var game = this.get('content');
+		return game.status == 'Trading';
+	},
+
   'isMyTurn': function () { 
 		return true;
 	},
@@ -110,25 +115,31 @@ var GameController = Ember.Controller.extend({
 		this.set('cardsToRedeem', []);
 		var cards = this.get('cards');
 		// Update game hand.
-		for (var i = 0; i < game.hand.length; i++) {
-			game.hand[i] = cards[game.hand[i]];
+		if (game.hand) {
+			for (var i = 0; i < game.hand.length; i++) {
+				game.hand[i] = cards[game.hand[i]];
+			}
 		}
 
-		// Update discards -- some trickiness with getting the order right.
-		for (i = 0; i < game.discards.length; i++) {
-			game.discards[i] = cards[game.discards[i]];
+		if (game.discards) {
+			// Update discards -- some trickiness with getting the order right.
+			for (i = 0; i < game.discards.length; i++) {
+				game.discards[i] = cards[game.discards[i]];
+			}
+			game.set('discards', game.get('discards').toArray().reverse());
 		}
-		game.set('discards', game.get('discards').toArray().reverse());
 
-		// Update trade cards.
-		for (i = 0; i < game.tradeCards.length; i++) {
-			game.tradeCards[i] = cards[game.tradeCards[i]];
+		if (game.tradeCards) {
+			// Update trade cards.
+			for (i = 0; i < game.tradeCards.length; i++) {
+				game.tradeCards[i] = cards[game.tradeCards[i]];
+			}
+			var tradeCards = game.get('tradeCards').toArray();
+			tradeCards = _.sortBy(tradeCards, function(c) {
+				return c.tradeLevel + '.' + c.name;
+			});
+			game.set('tradeCards', tradeCards);
 		}
-		var tradeCards = game.get('tradeCards').toArray();
-		tradeCards = _.sortBy(tradeCards, function(c) {
-			return c.tradeLevel + '.' + c.name;
-		});
-		game.set('tradeCards', tradeCards);
 
 		this.set('content', game);
 	},

@@ -119,12 +119,29 @@ namespace ForgottenArts.Commerce.Server
 			return gameList;
 		}
 
+		object BuildGameView (Game game, PlayerGame player, out string channel)
+		{
+			object message = null;
+			switch (game.Status) {
+			case GameState.Trading:
+				message = new TradeView (game, player);
+					channel = "tradeUpdate";
+				break;
+			default:
+				message = new PlayerGameView (game, player);
+					channel = "gameUpdate";
+				break;
+			}
+			return message;
+		}
+
 		dynamic GetGame (dynamic arg)
 		{
 			var playerKey = this.Request.Headers["Player"].First();
 			var game = repository.Get<Game>(Game.GetKey(arg.game));
 			var player = game.GetPlayer (playerKey);
-			return new PlayerGameView (game, player);
+			string channel;
+			return BuildGameView (game, player, out channel);
 		}
 
 		dynamic GenericAction<T>(long gameId, Func<Game, PlayerGame, T, bool> func)
@@ -139,18 +156,8 @@ namespace ForgottenArts.Commerce.Server
 					this.repository.Put(game.GetKey(), game);
 					if (PlayerSocketServer.Instance != null) {
 						foreach (var p in game.Players) {
-							object message = null;
 							string channel = string.Empty;
-							switch (game.Status) {
-							case GameState.Trading:
-								message = new TradeView (game, p);
-								channel = "tradeUpdate";
-								break;
-							default:
-								message = new PlayerGameView (game, p);
-								channel = "gameUpdate";
-								break;
-							}
+							object message = BuildGameView (game, p, out channel);
 							PlayerSocketServer.Instance.Send(message, channel, p);
 						}
 					}

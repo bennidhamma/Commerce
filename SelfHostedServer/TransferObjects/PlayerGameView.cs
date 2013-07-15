@@ -10,6 +10,11 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
+		GameState Status {
+			get;
+			set;
+		}
+
 		public List<Hex> Hexes {
 			get;
 			set;
@@ -58,6 +63,7 @@ namespace ForgottenArts.Commerce.Server
 		public PlayerGameView (Game game, PlayerGame player)
 		{
 			this.Id = game.Id;
+			this.Status = game.Status;
 			this.Hand = player.Hand;
 			this.Discards = player.Discards;
 			this.DeckCount = player.Deck.Count;

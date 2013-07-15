@@ -30,7 +30,7 @@ namespace ForgottenArts.Commerce.Server
 
 			// Setup phase terminator
 			PhaseTerminator.Instance = new PhaseTerminator ();
-			PhaseTerminator.Instance.Start ();
+			//PhaseTerminator.Instance.Start ();
 
 			// Wait for interrupt.
 			Console.ReadLine();

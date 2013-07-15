@@ -58,6 +58,8 @@
     <Compile Include="TransferObjects\OfferMatchRequest.cs" />
     <Compile Include="TransferObjects\EmptyRequest.cs" />
     <Compile Include="TransferObjects\TradeView.cs" />
+    <Compile Include="TransferObjects\OfferView.cs" />
+    <Compile Include="TransferObjects\MatchView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

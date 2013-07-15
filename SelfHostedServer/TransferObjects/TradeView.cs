@@ -6,17 +6,27 @@ namespace ForgottenArts.Commerce.Server
 {
 	public class TradeView
 	{
+		public long Id {
+			get;
+			set;
+		}
+
+		public GameState Status {
+			get;
+			set;
+		}
+
 		public List<string> TradeCards {
 			get;
 			set;
 		}
 
-		public List<Offer> Trades {
+		public IEnumerable<OfferView> Trades {
 			get;
 			set;
 		}
 
-		public List<Match> Matches {
+		public IEnumerable<MatchView> Matches {
 			get;
 			set;
 		}
@@ -26,24 +36,26 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
-		public int Duration {
+		public IEnumerable<KeyValuePair<string, int>> TradeCardCounts {
 			get;
 			set;
 		}
 
-		public IEnumerable<Tuple<string, int>> TradeCardCounts {
+		public int Gold {
 			get;
 			set;
 		}
 
 		public TradeView (Game game, PlayerGame player)
 		{
+			this.Id = game.Id;
+			this.Status = game.Status;
+			this.Gold = player.Gold;
 			this.TradeCards = player.TradeCards;
-			this.TradeCardCounts = from p in game.Players select new Tuple<string, int> (p.PlayerKey, p.TradeCards.Count);
-			this.Trades = game.Trades;
-			this.Matches = game.Matches;
+			this.TradeCardCounts = from p in game.Players select new KeyValuePair<string, int> (p.PlayerKey, p.TradeCards.Count);
+			this.Trades = from o in game.Trades select new OfferView (game, o);
+			this.Matches = from m in game.Matches select new MatchView (m);
 			this.TradeEnd = game.TradeEnd;
 		}
 	}
 }
-
