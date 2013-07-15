@@ -27,6 +27,10 @@ function receiveMessage (event) {
 		var game = App.Game.create(message.body);
 		Events.publish('/game/update', [game]);
 		break;
+	case 'newOffer':
+		var offer = App.Offer.create(message.body);
+		Events.publish('/offer/new', [offer]);
+		break;
 	default:
 		console.error('unknown message received', message);
 	}

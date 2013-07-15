@@ -14,6 +14,10 @@ var GameRoute = Ember.Route.extend({
 			controller.prepareGame(game);
 		});
 
+		Events.subscribe('/offer/new', function(offer) {
+			controller.addOffer(offer);
+		});
+
 		// List for errors.
 		Events.subscribe('error', function(message) {
 			controller.notify(message, 5000);

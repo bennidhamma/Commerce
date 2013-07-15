@@ -2,13 +2,19 @@ var Events = require('../vendor/pubsub.js');
 var _ = require('../vendor/underscore-min')
 
 var GameController = Ember.Controller.extend({
-	notification: '',
+	'notification': '',
 
-	cardsToRedeem: [],
+	'cardsToRedeem': [],
 
-	hasCardsToRedeem: function () {
+	'newOffer': [],
+
+	'hasCardsToRedeem': function () {
 		return this.cardsToRedeem.length;
 	}.property('cardsToRedeem.@each'),
+
+	'readyToListOffer': function () {
+		return this.newOffer.length == 3;
+	}.property('newOffer.@each'),
 
 	'isTrading' : function () {
 		var game = this.get('content');
@@ -16,7 +22,7 @@ var GameController = Ember.Controller.extend({
 	},
 
   'isMyTurn': function () { 
-		return true;
+		return !this.isTrading() && true;
 	},
 
 	'isActionPhase': function () {
@@ -73,8 +79,8 @@ var GameController = Ember.Controller.extend({
 			}
 			break;
 		case 'tradeCards':
-			if (this.get('isMyTurn')) {
-				elem = $(elem);
+			elem = $(elem);
+			if (this.isMyTurn()) {
 				if (elem.hasClass('selected')) {
 					elem.removeClass('selected');
 					var idx = this.cardsToRedeem.indexOf(card);
@@ -84,6 +90,25 @@ var GameController = Ember.Controller.extend({
 				} else {
 					this.cardsToRedeem.pushObject(card);
 					elem.addClass('selected');
+				}
+			} else if (this.isTrading()) {
+				if (elem.hasClass('selected')) {
+					elem.removeClass('selected secret');
+					$('.selected.secret').removeClass('secret');
+					var idx = this.newOffer.indexOf(card);
+					if (idx > -1) {
+						this.newOffer.removeAt(idx);
+					}
+				} else {
+					if (this.newOffer.length > 2) {
+						this.notify('Cannot have more than 3 cards in an offer.', 5000);
+						return;
+					}
+					this.newOffer.pushObject(card);
+					elem.addClass('selected');
+					if (this.newOffer.length == 3) {
+						elem.addClass('secret');
+					}
 				}
 			}
 		}
@@ -103,6 +128,21 @@ var GameController = Ember.Controller.extend({
 		game.redeem(this.cardsToRedeem);
 		this.set('cardsToRedeem', []);
 		$('.card.Trade.selected').removeClass('selected');
+	},
+
+	'listOffer': function() {
+		if (!this.isTrading() || this.newOffer.length != 3) {
+			return;
+		}
+		var game = this.get('content');
+		game.listOffer(this.newOffer);
+		this.set('newOffer', []);
+		$('.card.Trade.selected').removeClass('selected secret');
+	},
+
+	'cancelOffer': function () {
+		this.set('newOffer', []);
+		$('.card.Trade.selected').removeClass('selected secret');
 	},
 
   'skip': function (phase) {
@@ -141,7 +181,29 @@ var GameController = Ember.Controller.extend({
 			game.set('tradeCards', tradeCards);
 		}
 
+		if (game.trades) {
+			// Update offers.
+			for (i = 0; i < game.trades.length; i++) {
+				this.prepareOffer (game.trades[i]);
+			}
+		}
+
 		this.set('content', game);
+	},
+
+	'prepareOffer': function (offer) {
+		var cards = this.get('cards');
+		for (var i = 0; i < offer.cards.length; i++) {
+			offer.cards[i] = cards[offer.cards[i]];
+		}
+	},
+
+	'addOffer': function (offer) {
+		this.prepareOffer(offer);
+		var game = this.get('content');
+		var trades = game.get('trades');
+		trades.addObject(offer);
+		game.set('trades', trades);
 	},
 
   'notify': function (message, duration) {

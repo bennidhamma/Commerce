@@ -39,7 +39,9 @@ namespace ForgottenArts.Commerce.Server
 			this.PlayerName = player.Player.DisplayName;
 
 			this.Id = offer.Id;
-			this.Cards = offer.Cards;
+			this.Cards = new List<string>(offer.Cards);
+			// Remove the third card because it is hidden.
+			this.Cards.RemoveAt(2);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ForgottenArts.Commerce.Server;
 
 namespace ForgottenArts.Commerce
 {
@@ -357,7 +358,7 @@ namespace ForgottenArts.Commerce
 
 			game.Trades.Add (offer);
 			Save (game);
-			PlayerSocketServer.Instance.Send (offer, "newOffer", game);
+			PlayerSocketServer.Instance.Send (new OfferView (game, offer), "newOffer", game);
 
 			return false;
 		}

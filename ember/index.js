@@ -16,6 +16,7 @@ App.NewController = require('./controllers/new_controller');
 App.GameController = require('./controllers/game_controller');
 App.GameListController = require('./controllers/game_list_controller');
 App.GameList = require('./models/game_list');
+App.Offer = require('./models/offer');
 App.Card = require('./models/card');
 App.Friend = require('./models/friend');
 App.Game = require('./models/game');

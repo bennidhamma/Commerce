@@ -20,13 +20,19 @@ var Events = require('../vendor/pubsub.js');
 var _ = require('../vendor/underscore-min')
 
 var GameController = Ember.Controller.extend({
-	notification: '',
+	'notification': '',
 
-	cardsToRedeem: [],
+	'cardsToRedeem': [],
 
-	hasCardsToRedeem: function () {
+	'newOffer': [],
+
+	'hasCardsToRedeem': function () {
 		return this.cardsToRedeem.length;
 	}.property('cardsToRedeem.@each'),
+
+	'readyToListOffer': function () {
+		return this.newOffer.length == 3;
+	}.property('newOffer.@each'),
 
 	'isTrading' : function () {
 		var game = this.get('content');
@@ -34,7 +40,7 @@ var GameController = Ember.Controller.extend({
 	},
 
   'isMyTurn': function () { 
-		return true;
+		return !this.isTrading() && true;
 	},
 
 	'isActionPhase': function () {
@@ -91,8 +97,8 @@ var GameController = Ember.Controller.extend({
 			}
 			break;
 		case 'tradeCards':
-			if (this.get('isMyTurn')) {
-				elem = $(elem);
+			elem = $(elem);
+			if (this.isMyTurn()) {
 				if (elem.hasClass('selected')) {
 					elem.removeClass('selected');
 					var idx = this.cardsToRedeem.indexOf(card);
@@ -102,6 +108,25 @@ var GameController = Ember.Controller.extend({
 				} else {
 					this.cardsToRedeem.pushObject(card);
 					elem.addClass('selected');
+				}
+			} else if (this.isTrading()) {
+				if (elem.hasClass('selected')) {
+					elem.removeClass('selected secret');
+					$('.selected.secret').removeClass('secret');
+					var idx = this.newOffer.indexOf(card);
+					if (idx > -1) {
+						this.newOffer.removeAt(idx);
+					}
+				} else {
+					if (this.newOffer.length > 2) {
+						this.notify('Cannot have more than 3 cards in an offer.', 5000);
+						return;
+					}
+					this.newOffer.pushObject(card);
+					elem.addClass('selected');
+					if (this.newOffer.length == 3) {
+						elem.addClass('secret');
+					}
 				}
 			}
 		}
@@ -121,6 +146,21 @@ var GameController = Ember.Controller.extend({
 		game.redeem(this.cardsToRedeem);
 		this.set('cardsToRedeem', []);
 		$('.card.Trade.selected').removeClass('selected');
+	},
+
+	'listOffer': function() {
+		if (!this.isTrading() || this.newOffer.length != 3) {
+			return;
+		}
+		var game = this.get('content');
+		game.listOffer(this.newOffer);
+		this.set('newOffer', []);
+		$('.card.Trade.selected').removeClass('selected secret');
+	},
+
+	'cancelOffer': function () {
+		this.set('newOffer', []);
+		$('.card.Trade.selected').removeClass('selected secret');
 	},
 
   'skip': function (phase) {
@@ -159,7 +199,29 @@ var GameController = Ember.Controller.extend({
 			game.set('tradeCards', tradeCards);
 		}
 
+		if (game.trades) {
+			// Update offers.
+			for (i = 0; i < game.trades.length; i++) {
+				this.prepareOffer (game.trades[i]);
+			}
+		}
+
 		this.set('content', game);
+	},
+
+	'prepareOffer': function (offer) {
+		var cards = this.get('cards');
+		for (var i = 0; i < offer.cards.length; i++) {
+			offer.cards[i] = cards[offer.cards[i]];
+		}
+	},
+
+	'addOffer': function (offer) {
+		this.prepareOffer(offer);
+		var game = this.get('content');
+		var trades = game.get('trades');
+		trades.addObject(offer);
+		game.set('trades', trades);
 	},
 
   'notify': function (message, duration) {
@@ -240,6 +302,7 @@ App.NewController = require('./controllers/new_controller');
 App.GameController = require('./controllers/game_controller');
 App.GameListController = require('./controllers/game_list_controller');
 App.GameList = require('./models/game_list');
+App.Offer = require('./models/offer');
 App.Card = require('./models/card');
 App.Friend = require('./models/friend');
 App.Game = require('./models/game');
@@ -282,6 +345,10 @@ function receiveMessage (event) {
 	case "tradeUpdate":
 		var game = App.Game.create(message.body);
 		Events.publish('/game/update', [game]);
+		break;
+	case 'newOffer':
+		var offer = App.Offer.create(message.body);
+		Events.publish('/offer/new', [offer]);
 		break;
 	default:
 		console.error('unknown message received', message);
@@ -466,19 +533,23 @@ var Game = Ember.Object.extend({
 
 	playCard: function (card, hexId, process) {
 		var args = {card:card, hexId: hexId};
-    this.sendCommand('playCard', args);
+    this.sendCommand ('playCard', args);
 	},
 
 	buyCard: function (card, process) {
-    this.sendCommand('buyCard', {card:card});
+    this.sendCommand ('buyCard', {card:card});
   },
 
   skip: function (phase, process) {
-    this.sendCommand('skip', {phase:phase});
+    this.sendCommand ('skip', {phase:phase});
 	},
 
 	redeem: function (cards) {
-		this.sendCommand('redeem', {cards: cards});
+		this.sendCommand ('redeem', {cards: cards});
+	},
+
+	listOffer: function (cards) {
+		this.sendCommand ('offer', {cards: cards});
 	}
 });
 
@@ -542,6 +613,14 @@ GameList.reopenClass({
 
 module.exports = GameList;
 
+});require.register("models/offer.js", function(module, exports, require, global){
+var Offer = Ember.Object.extend({
+
+});
+
+module.exports = Offer;
+
+
 });require.register("routes.js", function(module, exports, require, global){
 var App = require('./app');
 
@@ -578,6 +657,10 @@ var GameRoute = Ember.Route.extend({
 		// Listen for game updates.
 		Events.subscribe('/game/update', function(game) {
 			controller.prepareGame(game);
+		});
+
+		Events.subscribe('/offer/new', function(offer) {
+			controller.addOffer(offer);
 		});
 
 		// List for errors.
@@ -941,9 +1024,58 @@ function program18(depth0,data) {
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n	");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "hasCardsToRedeem", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "readyToListOffer", {hash:{},inverse:self.noop,fn:self.program(19, program19, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</section>\n\n\n");
+  data.buffer.push("\n</section>\n\n<h2>Offers</h2>\n<section class=\"offers\">\n	<ul>\n	");
+  hashTypes = {};
+  stack1 = helpers.each.call(depth0, "content.trades", {hash:{},inverse:self.noop,fn:self.program(21, program21, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n	</ul>\n</section>\n\n");
+  return buffer;
+  }
+function program19(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n	<button ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "listOffer", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">List Trade Offer</button>\n	<button ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "cancelOffer", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Cancel Offer</button>\n	");
+  return buffer;
+  }
+
+function program21(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes;
+  data.buffer.push("\n	  <li>\n		<img ");
+  hashTypes = {'src': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'src': ("playerPhoto")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashTypes = {'title': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'title': ("playerName")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n		");
+  hashTypes = {};
+  stack1 = helpers.each.call(depth0, "cards", {hash:{},inverse:self.noop,fn:self.program(22, program22, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n		</li>\n	");
+  return buffer;
+  }
+function program22(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n			");
+  hashTypes = {'content': "ID",'cardSource': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
+    'content': (""),
+    'cardSource': ("offer")
+  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n		");
   return buffer;
   }
 

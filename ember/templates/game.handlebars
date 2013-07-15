@@ -74,10 +74,24 @@
 	{{#each content.tradeCards}}
 		{{view App.CardView content=this cardSource="tradeCards"}}
 	{{/each}}
-	{{#if hasCardsToRedeem}}
-	<button {{action redeem}}>Redeem Trade Cards</button>
+	{{#if readyToListOffer}}
+	<button {{action listOffer}}>List Trade Offer</button>
+	<button {{action cancelOffer}}>Cancel Offer</button>
 	{{/if}}
 </section>
 
+<h2>Offers</h2>
+<section class="offers">
+	<ul>
+	{{#each content.trades}}
+	  <li>
+		<img {{bindAttr src="playerPhoto"}} {{bindAttr title="playerName"}}>
+		{{#each cards}}
+			{{view App.CardView content=this cardSource="offer"}}
+		{{/each}}
+		</li>
+	{{/each}}
+	</ul>
+</section>
 
 {{/unless}}

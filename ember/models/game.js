@@ -27,19 +27,23 @@ var Game = Ember.Object.extend({
 
 	playCard: function (card, hexId, process) {
 		var args = {card:card, hexId: hexId};
-    this.sendCommand('playCard', args);
+    this.sendCommand ('playCard', args);
 	},
 
 	buyCard: function (card, process) {
-    this.sendCommand('buyCard', {card:card});
+    this.sendCommand ('buyCard', {card:card});
   },
 
   skip: function (phase, process) {
-    this.sendCommand('skip', {phase:phase});
+    this.sendCommand ('skip', {phase:phase});
 	},
 
 	redeem: function (cards) {
-		this.sendCommand('redeem', {cards: cards});
+		this.sendCommand ('redeem', {cards: cards});
+	},
+
+	listOffer: function (cards) {
+		this.sendCommand ('offer', {cards: cards});
 	}
 });
 
