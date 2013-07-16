@@ -5,11 +5,13 @@ using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using log4net;
 
 namespace ForgottenArts.Commerce
 {
 	public class ScriptManager
 	{
+		private static readonly ILog log = LogManager.GetLogger(typeof(ScriptManager));
 		private static ScriptManager manager = new ScriptManager ();
 		public static ScriptManager Manager {
 			get {
@@ -103,21 +105,23 @@ namespace ForgottenArts.Commerce
 		private bool started = false;
 		public void Setup (string dllPath)
 		{
-			if (started)
-				return;
-			var setup = new ScriptRuntimeSetup() ;
-            setup.LanguageSetups.Add(Ruby.CreateRubySetup());
-            engine = Ruby.CreateRuntime(setup).GetRubyEngine();
-			string baseScript = string.Format ("require '{0}'\n", dllPath ?? Config.DllPath) + 
-				Config.ReadAllText ("base.rb");
-			try{
+			try
+			{
+				if (started)
+					return;
+				var setup = new ScriptRuntimeSetup() ;
+				setup.LanguageSetups.Add(Ruby.CreateRubySetup());
+				engine = Ruby.CreateRuntime(setup).GetRubyEngine();
+				string baseScript = string.Format ("require '{0}'\n", dllPath ?? Config.DllPath) + 
+					Config.ReadAllText ("base.rb");
 				engine.Execute (baseScript);
+				started = true;
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine ("Error setting up script engine" + e);
+				log.Error ("Error setting up script engine" + e);
 			}
-			started = true;
+
 		}
 		
 		private ScriptManager ()

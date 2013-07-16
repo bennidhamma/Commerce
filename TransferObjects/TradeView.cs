@@ -21,7 +21,12 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
-		public IEnumerable<OfferView> Trades {
+		public IEnumerable<OfferView> MyOffers {
+			get;
+			set;
+		}
+
+		public IEnumerable<OfferView> OtherOffers {
 			get;
 			set;
 		}
@@ -53,7 +58,8 @@ namespace ForgottenArts.Commerce.Server
 			this.Gold = player.Gold;
 			this.TradeCards = player.TradeCards;
 			this.TradeCardCounts = from p in game.Players select new KeyValuePair<string, int> (p.PlayerKey, p.TradeCards.Count);
-			this.Trades = from o in game.Trades select new OfferView (game, o);
+			this.MyOffers = from o in game.Trades where o.PlayerKey == player.PlayerKey select new OfferView (game, o);
+			this.OtherOffers = from o in game.Trades where o.PlayerKey != player.PlayerKey select new OfferView (game, o);
 			this.Matches = from m in game.Matches select new MatchView (m);
 			this.TradeEnd = game.TradeEnd;
 		}

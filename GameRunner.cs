@@ -176,7 +176,7 @@ namespace ForgottenArts.Commerce
 			ExtendTradeTime (game);
 
 			// Ensure that trade deck is shuffled and in a healthy state.
-			SetupTradeDeck (game);
+			game.SetupTradeDeck ();
 
 			// For each player and distribute trade cards, starting with players with the fewest number of colonies.
 			foreach (var player in from p in game.Players orderby p.Hexes.Count(h => h.HasColony) select p) {
@@ -189,6 +189,11 @@ namespace ForgottenArts.Commerce
 					player.TradeCards.Add (game.TradeCards [level] [0]);
 					game.TradeCards [level].RemoveAt (0);
 				}
+			}
+
+			// If there are not two players with at least 3 cards, end trading.
+			if (game.Players.Count (p => p.TradeCards.Count >= 3) < 2) {
+				EndTradingPhase (game);
 			}
 		}
 
@@ -208,26 +213,6 @@ namespace ForgottenArts.Commerce
 
 			game.Status = GameState.Running;
 			NewTurn (game, false);
-		}
-
-		void SetupTradeDeck (Game game)
-		{
-			if (game.TradeCards == null)
-			{
-				game.TradeCards = new List<List<string>> ();
-				for (int level = 0; level < this.cards.NumberOfTradeLevels; ++level) {
-					var cardsAtLevel = cards.GetTradeCardLevel(level);
-					game.TradeCards.Add(new List<string> ());
-					foreach (var kvp in cardsAtLevel) {
-						for (int i = 0; i < kvp.Value; ++i) {
-							game.TradeCards[level].Add (kvp.Key);
-						}
-					}
-				}
-			}
-			for (int i = 0; i < game.TradeCards.Count; i++) {
-				game.TradeCards[i].Shuffle();
-			}
 		}
 
 		public bool CheckForGameEnd (Game game)

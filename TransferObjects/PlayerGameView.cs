@@ -10,7 +10,7 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
-		GameState Status {
+		public GameState Status {
 			get;
 			set;
 		}

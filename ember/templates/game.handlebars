@@ -1,11 +1,10 @@
 <section class=notification-bar style=display:none>
-	{{notification}}
+  {{notification}}
 </section>
-
 {{#unless isTrading}}
 <header>
-	<h2><img {{bindAttr src="content.currentTurn.playerPhoto"}}>
-		{{content.currentTurn.playerName}}</h2>
+  <h2><img {{bindAttr src="content.currentTurn.playerPhoto"}}>
+    {{content.currentTurn.playerName}}</h2>
 <div># Actions: {{content.currentTurn.actions}}</div>
 <div># Buys: {{content.currentTurn.buys}}</div>
 </header>
@@ -14,25 +13,25 @@
 <h2>Hand</h2>
 <section class="hand">
 {{#each content.hand}}
-	{{view App.CardView content=this cardSource="hand"}}
+  {{view App.CardView content=this cardSource="hand"}}
 {{/each}}
 </section>
 
 <h2>Hexes</h2>
 <section class="hexes">
 {{#each content.hexes}}
-	{{view App.HexView content=this}}
-{{/each}}	
+  {{view App.HexView content=this}}
+{{/each}}  
 </section>
 
 <h2>Trade Cards</h2>
 <section class="trade-cards">
-	{{#each content.tradeCards}}
-		{{view App.CardView content=this cardSource="tradeCards"}}
-	{{/each}}
-	{{#if hasCardsToRedeem}}
-	<button {{action redeem}}>Redeem Trade Cards</button>
-	{{/if}}
+  {{#each content.tradeCards}}
+    {{view App.CardView content=this cardSource="tradeCards"}}
+  {{/each}}
+  {{#if hasCardsToRedeem}}
+  <button {{action redeem}}>Redeem Trade Cards</button>
+  {{/if}}
 </section>
 
 <h2>Deck Count: {{content.deckCount}}</h2>
@@ -40,58 +39,72 @@
 <h2>Discards</h2>
 <section class="discards">
 {{#each content.discards}}
-	{{view App.CardView content=this cardSource="discards"}}
+  {{view App.CardView content=this cardSource="discards"}}
 {{/each}}
 </section>
 
 {{#if isActionPhase}}
 <section class="action-phase">
-	It is your turn. Double click a card to play it.
-	Or <button {{action skip 'action'}}>Skip Actions</button>.
+  It is your turn. Double click a card to play it.
+  Or <button {{action skip 'action'}}>Skip Actions</button>.
 </section>
 {{/if}}
 
 {{#if isBuyPhase}}
 <section class="buy-phase">
-	Double click a card to buy it, or <button {{action skip 'buy'}}>Skip Buys</button>.
-	<h2>Bank</h2>
-	<section class="bank">
-	{{#each stack in bank}}
-		<section class=stack>
-			{{#each stack}}
-			{{view App.CardView content=this cardSource="bank"}}
-			{{/each}}
-		</section>
-	{{/each}}
-	</section>
+  Double click a card to buy it, or <button {{action skip 'buy'}}>Skip Buys</button>.
+  <h2>Bank</h2>
+  <section class="bank">
+  {{#each stack in bank}}
+    <section class=stack>
+      {{#each stack}}
+      {{view App.CardView content=this cardSource="bank"}}
+      {{/each}}
+    </section>
+  {{/each}}
+  </section>
 </section>
 {{/if}}
 
 {{else}}
 <!-- Ths is the trading phase. -->
+<button {{action doneTrading}}>
 <h2>Trading Phase - Your Trade Cards</h2>
 <section class="trade-cards">
-	{{#each content.tradeCards}}
-		{{view App.CardView content=this cardSource="tradeCards"}}
-	{{/each}}
-	{{#if readyToListOffer}}
-	<button {{action listOffer}}>List Trade Offer</button>
-	<button {{action cancelOffer}}>Cancel Offer</button>
-	{{/if}}
+  {{#each content.tradeCards}}
+    {{view App.CardView content=this cardSource="tradeCards"}}
+  {{/each}}
+  {{#if readyToListOffer}}
+  <button {{action listOffer}}>List Trade Offer</button>
+  <button {{action cancelOffer}}>Cancel Offer</button>
+  {{/if}}
 </section>
 
 <h2>Offers</h2>
 <section class="offers">
-	<ul>
-	{{#each content.trades}}
-	  <li>
-		<img {{bindAttr src="playerPhoto"}} {{bindAttr title="playerName"}}>
-		{{#each cards}}
-			{{view App.CardView content=this cardSource="offer"}}
-		{{/each}}
-		</li>
-	{{/each}}
-	</ul>
+  <canvas id="offerCanvas">
+    
+  </canvas>
+  <ul class="my">
+  {{#each content.myOffers}}
+    <li>
+    <img {{bindAttr src="playerPhoto"}} {{bindAttr title="playerName"}}>
+    {{#each cards}}
+      {{view App.CardView content=this cardSource="offer"}}
+    {{/each}}
+    </li>
+  {{/each}}
+  </ul>
+  <ul class="other">
+  {{#each content.otherOffers}}
+    <li>
+    <img {{bindAttr src="playerPhoto"}} {{bindAttr title="playerName"}}>
+    {{#each cards}}
+      {{view App.CardView content=this cardSource="offer"}}
+    {{/each}}
+    </li>
+  {{/each}}
+  </ul>
 </section>
 
 {{/unless}}

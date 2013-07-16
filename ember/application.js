@@ -20,223 +20,237 @@ var Events = require('../vendor/pubsub.js');
 var _ = require('../vendor/underscore-min')
 
 var GameController = Ember.Controller.extend({
-	'notification': '',
+  'notification': '',
 
-	'cardsToRedeem': [],
+  'cardsToRedeem': [],
 
-	'newOffer': [],
+  'newOffer': [],
 
-	'hasCardsToRedeem': function () {
-		return this.cardsToRedeem.length;
-	}.property('cardsToRedeem.@each'),
+  'hasCardsToRedeem': function () {
+    return this.cardsToRedeem.length;
+  }.property('cardsToRedeem.@each'),
 
-	'readyToListOffer': function () {
-		return this.newOffer.length == 3;
-	}.property('newOffer.@each'),
+  'readyToListOffer': function () {
+    return this.newOffer.length == 3;
+  }.property('newOffer.@each'),
 
-	'isTrading' : function () {
-		var game = this.get('content');
-		return game.status == 'Trading';
-	},
+  'isTrading' : function () {
+    var game = this.get('content');
+    return game.status == 'Trading';
+  }.property('content.status'),
 
   'isMyTurn': function () { 
-		return !this.isTrading() && true;
-	},
+    return !this.get('isTrading') && true;
+  }.property('isTrading'),
 
-	'isActionPhase': function () {
-		var game = this.get('content');
-		if (!game.currentTurn) {
-			return false;
-		}
-		return this.isMyTurn() && game.currentTurn.actions;
-	}.property('content.currentTurn.actions'),
+  'isActionPhase': function () {
+    var game = this.get('content');
+    if (!game.currentTurn) {
+      return false;
+    }
+    return this.get('isMyTurn') && game.currentTurn.actions;
+  }.property('content.currentTurn.actions'),
 
-	'isBuyPhase': function () {
-		var game = this.get('content');
-		if (!game.currentTurn) {
-			return false;
-		}
-		return this.isMyTurn() && !game.currentTurn.actions && game.currentTurn.buys;
-	}.property('content.currentTurn.actions', 'content.currentTurn.buys'),
+  'isBuyPhase': function () {
+    var game = this.get('content');
+    if (!game.currentTurn) {
+      return false;
+    }
+    return this.get('isMyTurn') && !game.currentTurn.actions && game.currentTurn.buys;
+  }.property('content.currentTurn.actions', 'content.currentTurn.buys'),
 
   'bank': function () {
-		var game = this.get('content');
-		var ret = [];
-		for(var k in game.bank) {
-			var stack = [];
-			for (var i = 0; i < game.bank[k]; i++) {
-				stack.push(this.cards[k]);
-			}
-			ret.push(stack);
-		}
-		return ret;
-	}.property('content.bank'),
+    var game = this.get('content');
+    var ret = [];
+    for(var k in game.bank) {
+      var stack = [];
+      for (var i = 0; i < game.bank[k]; i++) {
+        stack.push(this.cards[k]);
+      }
+      ret.push(stack);
+    }
+    return ret;
+  }.property('content.bank'),
 
-	'selectCard': function (card, cardSource, elem) {
-		var self = this;
-		var game = this.get('content');
-	  switch (cardSource) {
-	  case 'hand':
-			if (this.get('isActionPhase')) {
-				var cardObject = this.get('cards')[card];
-				if (cardObject.needsHex) {
-					this.notify('Select a hex', 0);
-					var handle = Events.subscribe('/hex/selected', function(hexId) {
-						self.playCard(card, hexId);
-						Events.unsubscribe(handle);
-						self.unnotify();
-					});
-				} else {
-					this.playCard(card);
-				}
-			}
-			break;
+  'selectCard': function (card, cardSource, elem) {
+    var self = this;
+    var game = this.get('content');
+    switch (cardSource) {
+    case 'hand':
+      if (this.get('isActionPhase')) {
+        var cardObject = this.get('cards')[card];
+        if (cardObject.needsHex) {
+          this.notify('Select a hex', 0);
+          var handle = Events.subscribe('/hex/selected', function(hexId) {
+            self.playCard(card, hexId);
+            Events.unsubscribe(handle);
+            self.unnotify();
+          });
+        } else {
+          this.playCard(card);
+        }
+      }
+      break;
     case 'bank':
-			if (this.get('isBuyPhase')) {
-				game.buyCard(card);
-			}
-			break;
-		case 'tradeCards':
-			elem = $(elem);
-			if (this.isMyTurn()) {
-				if (elem.hasClass('selected')) {
-					elem.removeClass('selected');
-					var idx = this.cardsToRedeem.indexOf(card);
-					if (idx > -1) {
-						this.cardsToRedeem.removeAt(idx);
-					}
-				} else {
-					this.cardsToRedeem.pushObject(card);
-					elem.addClass('selected');
-				}
-			} else if (this.isTrading()) {
-				if (elem.hasClass('selected')) {
-					elem.removeClass('selected secret');
-					$('.selected.secret').removeClass('secret');
-					var idx = this.newOffer.indexOf(card);
-					if (idx > -1) {
-						this.newOffer.removeAt(idx);
-					}
-				} else {
-					if (this.newOffer.length > 2) {
-						this.notify('Cannot have more than 3 cards in an offer.', 5000);
-						return;
-					}
-					this.newOffer.pushObject(card);
-					elem.addClass('selected');
-					if (this.newOffer.length == 3) {
-						elem.addClass('secret');
-					}
-				}
-			}
-		}
-	},
-
-	'playCard': function(card, hexId) {
-		var self = this;
-		var game = this.get('content');
-		game.playCard(card, hexId);
-	},
-
-	'redeem': function() {
-		if (!this.get('isMyTurn')) {
-			return;
-		}
-		var game = this.get('content');
-		game.redeem(this.cardsToRedeem);
-		this.set('cardsToRedeem', []);
-		$('.card.Trade.selected').removeClass('selected');
-	},
-
-	'listOffer': function() {
-		if (!this.isTrading() || this.newOffer.length != 3) {
-			return;
-		}
-		var game = this.get('content');
-		game.listOffer(this.newOffer);
-		this.set('newOffer', []);
-		$('.card.Trade.selected').removeClass('selected secret');
-	},
-
-	'cancelOffer': function () {
-		this.set('newOffer', []);
-		$('.card.Trade.selected').removeClass('selected secret');
-	},
-
-  'skip': function (phase) {
-		var game = this.get('content');
-		var self = this;	
-		game.skip(phase);
+      if (this.get('isBuyPhase')) {
+        game.buyCard(card);
+      }
+      break;
+    case 'tradeCards':
+      elem = $(elem);
+      if (this.isMyTurn()) {
+        if (elem.hasClass('selected')) {
+          elem.removeClass('selected');
+          var idx = this.cardsToRedeem.indexOf(card);
+          if (idx > -1) {
+            this.cardsToRedeem.removeAt(idx);
+          }
+        } else {
+          this.cardsToRedeem.pushObject(card);
+          elem.addClass('selected');
+        }
+      } else if (this.isTrading()) {
+        if (elem.hasClass('selected')) {
+          elem.removeClass('selected secret');
+          $('.selected.secret').removeClass('secret');
+          var idx = this.newOffer.indexOf(card);
+          if (idx > -1) {
+            this.newOffer.removeAt(idx);
+          }
+        } else {
+          if (this.newOffer.length > 2) {
+            this.notify('Cannot have more than 3 cards in an offer.', 5000);
+            return;
+          }
+          this.newOffer.pushObject(card);
+          elem.addClass('selected');
+          if (this.newOffer.length == 3) {
+            elem.addClass('secret');
+          }
+        }
+      }
+    }
   },
 
-	'prepareGame': function (game) {
-		this.set('cardsToRedeem', []);
-		var cards = this.get('cards');
-		// Update game hand.
-		if (game.hand) {
-			for (var i = 0; i < game.hand.length; i++) {
-				game.hand[i] = cards[game.hand[i]];
-			}
-		}
+  'playCard': function(card, hexId) {
+    var self = this;
+    var game = this.get('content');
+    game.playCard(card, hexId);
+  },
 
-		if (game.discards) {
-			// Update discards -- some trickiness with getting the order right.
-			for (i = 0; i < game.discards.length; i++) {
-				game.discards[i] = cards[game.discards[i]];
-			}
-			game.set('discards', game.get('discards').toArray().reverse());
-		}
+  'redeem': function() {
+    if (!this.get('isMyTurn')) {
+      return;
+    }
+    var game = this.get('content');
+    game.redeem(this.cardsToRedeem);
+    this.set('cardsToRedeem', []);
+    $('.card.Trade.selected').removeClass('selected');
+  },
 
-		if (game.tradeCards) {
-			// Update trade cards.
-			for (i = 0; i < game.tradeCards.length; i++) {
-				game.tradeCards[i] = cards[game.tradeCards[i]];
-			}
-			var tradeCards = game.get('tradeCards').toArray();
-			tradeCards = _.sortBy(tradeCards, function(c) {
-				return c.tradeLevel + '.' + c.name;
-			});
-			game.set('tradeCards', tradeCards);
-		}
+  'listOffer': function() {
+    if (!this.isTrading() || this.newOffer.length != 3) {
+      return;
+    }
+    var game = this.get('content');
+    game.listOffer(this.newOffer);
+    this.set('newOffer', []);
+    $('.card.Trade.selected').removeClass('selected secret');
+  },
 
-		if (game.trades) {
-			// Update offers.
-			for (i = 0; i < game.trades.length; i++) {
-				this.prepareOffer (game.trades[i]);
-			}
-		}
+  'doneTrading' : function () {
+    var game = this.get('content');
+    game.doneTrading();
+  },
 
-		this.set('content', game);
-	},
+  'cancelOffer': function () {
+    this.set('newOffer', []);
+    $('.card.Trade.selected').removeClass('selected secret');
+  },
 
-	'prepareOffer': function (offer) {
-		var cards = this.get('cards');
-		for (var i = 0; i < offer.cards.length; i++) {
-			offer.cards[i] = cards[offer.cards[i]];
-		}
-	},
+  'skip': function (phase) {
+    var game = this.get('content');
+    var self = this;  
+    game.skip(phase);
+  },
 
-	'addOffer': function (offer) {
-		this.prepareOffer(offer);
-		var game = this.get('content');
-		var trades = game.get('trades');
-		trades.addObject(offer);
-		game.set('trades', trades);
-	},
+  'prepareGame': function (game) {
+    this.set('cardsToRedeem', []);
+    var cards = this.get('cards');
+    // Update game hand.
+    if (game.hand) {
+      for (var i = 0; i < game.hand.length; i++) {
+        game.hand[i] = cards[game.hand[i]];
+      }
+    }
+
+    if (game.discards) {
+      // Update discards -- some trickiness with getting the order right.
+      for (i = 0; i < game.discards.length; i++) {
+        game.discards[i] = cards[game.discards[i]];
+      }
+      game.set('discards', game.get('discards').toArray().reverse());
+    }
+
+    if (game.tradeCards) {
+      // Update trade cards.
+      for (i = 0; i < game.tradeCards.length; i++) {
+        game.tradeCards[i] = cards[game.tradeCards[i]];
+      }
+      var tradeCards = game.get('tradeCards').toArray();
+      tradeCards = _.sortBy(tradeCards, function(c) {
+        return c.tradeLevel + '.' + c.name;
+      });
+      game.set('tradeCards', tradeCards);
+    }
+
+    if (game.myOffers) {
+      // Update offers.
+      for (i = 0; i < game.myOffers.length; i++) {
+        this.prepareOffer (game.myOffers[i]);
+      }
+    }
+
+    if (game.otherOffers) {
+      // Update offers.
+      for (i = 0; i < game.otherOffers.length; i++) {
+        this.prepareOffer (game.otherOffers[i]);
+      }
+    }
+
+    this.set('content', game);
+  },
+
+  'prepareOffer': function (offer) {
+    var cards = this.get('cards');
+    for (var i = 0; i < offer.cards.length; i++) {
+      offer.cards[i] = cards[offer.cards[i]];
+    }
+  },
+
+  'addOffer': function (offer) {
+    this.prepareOffer(offer);
+    var game = this.get('content');
+    if (offer.playerKey == App.Friend.meId()) {
+      game.get('myOffers').addObject(offer);
+    } else {
+      game.get('otherOffers').addObject(offer);
+    }
+  },
 
   'notify': function (message, duration) {
-		this.set('notification', message);
-		if (duration) {
-			$('.notification-bar').slideDown().delay(duration).slideUp();
-		} else {
-			$('.notification-bar').slideDown();
-		}
-	},
+    this.set('notification', message);
+    if (duration) {
+      $('.notification-bar').slideDown().delay(duration).slideUp();
+    } else {
+      $('.notification-bar').slideDown();
+    }
+  },
 
-	'unnotify': function () {
-		$('.notification-bar').slideUp();
-	}
-		
+  'unnotify': function () {
+    $('.notification-bar').slideUp();
+  }
+    
 });
 
 module.exports = GameController;
@@ -510,64 +524,68 @@ var config = require('../config');
 
 
 var Game = Ember.Object.extend({
-	sendCommand: function (command, data, process) {
-			$.ajax({
-				url: config.serverUrlBase + '/api/game/' + this.id + '/' + command,
-				type: 'POST',
-				contentType: 'application/json',
-				dataType: 'json',
-				data: JSON.stringify(data),
-				beforeSend: function(xhr) {
-					xhr.setRequestHeader('Player', App.Friend.meId());
-				},
-				success: function(resp) {
-					if (resp && resp.error) {
-						Events.publish('error', [resp.error]);
-					}	
-				},
-				error: function (resp) {
-					console.log ('error sending ' + command, resp);
-				}
-			});
-	},
+  sendCommand: function (command, data, process) {
+      $.ajax({
+        url: config.serverUrlBase + '/api/game/' + this.id + '/' + command,
+        type: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('Player', App.Friend.meId());
+        },
+        success: function(resp) {
+          if (resp && resp.error) {
+            Events.publish('error', [resp.error]);
+          }  
+        },
+        error: function (resp) {
+          console.log ('error sending ' + command, resp);
+        }
+      });
+  },
 
-	playCard: function (card, hexId, process) {
-		var args = {card:card, hexId: hexId};
+  playCard: function (card, hexId, process) {
+    var args = {card:card, hexId: hexId};
     this.sendCommand ('playCard', args);
-	},
+  },
 
-	buyCard: function (card, process) {
+  buyCard: function (card, process) {
     this.sendCommand ('buyCard', {card:card});
   },
 
   skip: function (phase, process) {
     this.sendCommand ('skip', {phase:phase});
-	},
+  },
 
-	redeem: function (cards) {
-		this.sendCommand ('redeem', {cards: cards});
-	},
+  redeem: function (cards) {
+    this.sendCommand ('redeem', {cards: cards});
+  },
 
-	listOffer: function (cards) {
-		this.sendCommand ('offer', {cards: cards});
-	}
+  listOffer: function (cards) {
+    this.sendCommand ('offer', {cards: cards});
+  },
+
+  doneTrading: function () {
+    this.sendCommand ('trading/done', {});
+  }
 });
 
 Game.reopenClass({
-	find: function(id, process) {
-		App.Friend.me(function(me) {
-			$.ajax({
-				url: config.serverUrlBase + '/api/game/' + id,
-				beforeSend: function(xhr) {
-					xhr.setRequestHeader('Player', App.Friend.meId());
-				},
-				contentType: 'application/json',
-				success: function(resp) {
-					process(Game.create(resp));
-				}
-			});
-		});
-	}
+  find: function(id, process) {
+    App.Friend.me(function(me) {
+      $.ajax({
+        url: config.serverUrlBase + '/api/game/' + id,
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('Player', App.Friend.meId());
+        },
+        contentType: 'application/json',
+        success: function(resp) {
+          process(Game.create(resp));
+        }
+      });
+    });
+  }
 });
 
 module.exports = Game;
@@ -857,12 +875,12 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n<header>\n	<h2><img ");
+  data.buffer.push("\n<header>\n  <h2><img ");
   hashTypes = {'src': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'src': ("content.currentTurn.playerPhoto")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">\n		");
+  data.buffer.push(">\n    ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "content.currentTurn.playerName", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</h2>\n<div># Actions: ");
@@ -882,11 +900,11 @@ function program1(depth0,data) {
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "content.hexes", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("	\n</section>\n\n<h2>Trade Cards</h2>\n<section class=\"trade-cards\">\n	");
+  data.buffer.push("  \n</section>\n\n<h2>Trade Cards</h2>\n<section class=\"trade-cards\">\n  ");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "content.tradeCards", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n	");
+  data.buffer.push("\n  ");
   hashTypes = {};
   stack1 = helpers['if'].call(depth0, "hasCardsToRedeem", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
@@ -911,7 +929,7 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n	");
+  data.buffer.push("\n  ");
   hashTypes = {'content': "ID",'cardSource': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
     'content': (""),
@@ -924,7 +942,7 @@ function program2(depth0,data) {
 function program4(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n	");
+  data.buffer.push("\n  ");
   hashTypes = {'content': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.HexView", {hash:{
     'content': ("")
@@ -936,30 +954,30 @@ function program4(depth0,data) {
 function program6(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n		");
+  data.buffer.push("\n    ");
   hashTypes = {'content': "ID",'cardSource': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
     'content': (""),
     'cardSource': ("tradeCards")
   },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n	");
+  data.buffer.push("\n  ");
   return buffer;
   }
 
 function program8(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n	<button ");
+  data.buffer.push("\n  <button ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "redeem", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Redeem Trade Cards</button>\n	");
+  data.buffer.push(">Redeem Trade Cards</button>\n  ");
   return buffer;
   }
 
 function program10(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n	");
+  data.buffer.push("\n  ");
   hashTypes = {'content': "ID",'cardSource': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
     'content': (""),
@@ -972,7 +990,7 @@ function program10(depth0,data) {
 function program12(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n<section class=\"action-phase\">\n	It is your turn. Double click a card to play it.\n	Or <button ");
+  data.buffer.push("\n<section class=\"action-phase\">\n  It is your turn. Double click a card to play it.\n  Or <button ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "action", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Actions</button>.\n</section>\n");
@@ -982,74 +1000,81 @@ function program12(depth0,data) {
 function program14(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n<section class=\"buy-phase\">\n	Double click a card to buy it, or <button ");
+  data.buffer.push("\n<section class=\"buy-phase\">\n  Double click a card to buy it, or <button ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "buy", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Skip Buys</button>.\n	<h2>Bank</h2>\n	<section class=\"bank\">\n	");
+  data.buffer.push(">Skip Buys</button>.\n  <h2>Bank</h2>\n  <section class=\"bank\">\n  ");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "stack", "in", "bank", {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n	</section>\n</section>\n");
+  data.buffer.push("\n  </section>\n</section>\n");
   return buffer;
   }
 function program15(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n		<section class=stack>\n			");
+  data.buffer.push("\n    <section class=stack>\n      ");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "stack", {hash:{},inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n		</section>\n	");
+  data.buffer.push("\n    </section>\n  ");
   return buffer;
   }
 function program16(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n			");
+  data.buffer.push("\n      ");
   hashTypes = {'content': "ID",'cardSource': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
     'content': (""),
     'cardSource': ("bank")
   },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n			");
+  data.buffer.push("\n      ");
   return buffer;
   }
 
 function program18(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n<!-- Ths is the trading phase. -->\n<h2>Trading Phase - Your Trade Cards</h2>\n<section class=\"trade-cards\">\n	");
+  data.buffer.push("\n<!-- Ths is the trading phase. -->\n<button ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "doneTrading", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n<h2>Trading Phase - Your Trade Cards</h2>\n<section class=\"trade-cards\">\n  ");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "content.tradeCards", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n	");
+  data.buffer.push("\n  ");
   hashTypes = {};
   stack1 = helpers['if'].call(depth0, "readyToListOffer", {hash:{},inverse:self.noop,fn:self.program(19, program19, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</section>\n\n<h2>Offers</h2>\n<section class=\"offers\">\n	<ul>\n	");
+  data.buffer.push("\n</section>\n\n<h2>Offers</h2>\n<section class=\"offers\">\n  <canvas id=\"offerCanvas\">\n    \n  </canvas>\n  <ul class=\"my\">\n  ");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "content.trades", {hash:{},inverse:self.noop,fn:self.program(21, program21, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "content.myOffers", {hash:{},inverse:self.noop,fn:self.program(21, program21, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n	</ul>\n</section>\n\n");
+  data.buffer.push("\n  </ul>\n  <ul class=\"other\">\n  ");
+  hashTypes = {};
+  stack1 = helpers.each.call(depth0, "content.otherOffers", {hash:{},inverse:self.noop,fn:self.program(21, program21, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n  </ul>\n</section>\n\n");
   return buffer;
   }
 function program19(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n	<button ");
+  data.buffer.push("\n  <button ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "listOffer", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">List Trade Offer</button>\n	<button ");
+  data.buffer.push(">List Trade Offer</button>\n  <button ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "cancelOffer", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Cancel Offer</button>\n	");
+  data.buffer.push(">Cancel Offer</button>\n  ");
   return buffer;
   }
 
 function program21(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n	  <li>\n		<img ");
+  data.buffer.push("\n    <li>\n    <img ");
   hashTypes = {'src': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'src': ("playerPhoto")
@@ -1059,30 +1084,30 @@ function program21(depth0,data) {
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'title': ("playerName")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">\n		");
+  data.buffer.push(">\n    ");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "cards", {hash:{},inverse:self.noop,fn:self.program(22, program22, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n		</li>\n	");
+  data.buffer.push("\n    </li>\n  ");
   return buffer;
   }
 function program22(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n			");
+  data.buffer.push("\n      ");
   hashTypes = {'content': "ID",'cardSource': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
     'content': (""),
     'cardSource': ("offer")
   },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n		");
+  data.buffer.push("\n    ");
   return buffer;
   }
 
-  data.buffer.push("<section class=notification-bar style=display:none>\n	");
+  data.buffer.push("<section class=notification-bar style=display:none>\n  ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "notification", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n</section>\n\n");
+  data.buffer.push("\n</section>\n");
   hashTypes = {};
   stack1 = helpers.unless.call(depth0, "isTrading", {hash:{},inverse:self.program(18, program18, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }

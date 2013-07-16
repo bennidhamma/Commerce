@@ -29,7 +29,19 @@ namespace ForgottenArts.Commerce
 		public Turn CurrentTurn {get; set;}
 		public List<PlayerGame> Players {get; set;}
 		public Dictionary<string, int> Bank {get; set;}
-		public List<List<string>> TradeCards {get; set;}
+		List<List<string>> tradeCards;
+		public List<List<string>> TradeCards {
+			get {
+				if (tradeCards == null)
+				{
+					SetupTradeDeck ();
+				}
+				return tradeCards;
+			}
+			set {
+				tradeCards = value;
+			}
+		}
 		public List<string> Trash {get; set;}
 		public List<Offer> Trades {get; set;}
 		public List<Match> Matches { get; set; }
@@ -105,6 +117,27 @@ namespace ForgottenArts.Commerce
 				}
 			}
 			return null;
+		}
+
+		public void SetupTradeDeck ()
+		{
+			var cards = GameRunner.Instance.Cards;
+			if (tradeCards == null)
+			{
+				tradeCards = new List<List<string>> ();
+				for (int level = 0; level < cards.NumberOfTradeLevels; ++level) {
+					var cardsAtLevel = cards.GetTradeCardLevel(level);
+					tradeCards.Add(new List<string> ());
+					foreach (var kvp in cardsAtLevel) {
+						for (int i = 0; i < kvp.Value; ++i) {
+							tradeCards[level].Add (kvp.Key);
+						}
+					}
+				}
+			}
+			for (int i = 0; i < tradeCards.Count; i++) {
+				tradeCards[i].Shuffle();
+			}
 		}
 	}
 }
