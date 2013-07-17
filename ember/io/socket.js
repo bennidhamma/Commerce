@@ -6,48 +6,48 @@ var playerKey_ = null;
 var socket = null;
 
 function setPlayer () {
-	var message = {
-		gameId: gameId_,
-		playerKey: playerKey_
-	};
-	send('setPlayer', JSON.stringify(message));
+  var message = {
+    gameId: gameId_,
+    playerKey: playerKey_
+  };
+  send('setPlayer', JSON.stringify(message));
 }
 
 function send (channel, message) {
-	message = channel + '\n' + message;
-	socket.send(message);
+  message = channel + '\n' + message;
+  socket.send(message);
 }
 
 function receiveMessage (event) {
-	var message = JSON.parse(event.data);
+  var message = JSON.parse(event.data);
 
-	switch(message.channel) {
-	case "gameUpdate":
-	case "tradeUpdate":
-		var game = App.Game.create(message.body);
-		Events.publish('/game/update', [game]);
-		break;
-	case 'newOffer':
-		var offer = App.Offer.create(message.body);
-		Events.publish('/offer/new', [offer]);
-		break;
-	default:
-		console.error('unknown message received', message);
-	}
+  switch(message.channel) {
+  case "gameUpdate":
+  case "tradeUpdate":
+    var game = App.Game.create(message.body);
+    Events.publish('/game/update', [game]);
+    break;
+  case 'newOffer':
+    var offer = App.Offer.create(message.body);
+    Events.publish('/offer/new', [offer]);
+    break;
+  default:
+    console.error('unknown message received', message);
+  }
 }
 
 function connect (gameId, playerKey) {
-	gameId_ = gameId;
-	playerKey_ = playerKey;
+  gameId_ = gameId;
+  playerKey_ = playerKey;
   if (!socket) {
-		socket = new WebSocket(config.socketBase);
-		socket.onopen = setPlayer;
-		socket.onmessage = receiveMessage;
-	} else {
-		setPlayer();
-	}
+    socket = new WebSocket(config.socketBase);
+    socket.onopen = setPlayer;
+    socket.onmessage = receiveMessage;
+  } else {
+    setPlayer();
+  }
 }
 
 module.exports = {
-	connect: connect
+  connect: connect
 };

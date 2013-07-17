@@ -40,7 +40,7 @@ var GameController = Ember.Controller.extend({
   }.property('content.status'),
 
   'isMyTurn': function () { 
-    return !this.get('isTrading') && true;
+    return !this.get('isTrading') && this.get('content.currentTurn.playerKey') == App.Friend.meId();
   }.property('isTrading'),
 
   'isActionPhase': function () {
@@ -98,7 +98,7 @@ var GameController = Ember.Controller.extend({
       break;
     case 'tradeCards':
       elem = $(elem);
-      if (this.isMyTurn()) {
+      if (this.get('isMyTurn')) {
         if (elem.hasClass('selected')) {
           elem.removeClass('selected');
           var idx = this.cardsToRedeem.indexOf(card);
@@ -109,7 +109,7 @@ var GameController = Ember.Controller.extend({
           this.cardsToRedeem.pushObject(card);
           elem.addClass('selected');
         }
-      } else if (this.isTrading()) {
+      } else if (this.get('isTrading')) {
         if (elem.hasClass('selected')) {
           elem.removeClass('selected secret');
           $('.selected.secret').removeClass('secret');
@@ -149,7 +149,7 @@ var GameController = Ember.Controller.extend({
   },
 
   'listOffer': function() {
-    if (!this.isTrading() || this.newOffer.length != 3) {
+    if (!this.get('isTrading') || this.newOffer.length != 3) {
       return;
     }
     var game = this.get('content');
@@ -219,6 +219,8 @@ var GameController = Ember.Controller.extend({
     }
 
     this.set('content', game);
+
+    this.updateMatches (game);
   },
 
   'prepareOffer': function (offer) {
@@ -236,6 +238,48 @@ var GameController = Ember.Controller.extend({
     } else {
       game.get('otherOffers').addObject(offer);
     }
+    this.updateMatches (game);
+  },
+
+  'updateMatches': function (game) {
+    var self = this;
+    setTimeout(function() {self.drawMatches(game);}, 0); 
+  },
+
+  drawMatches: function (game) {
+    var canvas = $('#offerCanvas');
+    var parent = canvas.parent();
+    canvas = canvas[0];
+    canvas.width = parent.width();
+    canvas.height = parent.height();
+    var ctx = canvas.getContext('2d');
+    for (var i = 0; i < game.matches.length; i++) {
+      var match = game.matches[i];
+      console.log (match);
+    }
+    this.drawMatchLine (ctx, 47, 45);
+    this.drawMatchLine (ctx, 46, 48);
+    this.drawMatchLine (ctx, 45, 46);
+  },
+
+  drawMatchLine: function (ctx, o1, o2) {
+    var p1 = this.getOfferPoint(o1);
+    var p2 = this.getOfferPoint(o2);
+    ctx.beginPath();
+    ctx.moveTo (p1.x, p1.y);
+    ctx.lineTo (p2.x, p2.y);
+    ctx.closePath();
+    ctx.stroke();
+  },
+
+  getOfferPoint: function (offerId) {
+    var po = $('#offerCanvas').offset();
+    var e = $('[offerid=' + offerId + ']');
+    var o = e.offset();
+    return {
+      x: (o.left - po.left) + e.width() / 2,
+      y: (o.top - po.top) + e.height() / 2
+    };
   },
 
   'notify': function (message, duration) {
@@ -323,6 +367,7 @@ App.Game = require('./models/game');
 App.NewRoute = require('./routes/new_route');
 App.GameRoute = require('./routes/game_route');
 App.GameListRoute = require('./routes/game_list_route');
+App.OfferView = require('./views/offer_view');
 App.CardView = require('./views/card_view');
 App.FriendThumbView = require('./views/friend_thumb_view');
 App.HexView = require('./views/hex_view');
@@ -339,50 +384,50 @@ var playerKey_ = null;
 var socket = null;
 
 function setPlayer () {
-	var message = {
-		gameId: gameId_,
-		playerKey: playerKey_
-	};
-	send('setPlayer', JSON.stringify(message));
+  var message = {
+    gameId: gameId_,
+    playerKey: playerKey_
+  };
+  send('setPlayer', JSON.stringify(message));
 }
 
 function send (channel, message) {
-	message = channel + '\n' + message;
-	socket.send(message);
+  message = channel + '\n' + message;
+  socket.send(message);
 }
 
 function receiveMessage (event) {
-	var message = JSON.parse(event.data);
+  var message = JSON.parse(event.data);
 
-	switch(message.channel) {
-	case "gameUpdate":
-	case "tradeUpdate":
-		var game = App.Game.create(message.body);
-		Events.publish('/game/update', [game]);
-		break;
-	case 'newOffer':
-		var offer = App.Offer.create(message.body);
-		Events.publish('/offer/new', [offer]);
-		break;
-	default:
-		console.error('unknown message received', message);
-	}
+  switch(message.channel) {
+  case "gameUpdate":
+  case "tradeUpdate":
+    var game = App.Game.create(message.body);
+    Events.publish('/game/update', [game]);
+    break;
+  case 'newOffer':
+    var offer = App.Offer.create(message.body);
+    Events.publish('/offer/new', [offer]);
+    break;
+  default:
+    console.error('unknown message received', message);
+  }
 }
 
 function connect (gameId, playerKey) {
-	gameId_ = gameId;
-	playerKey_ = playerKey;
+  gameId_ = gameId;
+  playerKey_ = playerKey;
   if (!socket) {
-		socket = new WebSocket(config.socketBase);
-		socket.onopen = setPlayer;
-		socket.onmessage = receiveMessage;
-	} else {
-		setPlayer();
-	}
+    socket = new WebSocket(config.socketBase);
+    socket.onopen = setPlayer;
+    socket.onmessage = receiveMessage;
+  } else {
+    setPlayer();
+  }
 }
 
 module.exports = {
-	connect: connect
+  connect: connect
 };
 
 });require.register("models/card.js", function(module, exports, require, global){
@@ -892,102 +937,41 @@ function program1(depth0,data) {
   data.buffer.push("</div>\n</header>\n\n<h2>Gold: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "content.gold", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</h2>\n<h2>Hand</h2>\n<section class=\"hand\">\n");
+  data.buffer.push("</h2>\n\n");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "content.hand", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "isActionPhase", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n");
+  hashTypes = {};
+  stack1 = helpers['if'].call(depth0, "isBuyPhase", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n<h2>Hand</h2>\n<section class=\"hand\">\n");
+  hashTypes = {};
+  stack1 = helpers.each.call(depth0, "content.hand", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n</section>\n\n<h2>Hexes</h2>\n<section class=\"hexes\">\n");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "content.hexes", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "content.hexes", {hash:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("  \n</section>\n\n<h2>Trade Cards</h2>\n<section class=\"trade-cards\">\n  ");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "content.tradeCards", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "content.tradeCards", {hash:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n  ");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "hasCardsToRedeem", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "hasCardsToRedeem", {hash:{},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n</section>\n\n<h2>Deck Count: ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "content.deckCount", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</h2>\n\n<h2>Discards</h2>\n<section class=\"discards\">\n");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "content.discards", {hash:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "content.discards", {hash:{},inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</section>\n\n");
-  hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "isActionPhase", {hash:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n\n");
-  hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "isBuyPhase", {hash:{},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n\n");
+  data.buffer.push("\n</section>\n\n\n");
   return buffer;
   }
 function program2(depth0,data) {
-  
-  var buffer = '', hashTypes;
-  data.buffer.push("\n  ");
-  hashTypes = {'content': "ID",'cardSource': "STRING"};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
-    'content': (""),
-    'cardSource': ("hand")
-  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n");
-  return buffer;
-  }
-
-function program4(depth0,data) {
-  
-  var buffer = '', hashTypes;
-  data.buffer.push("\n  ");
-  hashTypes = {'content': "ID"};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.HexView", {hash:{
-    'content': ("")
-  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n");
-  return buffer;
-  }
-
-function program6(depth0,data) {
-  
-  var buffer = '', hashTypes;
-  data.buffer.push("\n    ");
-  hashTypes = {'content': "ID",'cardSource': "STRING"};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
-    'content': (""),
-    'cardSource': ("tradeCards")
-  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n  ");
-  return buffer;
-  }
-
-function program8(depth0,data) {
-  
-  var buffer = '', hashTypes;
-  data.buffer.push("\n  <button ");
-  hashTypes = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "redeem", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Redeem Trade Cards</button>\n  ");
-  return buffer;
-  }
-
-function program10(depth0,data) {
-  
-  var buffer = '', hashTypes;
-  data.buffer.push("\n  ");
-  hashTypes = {'content': "ID",'cardSource': "STRING"};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
-    'content': (""),
-    'cardSource': ("discards")
-  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n");
-  return buffer;
-  }
-
-function program12(depth0,data) {
   
   var buffer = '', hashTypes;
   data.buffer.push("\n<section class=\"action-phase\">\n  It is your turn. Double click a card to play it.\n  Or <button ");
@@ -997,7 +981,7 @@ function program12(depth0,data) {
   return buffer;
   }
 
-function program14(depth0,data) {
+function program4(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n<section class=\"buy-phase\">\n  Double click a card to buy it, or <button ");
@@ -1005,22 +989,22 @@ function program14(depth0,data) {
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "buy", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Buys</button>.\n  <h2>Bank</h2>\n  <section class=\"bank\">\n  ");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "stack", "in", "bank", {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "stack", "in", "bank", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n  </section>\n</section>\n");
   return buffer;
   }
-function program15(depth0,data) {
+function program5(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n    <section class=stack>\n      ");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "stack", {hash:{},inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "stack", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n    </section>\n  ");
   return buffer;
   }
-function program16(depth0,data) {
+function program6(depth0,data) {
   
   var buffer = '', hashTypes;
   data.buffer.push("\n      ");
@@ -1033,15 +1017,76 @@ function program16(depth0,data) {
   return buffer;
   }
 
+function program8(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n  ");
+  hashTypes = {'content': "ID",'cardSource': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
+    'content': (""),
+    'cardSource': ("hand")
+  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n");
+  return buffer;
+  }
+
+function program10(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n  ");
+  hashTypes = {'content': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.HexView", {hash:{
+    'content': ("")
+  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n");
+  return buffer;
+  }
+
+function program12(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n    ");
+  hashTypes = {'content': "ID",'cardSource': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
+    'content': (""),
+    'cardSource': ("tradeCards")
+  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n  ");
+  return buffer;
+  }
+
+function program14(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n  <button ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "redeem", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Redeem Trade Cards</button>\n  ");
+  return buffer;
+  }
+
+function program16(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n  ");
+  hashTypes = {'content': "ID",'cardSource': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
+    'content': (""),
+    'cardSource': ("discards")
+  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n");
+  return buffer;
+  }
+
 function program18(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n<!-- Ths is the trading phase. -->\n<button ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "doneTrading", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">\n<h2>Trading Phase - Your Trade Cards</h2>\n<section class=\"trade-cards\">\n  ");
+  data.buffer.push(">Done Trading</button>\n<h2>Trading Phase - Your Trade Cards</h2>\n<section class=\"trade-cards\">\n  ");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "content.tradeCards", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "content.tradeCards", {hash:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n  ");
   hashTypes = {};
@@ -1053,7 +1098,7 @@ function program18(depth0,data) {
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n  </ul>\n  <ul class=\"other\">\n  ");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "content.otherOffers", {hash:{},inverse:self.noop,fn:self.program(21, program21, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "content.otherOffers", {hash:{},inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n  </ul>\n</section>\n\n");
   return buffer;
@@ -1073,34 +1118,27 @@ function program19(depth0,data) {
 
 function program21(depth0,data) {
   
-  var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n    <li>\n    <img ");
-  hashTypes = {'src': "STRING"};
-  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
-    'src': ("playerPhoto")
-  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(" ");
-  hashTypes = {'title': "STRING"};
-  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
-    'title': ("playerName")
-  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">\n    ");
-  hashTypes = {};
-  stack1 = helpers.each.call(depth0, "cards", {hash:{},inverse:self.noop,fn:self.program(22, program22, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n    </li>\n  ");
+  var buffer = '', hashTypes;
+  data.buffer.push("\n    ");
+  hashTypes = {'content': "ID",'source': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.OfferView", {hash:{
+    'content': (""),
+    'source': ("my")
+  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n  ");
   return buffer;
   }
-function program22(depth0,data) {
+
+function program23(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n      ");
-  hashTypes = {'content': "ID",'cardSource': "STRING"};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
-    'content': (""),
-    'cardSource': ("offer")
-  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("\n    ");
+  hashTypes = {'content': "ID",'source': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.OfferView", {hash:{
+    'content': (""),
+    'source': ("other")
+  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n  ");
   return buffer;
   }
 
@@ -1266,6 +1304,46 @@ function program10(depth0,data) {
   data.buffer.push("\n");
   hashTypes = {};
   stack1 = helpers['if'].call(depth0, "view.setValues2", {hash:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES['offer'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [2,'>= 1.0.0-rc.3'];
+helpers = helpers || Ember.Handlebars.helpers; data = data || {};
+  var buffer = '', stack1, hashTypes, escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n  ");
+  hashTypes = {'content': "ID",'cardSource': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "App.CardView", {hash:{
+    'content': (""),
+    'cardSource': ("offer")
+  },contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n");
+  return buffer;
+  }
+
+  data.buffer.push("<img ");
+  hashTypes = {'src': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'src': ("playerPhoto")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashTypes = {'title': "STRING"};
+  data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
+    'title': ("playerName")
+  },contexts:[],types:[],hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "id", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n");
+  hashTypes = {};
+  stack1 = helpers.each.call(depth0, "cards", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   return buffer;
@@ -41074,6 +41152,30 @@ var HexView = Ember.View.extend({
 });
 
 module.exports = HexView;
+
+
+});require.register("views/offer_view.js", function(module, exports, require, global){
+var Events = require('../vendor/pubsub.js');
+
+var OfferView = Ember.View.extend({
+  tagName: 'li',
+  templateName: 'offer',
+  attributeBindings: ['offerId'],
+
+  offerId: function () {
+    return this.get('context.id');
+  }.property('content.id'),
+
+  source: null, 
+  click: function(event) {
+    console.log('offer double clicked', event.currentTarget);
+    $(event.currentTarget).toggleClass('selected');
+    var source = this.get('source');
+    Events.publish('/offer/selected', [this.get('context.id'), source], this);
+  }
+});
+
+module.exports = OfferView;
 
 
 });var exp = require('index');if ("undefined" != typeof module) module.exports = exp;else index = exp;

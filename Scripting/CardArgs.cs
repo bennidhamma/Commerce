@@ -14,6 +14,8 @@ namespace ForgottenArts.Commerce
 		// Signals card scripts can set to change the after play behavior.
 		public bool TrashCard {get; set;}
 
+		public string Error {get; set;}
+
 		bool discardCard = true;
 		public bool DiscardCard {
 			get {
@@ -24,5 +26,4 @@ namespace ForgottenArts.Commerce
 			}
 		}
 	}
-
 }

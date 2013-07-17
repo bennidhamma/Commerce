@@ -1,0 +1,5 @@
+<img {{bindAttr src="playerPhoto"}} {{bindAttr title="playerName"}}>
+{{id}}
+{{#each cards}}
+  {{view App.CardView content=this cardSource="offer"}}
+{{/each}}

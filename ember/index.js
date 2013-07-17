@@ -23,6 +23,7 @@ App.Game = require('./models/game');
 App.NewRoute = require('./routes/new_route');
 App.GameRoute = require('./routes/game_route');
 App.GameListRoute = require('./routes/game_list_route');
+App.OfferView = require('./views/offer_view');
 App.CardView = require('./views/card_view');
 App.FriendThumbView = require('./views/friend_thumb_view');
 App.HexView = require('./views/hex_view');

@@ -22,7 +22,7 @@ var GameController = Ember.Controller.extend({
   }.property('content.status'),
 
   'isMyTurn': function () { 
-    return !this.get('isTrading') && true;
+    return !this.get('isTrading') && this.get('content.currentTurn.playerKey') == App.Friend.meId();
   }.property('isTrading'),
 
   'isActionPhase': function () {
@@ -80,7 +80,7 @@ var GameController = Ember.Controller.extend({
       break;
     case 'tradeCards':
       elem = $(elem);
-      if (this.isMyTurn()) {
+      if (this.get('isMyTurn')) {
         if (elem.hasClass('selected')) {
           elem.removeClass('selected');
           var idx = this.cardsToRedeem.indexOf(card);
@@ -91,7 +91,7 @@ var GameController = Ember.Controller.extend({
           this.cardsToRedeem.pushObject(card);
           elem.addClass('selected');
         }
-      } else if (this.isTrading()) {
+      } else if (this.get('isTrading')) {
         if (elem.hasClass('selected')) {
           elem.removeClass('selected secret');
           $('.selected.secret').removeClass('secret');
@@ -131,7 +131,7 @@ var GameController = Ember.Controller.extend({
   },
 
   'listOffer': function() {
-    if (!this.isTrading() || this.newOffer.length != 3) {
+    if (!this.get('isTrading') || this.newOffer.length != 3) {
       return;
     }
     var game = this.get('content');
@@ -201,6 +201,8 @@ var GameController = Ember.Controller.extend({
     }
 
     this.set('content', game);
+
+    this.updateMatches (game);
   },
 
   'prepareOffer': function (offer) {
@@ -218,6 +220,48 @@ var GameController = Ember.Controller.extend({
     } else {
       game.get('otherOffers').addObject(offer);
     }
+    this.updateMatches (game);
+  },
+
+  'updateMatches': function (game) {
+    var self = this;
+    setTimeout(function() {self.drawMatches(game);}, 0); 
+  },
+
+  drawMatches: function (game) {
+    var canvas = $('#offerCanvas');
+    var parent = canvas.parent();
+    canvas = canvas[0];
+    canvas.width = parent.width();
+    canvas.height = parent.height();
+    var ctx = canvas.getContext('2d');
+    for (var i = 0; i < game.matches.length; i++) {
+      var match = game.matches[i];
+      console.log (match);
+    }
+    this.drawMatchLine (ctx, 47, 45);
+    this.drawMatchLine (ctx, 46, 48);
+    this.drawMatchLine (ctx, 45, 46);
+  },
+
+  drawMatchLine: function (ctx, o1, o2) {
+    var p1 = this.getOfferPoint(o1);
+    var p2 = this.getOfferPoint(o2);
+    ctx.beginPath();
+    ctx.moveTo (p1.x, p1.y);
+    ctx.lineTo (p2.x, p2.y);
+    ctx.closePath();
+    ctx.stroke();
+  },
+
+  getOfferPoint: function (offerId) {
+    var po = $('#offerCanvas').offset();
+    var e = $('[offerid=' + offerId + ']');
+    var o = e.offset();
+    return {
+      x: (o.left - po.left) + e.width() / 2,
+      y: (o.top - po.top) + e.height() / 2
+    };
   },
 
   'notify': function (message, duration) {

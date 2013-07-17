@@ -41,7 +41,7 @@ namespace ForgottenArts.Commerce
 			return scope;
 		}
 
-		public bool ExecuteCardAction (Game game, Card card, CardArgs args) 
+		public string ExecuteCardAction (Game game, Card card, CardArgs args) 
 		{
 			try
 			{
@@ -54,9 +54,9 @@ namespace ForgottenArts.Commerce
 			catch (Exception e)
 			{
 				Console.WriteLine (e);
-				return false;
+				return e.Message;
 			}
-			return true;
+			return args.Error;
 		}
 
 		public int ExecuteModifyAttack (Game game, Card card) 

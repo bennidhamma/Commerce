@@ -4,16 +4,17 @@ Description: Roll on the Discovery Table.
 HasAttack: false
 Cost: 50
 Action: |
-  roll = 1 + rand(100)
+  num_cities = game.players.reduce {|p| p.hexes.length}
+  roll = 1 + rand(100) - num_cities
   pop = ((2 + rand(6) + rand(6)) / 2).round
   # Allow other cards to modify discovery roll.
   case roll
   when 1..10
     args.trash_card = true
     log = "lost a ship"
-  when 11..60
+  when 11..30
     log = "found nothing"
-  when 61..90
+  when 31..90
     current_player.add_hex pop
     log = "found a hex"
   else
