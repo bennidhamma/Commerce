@@ -344,7 +344,10 @@ namespace ForgottenArts.Commerce
 
 			game.Trades.Add (offer);
 			Save (game);
-			PlayerSocketServer.Instance.Send (new OfferView (game, offer), "newOffer", game);
+			foreach (var p in game.Players) {
+				PlayerSocketServer.Instance.Send (new OfferView (game, p, offer), "newOffer", p); 
+			}
+
 
 			return false;
 		}
@@ -377,7 +380,7 @@ namespace ForgottenArts.Commerce
 			otherPlayer.ReceiveMatch (match);
 			game.Matches.Add (match);
 			Save (game);
-			PlayerSocketServer.Instance.Send (match, "newMatch", game);
+			PlayerSocketServer.Instance.Send (new MatchView (match), "newMatch", game);
 
 			return false;
 		}

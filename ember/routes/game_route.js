@@ -8,21 +8,9 @@ var GameRoute = Ember.Route.extend({
 
 	setupController: function (controller, gameSummary) {
 		var route = this;
+
+    controller.setupListeners ();
 		
-		// Listen for game updates.
-		Events.subscribe('/game/update', function(game) {
-			controller.prepareGame(game);
-		});
-
-		Events.subscribe('/offer/new', function(offer) {
-			controller.addOffer(offer);
-		});
-
-		// List for errors.
-		Events.subscribe('error', function(message) {
-			controller.notify(message, 5000);
-		});
-
 		App.Game.find(gameSummary.id, function (game) {
 			socket.connect(gameSummary.id, App.Friend.meId());
 			route.getCards(game, controller);

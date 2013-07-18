@@ -31,6 +31,9 @@ function receiveMessage (event) {
     var offer = App.Offer.create(message.body);
     Events.publish('/offer/new', [offer]);
     break;
+  case "newMatch":
+    Events.publish('/match/new', [message.body]);
+    break;
   default:
     console.error('unknown message received', message);
   }

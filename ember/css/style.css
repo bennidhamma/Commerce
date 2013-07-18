@@ -141,6 +141,17 @@ h2 {
   .offers ul {
     display: inline-block;
     position: relative;
-    width: 40%;
     list-style: none;
     margin: 0; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003148}}
+    .offers ul.my {
+      margin-right: 20em; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003153}}
+    .offers ul li {
+      border: 1px solid black;
+      border-radius: 5px;
+      background: white; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003157}}
+      .offers ul li .card {
+        -webkit-transform: scale(0.6, 0.6);
+        margin: -25px -25px; }

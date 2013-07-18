@@ -145,8 +145,19 @@ h2 {
   ul {
     display: inline-block;
     position: relative;
-    width: 40%;
+    &.my {
+      margin-right: 20em;
+    }
     list-style: none;
     margin: 0;
+    li {
+      border:1px solid black;
+      border-radius:5px;
+      background: white;
+      .card {
+        -webkit-transform:scale(0.6,0.6);
+        margin: -25px -25px;
+      }
+    }
   }
 }

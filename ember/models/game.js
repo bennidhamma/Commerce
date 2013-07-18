@@ -48,6 +48,13 @@ var Game = Ember.Object.extend({
 
   doneTrading: function () {
     this.sendCommand ('trading/done', {});
+  },
+
+  suggestMatch: function (myOfferId, otherOfferId) {
+    this.sendCommand ('match/suggest', {
+      myOfferId: myOfferId,
+      otherOfferId: otherOfferId
+    });
   }
 });
 

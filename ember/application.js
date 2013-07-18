@@ -132,6 +132,48 @@ var GameController = Ember.Controller.extend({
     }
   },
 
+  'selectOffer': function (offerId, source) {
+    var self = this;
+    var game = this.get('content');
+    // Clear out any current selection.
+    $('.offers ul.' + source + ' .selected').removeClass('selected');
+    var myOffer = null;
+    var otherOffer = null;
+    
+    if (source == 'my') {
+      if (this.get('myOfferId') == offerId) {
+        this.set('myOfferId', null);
+        return;
+      }
+      otherOffer  = this.get('otherOfferId');
+      if (otherOffer) {
+        myOffer = offerId;
+      } else {
+        this.set('myOfferId', offerId);
+      }
+    } else {
+      if (this.get('otherOfferId') == offerId) {
+        this.set('otherOfferId', null);
+        return;
+      }
+      myOffer = this.get('myOfferId');
+      if (myOffer) {
+        otherOffer = offerId;
+      } else {
+        this.set('otherOfferId', offerId);
+      }
+    }
+
+    if (myOffer && otherOffer) {
+      game.suggestMatch(myOffer, otherOffer);
+      this.set('myOfferId', null);
+      this.set('otherOfferId', null);
+      $('.offers ul .selected').removeClass('selected');
+    } else {
+      $('[offerid=' + offerId + ']').addClass('selected');
+    }
+  },
+
   'playCard': function(card, hexId) {
     var self = this;
     var game = this.get('content');
@@ -253,13 +295,12 @@ var GameController = Ember.Controller.extend({
     canvas.width = parent.width();
     canvas.height = parent.height();
     var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (var i = 0; i < game.matches.length; i++) {
       var match = game.matches[i];
       console.log (match);
+      this.drawMatchLine (ctx, match.offer1Id, match.offer2Id);
     }
-    this.drawMatchLine (ctx, 47, 45);
-    this.drawMatchLine (ctx, 46, 48);
-    this.drawMatchLine (ctx, 45, 46);
   },
 
   drawMatchLine: function (ctx, o1, o2) {
@@ -293,6 +334,29 @@ var GameController = Ember.Controller.extend({
 
   'unnotify': function () {
     $('.notification-bar').slideUp();
+  },
+
+  setupListeners: function () {
+    var controller = this;
+    // Listen for game updates.
+    Events.subscribe('/game/update', function(game) {
+      controller.prepareGame(game);
+    });
+
+    Events.subscribe('/offer/new', function(offer) {
+      controller.addOffer(offer);
+    });
+
+    Events.subscribe('/match/new', function(match) {
+      var game = controller.get('content');
+      game.get('matches').addObject(match);
+      controller.drawMatches(game);
+    });
+
+    // List for errors.
+    Events.subscribe('error', function(message) {
+      controller.notify(message, 5000);
+    });
   }
     
 });
@@ -408,6 +472,9 @@ function receiveMessage (event) {
   case 'newOffer':
     var offer = App.Offer.create(message.body);
     Events.publish('/offer/new', [offer]);
+    break;
+  case "newMatch":
+    Events.publish('/match/new', [message.body]);
     break;
   default:
     console.error('unknown message received', message);
@@ -613,6 +680,13 @@ var Game = Ember.Object.extend({
 
   doneTrading: function () {
     this.sendCommand ('trading/done', {});
+  },
+
+  suggestMatch: function (myOfferId, otherOfferId) {
+    this.sendCommand ('match/suggest', {
+      myOfferId: myOfferId,
+      otherOfferId: otherOfferId
+    });
   }
 });
 
@@ -716,21 +790,9 @@ var GameRoute = Ember.Route.extend({
 
 	setupController: function (controller, gameSummary) {
 		var route = this;
+
+    controller.setupListeners ();
 		
-		// Listen for game updates.
-		Events.subscribe('/game/update', function(game) {
-			controller.prepareGame(game);
-		});
-
-		Events.subscribe('/offer/new', function(offer) {
-			controller.addOffer(offer);
-		});
-
-		// List for errors.
-		Events.subscribe('error', function(message) {
-			controller.notify(message, 5000);
-		});
-
 		App.Game.find(gameSummary.id, function (game) {
 			socket.connect(gameSummary.id, App.Friend.meId());
 			route.getCards(game, controller);
@@ -41171,6 +41233,8 @@ var OfferView = Ember.View.extend({
     console.log('offer double clicked', event.currentTarget);
     $(event.currentTarget).toggleClass('selected');
     var source = this.get('source');
+    var id = this.get('context.id');
+    this.get('controller').send('selectOffer', id, source);
     Events.publish('/offer/selected', [this.get('context.id'), source], this);
   }
 });

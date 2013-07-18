@@ -30,7 +30,7 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
-		public OfferView (Game game, Offer offer)
+		public OfferView (Game game, PlayerGame viewer, Offer offer)
 		{
 			this.PlayerKey = offer.PlayerKey;
 
@@ -41,7 +41,8 @@ namespace ForgottenArts.Commerce.Server
 			this.Id = offer.Id;
 			this.Cards = new List<string>(offer.Cards);
 			// Remove the third card because it is hidden.
-			this.Cards.RemoveAt(2);
+			if (offer.PlayerKey != viewer.PlayerKey)
+				this.Cards[2] = "Secret";
 		}
 	}
 }
