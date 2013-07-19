@@ -60,7 +60,7 @@ namespace ForgottenArts.Commerce.Server
 			this.TradeCardCounts = from p in game.Players select new KeyValuePair<string, int> (p.PlayerKey, p.TradeCards.Count);
 			this.MyOffers = from o in game.Trades where o.PlayerKey == player.PlayerKey select new OfferView (game, player, o);
 			this.OtherOffers = from o in game.Trades where o.PlayerKey != player.PlayerKey select new OfferView (game, player, o);
-			this.Matches = from m in game.Matches select new MatchView (m);
+			this.Matches = from m in game.Matches select new MatchView (player, m);
 			this.TradeEnd = game.TradeEnd;
 		}
 	}

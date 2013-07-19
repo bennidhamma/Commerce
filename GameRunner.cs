@@ -380,7 +380,10 @@ namespace ForgottenArts.Commerce
 			otherPlayer.ReceiveMatch (match);
 			game.Matches.Add (match);
 			Save (game);
-			PlayerSocketServer.Instance.Send (new MatchView (match), "newMatch", game);
+
+			foreach (var p in game.Players) {
+				PlayerSocketServer.Instance.Send (new MatchView (p, match), "newMatch", p);
+			}
 
 			return false;
 		}

@@ -55,7 +55,15 @@ var Game = Ember.Object.extend({
       myOfferId: myOfferId,
       otherOfferId: otherOfferId
     });
-  }
+  },
+
+  cancelMatch: function (matchId) {
+    this.sendCommand ('match/cancel', {matchId: matchId});
+  },
+
+  acceptMatch: function (matchId) {
+    this.sendCommand ('match/accept', {matchId: matchId});
+  },
 });
 
 Game.reopenClass({

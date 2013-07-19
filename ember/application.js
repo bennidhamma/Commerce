@@ -299,18 +299,47 @@ var GameController = Ember.Controller.extend({
     for (var i = 0; i < game.matches.length; i++) {
       var match = game.matches[i];
       console.log (match);
-      this.drawMatchLine (ctx, match.offer1Id, match.offer2Id);
+      this.drawMatchLine (game, ctx, match);
     }
   },
 
-  drawMatchLine: function (ctx, o1, o2) {
-    var p1 = this.getOfferPoint(o1);
-    var p2 = this.getOfferPoint(o2);
+  drawMatchLine: function (game, ctx, match) {
+    var p1 = this.getOfferPoint(match.offer1Id);
+    var p2 = this.getOfferPoint(match.offer2Id);
+    
     ctx.beginPath();
     ctx.moveTo (p1.x, p1.y);
     ctx.lineTo (p2.x, p2.y);
     ctx.closePath();
     ctx.stroke();
+
+    var buttons = $('<div class=match-buttons>');
+    if (match.canAccept) {
+      var button = $('<button class=can-accept>Accept</button>');
+      button.click(function () {
+        game.acceptMatch(match.id);
+      });
+      buttons.append(button);
+    }
+    if (match.canCancel) {
+      var button = $('<button class=can-canel>X</button>');
+      button.click(function () {
+        game.cancelMatch(match.id);
+      });
+      buttons.append(button);
+      var center = {
+        left: (p1.x + p2.x) / 2,
+        top: (p1.y + p2.y) / 2
+      };
+      center.left -= buttons.width() / 2;
+      center.top -= buttons.height() / 2;
+      buttons.css({
+        top: center.top,
+        left: center.left,
+        position: 'absolute'
+      });
+      $('section.offers').append(buttons);
+    }
   },
 
   getOfferPoint: function (offerId) {
@@ -687,7 +716,15 @@ var Game = Ember.Object.extend({
       myOfferId: myOfferId,
       otherOfferId: otherOfferId
     });
-  }
+  },
+
+  cancelMatch: function (matchId) {
+    this.sendCommand ('match/cancel', {matchId: matchId});
+  },
+
+  acceptMatch: function (matchId) {
+    this.sendCommand ('match/accept', {matchId: matchId});
+  },
 });
 
 Game.reopenClass({
@@ -784,27 +821,27 @@ var Events = require('../vendor/pubsub.js');
 var socket = require('../io/socket.js');
 
 var GameRoute = Ember.Route.extend({
-	model: function (params) {
-		return App.Game.create({id: params.game_id});
-	},
+  model: function (params) {
+    return App.Game.create({id: params.game_id});
+  },
 
-	setupController: function (controller, gameSummary) {
-		var route = this;
+  setupController: function (controller, gameSummary) {
+    var route = this;
 
     controller.setupListeners ();
-		
-		App.Game.find(gameSummary.id, function (game) {
-			socket.connect(gameSummary.id, App.Friend.meId());
-			route.getCards(game, controller);
-		});
-	},
+    
+    App.Game.find(gameSummary.id, function (game) {
+      socket.connect(gameSummary.id, App.Friend.meId());
+      route.getCards(game, controller);
+    });
+  },
 
-	getCards: function(game, controller) {
-		App.Card.getForGame(game, function(cards) {
-			controller.set('cards', cards);
-			controller.prepareGame(game);
-		});
-	}
+  getCards: function(game, controller) {
+    App.Card.getForGame(game, function(cards) {
+      controller.set('cards', cards);
+      controller.prepareGame(game);
+    });
+  }
 
 });
 
@@ -41145,47 +41182,47 @@ window.authenticate = Plus.authenticate;
 var _ = require('../vendor/underscore-min')
 
 var CardView = Ember.View.extend({
-	cardSource: null,
+  cardSource: null,
 
   templateName: 'card',
 
-	classNameBindings: ['context.type'],
+  classNameBindings: ['context.type'],
 
   classNames: ['card'],
-	
-	setValues1: function () {
-		return this.setValues(0, 4);
-	}.property('context.tradeValues'),
+  
+  setValues1: function () {
+    return this.setValues(0, 4);
+  }.property('context.tradeValues'),
 
-	setValues2: function () {
-		return this.setValues(4, 8);
-	}.property('context.tradeValues'),
+  setValues2: function () {
+    return this.setValues(4, 8);
+  }.property('context.tradeValues'),
 
-	setValues3: function () {
-		return this.setValues(8, 12);
-	}.property('context.tradeValues'),
+  setValues3: function () {
+    return this.setValues(8, 12);
+  }.property('context.tradeValues'),
 
-	setValues: function(start, end) {
-		var card = this.get('context');
-		if (!card.tradeValues) {
-			return null;
-		}
-		var items = [];
-		for (var i = start; i < end && i < card.tradeValues.length; i++) {
-			items.push(card.tradeValues[i]);
-		}
-		return items;
-	},
+  setValues: function(start, end) {
+    var card = this.get('context');
+    if (!card.tradeValues) {
+      return null;
+    }
+    var items = [];
+    for (var i = start; i < end && i < card.tradeValues.length; i++) {
+      items.push(card.tradeValues[i]);
+    }
+    return items;
+  },
 
-	click: function(event) {
-		var card = this.get('context');
-		var name = card.get('name');
-		var cardSource = this.get('cardSource');
-		console.log ('card double clicked', event.currentTarget, cardSource);
+  click: function(event) {
+    var card = this.get('context');
+    var name = card.get('name');
+    var cardSource = this.get('cardSource');
+    console.log ('card double clicked', event.currentTarget, cardSource);
 
-		this.get('controller').send('selectCard', name, cardSource,
-				event.currentTarget);
-	}
+    this.get('controller').send('selectCard', name, cardSource,
+        event.currentTarget);
+  }
 });
 
 module.exports = CardView;
