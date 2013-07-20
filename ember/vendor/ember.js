@@ -2859,7 +2859,11 @@ ChainNodePrototype.chain = function(key, path, src) {
 };
 
 ChainNodePrototype.unchain = function(key, path) {
-  var chains = this._chains, node = chains[key];
+  var chains = this._chains;
+  if (!chains) {
+    return;
+  }
+  var node = chains[key];
 
   // unchain rest of path first...
   if (path && path.length>1) {

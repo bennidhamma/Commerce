@@ -195,7 +195,7 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n<section class=\"action-phase\">\n  It is your turn. Double click a card to play it.\n  Or <button ");
+  data.buffer.push("\n<section class=\"action-phase\">\n  It is your turn. Click a card to play it.\n  Or <button ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "action", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Actions</button>.\n</section>\n");
@@ -205,7 +205,7 @@ function program2(depth0,data) {
 function program4(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n<section class=\"buy-phase\">\n  Double click a card to buy it, or <button ");
+  data.buffer.push("\n<section class=\"buy-phase\">\n  Click a card to buy it, or <button ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "buy", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Buys</button>.\n  <h2>Bank</h2>\n  <section class=\"bank\">\n  ");
@@ -469,16 +469,6 @@ function program4(depth0,data) {
 
 function program6(depth0,data) {
   
-  var buffer = '', hashTypes;
-  data.buffer.push("\n<p>");
-  hashTypes = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "cost", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(" gold</p>\n");
-  return buffer;
-  }
-
-function program8(depth0,data) {
-  
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n<section class=\"set set3\">\n");
   hashTypes = {};
@@ -488,7 +478,7 @@ function program8(depth0,data) {
   return buffer;
   }
 
-function program10(depth0,data) {
+function program8(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n<section class=\"set set2\">\n");
@@ -516,15 +506,11 @@ function program10(depth0,data) {
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "cost", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "view.setValues3", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "view.setValues3", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n");
-  hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "view.setValues2", {hash:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "view.setValues2", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   return buffer;

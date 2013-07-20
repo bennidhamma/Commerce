@@ -34,6 +34,12 @@ function receiveMessage (event) {
   case "newMatch":
     Events.publish('/match/new', [message.body]);
     break;
+  case "updateTradeCards":
+    Events.publish('/tradeCards/update', [message.body]);
+    break;
+  case "removeMatch":
+    Events.publish('/match/delete', [message.body]);
+    break;
   default:
     console.error('unknown message received', message);
   }

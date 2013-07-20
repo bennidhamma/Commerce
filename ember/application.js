@@ -235,15 +235,7 @@ var GameController = Ember.Controller.extend({
     }
 
     if (game.tradeCards) {
-      // Update trade cards.
-      for (i = 0; i < game.tradeCards.length; i++) {
-        game.tradeCards[i] = cards[game.tradeCards[i]];
-      }
-      var tradeCards = game.get('tradeCards').toArray();
-      tradeCards = _.sortBy(tradeCards, function(c) {
-        return c.tradeLevel + '.' + c.name;
-      });
-      game.set('tradeCards', tradeCards);
+      this.updateTradeCards (game.get('tradeCards').toArray(), game);
     }
 
     if (game.myOffers) {
@@ -263,6 +255,20 @@ var GameController = Ember.Controller.extend({
     this.set('content', game);
 
     this.updateMatches (game);
+  },
+
+  'updateTradeCards': function (cards, game) {
+    if (!game) {
+      game = this.get('content');
+    }
+    var cardObjects = this.get('cards');
+    for (i = 0; i < cards.length; i++) {
+      cards[i] = cardObjects[cards[i]];
+    }
+    cards = _.sortBy(cards, function(c) {
+      return c.tradeLevel + '.' + c.name;
+    });
+    game.set('tradeCards', cards);
   },
 
   'prepareOffer': function (offer) {
@@ -291,14 +297,19 @@ var GameController = Ember.Controller.extend({
   drawMatches: function (game) {
     var canvas = $('#offerCanvas');
     var parent = canvas.parent();
+    if (canvas.length == 0 || parent.length == 0)
+      return;
     canvas = canvas[0];
     canvas.width = parent.width();
     canvas.height = parent.height();
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    $('section.offers div.match-buttons').remove();
+    if (!game.matches) {
+      return;
+    }
     for (var i = 0; i < game.matches.length; i++) {
       var match = game.matches[i];
-      console.log (match);
       this.drawMatchLine (game, ctx, match);
     }
   },
@@ -368,17 +379,32 @@ var GameController = Ember.Controller.extend({
   setupListeners: function () {
     var controller = this;
     // Listen for game updates.
-    Events.subscribe('/game/update', function(game) {
+    Events.subscribe('/game/update', function (game) {
       controller.prepareGame(game);
     });
 
-    Events.subscribe('/offer/new', function(offer) {
+    Events.subscribe('/offer/new', function (offer) {
       controller.addOffer(offer);
     });
 
-    Events.subscribe('/match/new', function(match) {
+    Events.subscribe('/match/new', function (match) {
       var game = controller.get('content');
       game.get('matches').addObject(match);
+      controller.drawMatches(game);
+    });
+
+    Events.subscribe('/tradeCards/update', function (cards) {
+      controller.updateTradeCards (cards);
+    });
+
+    Events.subscribe('/match/delete', function (matchId) {
+      var game = controller.get('content');
+      for (var i = 0; i < game.matches.length; i++) {
+        if (game.matches[i].id == matchId) {
+          game.matches.splice(i, 1);
+          break
+        }
+      }
       controller.drawMatches(game);
     });
 
@@ -504,6 +530,12 @@ function receiveMessage (event) {
     break;
   case "newMatch":
     Events.publish('/match/new', [message.body]);
+    break;
+  case "updateTradeCards":
+    Events.publish('/tradeCards/update', [message.body]);
+    break;
+  case "removeMatch":
+    Events.publish('/match/delete', [message.body]);
     break;
   default:
     console.error('unknown message received', message);
@@ -1073,7 +1105,7 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n<section class=\"action-phase\">\n  It is your turn. Double click a card to play it.\n  Or <button ");
+  data.buffer.push("\n<section class=\"action-phase\">\n  It is your turn. Click a card to play it.\n  Or <button ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "action", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Actions</button>.\n</section>\n");
@@ -1083,7 +1115,7 @@ function program2(depth0,data) {
 function program4(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n<section class=\"buy-phase\">\n  Double click a card to buy it, or <button ");
+  data.buffer.push("\n<section class=\"buy-phase\">\n  Click a card to buy it, or <button ");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "skip", "buy", {hash:{},contexts:[depth0,depth0],types:["ID","STRING"],hashTypes:hashTypes,data:data})));
   data.buffer.push(">Skip Buys</button>.\n  <h2>Bank</h2>\n  <section class=\"bank\">\n  ");
@@ -1347,16 +1379,6 @@ function program4(depth0,data) {
 
 function program6(depth0,data) {
   
-  var buffer = '', hashTypes;
-  data.buffer.push("\n<p>");
-  hashTypes = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "cost", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push(" gold</p>\n");
-  return buffer;
-  }
-
-function program8(depth0,data) {
-  
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n<section class=\"set set3\">\n");
   hashTypes = {};
@@ -1366,7 +1388,7 @@ function program8(depth0,data) {
   return buffer;
   }
 
-function program10(depth0,data) {
+function program8(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
   data.buffer.push("\n<section class=\"set set2\">\n");
@@ -1394,15 +1416,11 @@ function program10(depth0,data) {
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "cost", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "view.setValues3", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "view.setValues3", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n");
-  hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "view.setValues2", {hash:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "view.setValues2", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   return buffer;
@@ -4313,7 +4331,11 @@ ChainNodePrototype.chain = function(key, path, src) {
 };
 
 ChainNodePrototype.unchain = function(key, path) {
-  var chains = this._chains, node = chains[key];
+  var chains = this._chains;
+  if (!chains) {
+    return;
+  }
+  var node = chains[key];
 
   // unchain rest of path first...
   if (path && path.length>1) {

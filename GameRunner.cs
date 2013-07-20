@@ -348,7 +348,6 @@ namespace ForgottenArts.Commerce
 				PlayerSocketServer.Instance.Send (new OfferView (game, p, offer), "newOffer", p); 
 			}
 
-
 			return false;
 		}
 
@@ -427,25 +426,28 @@ namespace ForgottenArts.Commerce
 				GiveTradeCard(player, firstPlayer, card);
 			}
 
-			// Send trade card updates.
-			firstPlayer.Send (firstPlayer.TradeCards, "updateTradeCards");
-			player.Send (player.TradeCards, "updateTradeCards");
+			game.Matches.RemoveAll (m => m.MatchId == match.MatchId);
+			game.Trades.RemoveAll (o => o.Id == match.Offer1.Id || o.Id == match.Offer2.Id);
 
 			ExtendTradeTime (game);
 
 			// Remove match will also trigger a save.
-			RemoveMatch (game, match, firstPlayer, player);
+			RemoveMatch (game, match, firstPlayer, player, false);
 
-			return false;
+			return true;
 		}
 
-		void RemoveMatch (Game game, Match match, PlayerGame firstPlayer, PlayerGame secondPlayer)
+		void RemoveMatch (Game game, Match match, PlayerGame firstPlayer, PlayerGame secondPlayer, bool sendUpdates)
 		{
 			firstPlayer.ProposedMatches.RemoveAll (m => m.MatchId == match.MatchId);
 			secondPlayer.ReceivedMatches.RemoveAll (m => m.MatchId == match.MatchId);
 			game.Matches.RemoveAll (m => m.MatchId == match.MatchId);
-			Save (game);
-			PlayerSocketServer.Instance.Send (match.MatchId, "removeMatch", game);
+
+			if (sendUpdates)
+			{
+				Save (game);
+				PlayerSocketServer.Instance.Send (match.MatchId, "removeMatch", game);
+			}
 		}
 
 		public bool CancelMatch (Game game, PlayerGame player, Match match)
@@ -458,10 +460,10 @@ namespace ForgottenArts.Commerce
 			var firstPlayer = game.GetPlayer (match.Offer1.PlayerKey);
 			var secondPlayer = game.GetPlayer (match.Offer2.PlayerKey);
 
-			if (player.PlayerKey != firstPlayer.PlayerKey || player.PlayerKey != secondPlayer.PlayerKey) {
+			if (player.PlayerKey != firstPlayer.PlayerKey && player.PlayerKey != secondPlayer.PlayerKey) {
 				throw new InvalidOperationException ("Cannot cancel a match that isn't yours.");
 			}
-			RemoveMatch (game, match, firstPlayer, secondPlayer);
+			RemoveMatch (game, match, firstPlayer, secondPlayer, true);
 			return false;
 		}
 

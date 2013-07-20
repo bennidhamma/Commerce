@@ -217,15 +217,7 @@ var GameController = Ember.Controller.extend({
     }
 
     if (game.tradeCards) {
-      // Update trade cards.
-      for (i = 0; i < game.tradeCards.length; i++) {
-        game.tradeCards[i] = cards[game.tradeCards[i]];
-      }
-      var tradeCards = game.get('tradeCards').toArray();
-      tradeCards = _.sortBy(tradeCards, function(c) {
-        return c.tradeLevel + '.' + c.name;
-      });
-      game.set('tradeCards', tradeCards);
+      this.updateTradeCards (game.get('tradeCards').toArray(), game);
     }
 
     if (game.myOffers) {
@@ -245,6 +237,20 @@ var GameController = Ember.Controller.extend({
     this.set('content', game);
 
     this.updateMatches (game);
+  },
+
+  'updateTradeCards': function (cards, game) {
+    if (!game) {
+      game = this.get('content');
+    }
+    var cardObjects = this.get('cards');
+    for (i = 0; i < cards.length; i++) {
+      cards[i] = cardObjects[cards[i]];
+    }
+    cards = _.sortBy(cards, function(c) {
+      return c.tradeLevel + '.' + c.name;
+    });
+    game.set('tradeCards', cards);
   },
 
   'prepareOffer': function (offer) {
@@ -273,14 +279,19 @@ var GameController = Ember.Controller.extend({
   drawMatches: function (game) {
     var canvas = $('#offerCanvas');
     var parent = canvas.parent();
+    if (canvas.length == 0 || parent.length == 0)
+      return;
     canvas = canvas[0];
     canvas.width = parent.width();
     canvas.height = parent.height();
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    $('section.offers div.match-buttons').remove();
+    if (!game.matches) {
+      return;
+    }
     for (var i = 0; i < game.matches.length; i++) {
       var match = game.matches[i];
-      console.log (match);
       this.drawMatchLine (game, ctx, match);
     }
   },
@@ -350,17 +361,32 @@ var GameController = Ember.Controller.extend({
   setupListeners: function () {
     var controller = this;
     // Listen for game updates.
-    Events.subscribe('/game/update', function(game) {
+    Events.subscribe('/game/update', function (game) {
       controller.prepareGame(game);
     });
 
-    Events.subscribe('/offer/new', function(offer) {
+    Events.subscribe('/offer/new', function (offer) {
       controller.addOffer(offer);
     });
 
-    Events.subscribe('/match/new', function(match) {
+    Events.subscribe('/match/new', function (match) {
       var game = controller.get('content');
       game.get('matches').addObject(match);
+      controller.drawMatches(game);
+    });
+
+    Events.subscribe('/tradeCards/update', function (cards) {
+      controller.updateTradeCards (cards);
+    });
+
+    Events.subscribe('/match/delete', function (matchId) {
+      var game = controller.get('content');
+      for (var i = 0; i < game.matches.length; i++) {
+        if (game.matches[i].id == matchId) {
+          game.matches.splice(i, 1);
+          break
+        }
+      }
       controller.drawMatches(game);
     });
 
