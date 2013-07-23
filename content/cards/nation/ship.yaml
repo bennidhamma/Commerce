@@ -15,11 +15,11 @@ Action: |
   when 11..30
     log = "found nothing"
   when 31..90
-    current_player.add_hex pop
+    player.add_hex pop
     log = "found a hex"
   else
-    current_player.add_hex pop, (1 + rand(6))
+    player.add_hex pop, (1 + rand(6))
     log = "found a hex with friendly natives"
   end
-  game.log("#{current_player.player.display_name} " +
+  game.log("#{player.player.display_name} " +
     "rolled on the discovery table and " + log)  

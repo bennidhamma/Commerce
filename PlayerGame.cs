@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Linq;
 
 namespace ForgottenArts.Commerce
 {
@@ -17,7 +18,7 @@ namespace ForgottenArts.Commerce
 		public List<string> Hand {get; set;}
 		public Stack<string> Discards {get; set;}
 
-		public List<string> TradeCards {get; set;}
+		public List<TradeCardInfo> TradeCards {get; set;}
 		public List<string> TechnologyCards {get; set;}
 
 		public List<Match> ProposedMatches {get; set; }
@@ -30,7 +31,7 @@ namespace ForgottenArts.Commerce
 
 		public PlayerGame () {
 			Deck = new Stack<string> ();
-			TradeCards = new List<string> ();
+			TradeCards = new List<TradeCardInfo> ();
 			TechnologyCards = new List<string> ();
 			Hand = new List<string> ();
 			Discards = new Stack<string> ();
@@ -52,7 +53,7 @@ namespace ForgottenArts.Commerce
 					yield return card;
 				}
 				foreach (var card in TradeCards) {
-					yield return card;
+					yield return card.Card;
 				}
 			}
 		}
@@ -95,7 +96,7 @@ namespace ForgottenArts.Commerce
 		public bool HasTradeCards (List<string> cards)
 		{
 			// There's probably a more optimal way to do this.
-			var tradeCards = new List<string>(this.TradeCards);
+			var tradeCards = new List<string>(from c in TradeCards select c.Card);
 			foreach (string card in cards) {
 				if (!tradeCards.Contains(card)) {
 					return false;
@@ -103,6 +104,13 @@ namespace ForgottenArts.Commerce
 				tradeCards.Remove(card);
 			}
 			return true;
+		}
+
+		public void RemoveTradeCard (string card)
+		{
+			var index = TradeCards.FindIndex (t => t.Card == card);
+			if (index >= 0) 
+				TradeCards.RemoveAt (index);
 		}
 
 		public void ReceiveMatch (Match match)
@@ -167,6 +175,25 @@ namespace ForgottenArts.Commerce
 		{
 			return gameId + "-" + playerKey;
 		}
+
+		public void ReduceColonies (int number, string reason)
+		{
+			number = Math.Min (number, this.Hexes.Count (h => h.HasColony));
+			foreach (var hex in this.Hexes) {
+				if (hex.HasColony) {
+					hex.HasColony = false;
+					hex.CurrentPopulation = hex.PopulationLimit;
+					if (--number <= 0) {
+						break;
+					}
+				}
+			}
+			this.Game.Log ("{0} lost {1} colonies due to {2}.", this.Player.DisplayName, number, reason);
+		}
+	}
+
+	public class TradeCardInfo {
+		public string Card {get; set;}
+		public string FromPlayerKey {get; set;}
 	}
 }
-

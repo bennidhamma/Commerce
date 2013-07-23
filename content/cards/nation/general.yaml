@@ -6,7 +6,7 @@ Description: |
   until they have only three cards left.
 Action: |
   for player in players
-    next if player == current_player
+    next if player == player
     next if player.defends
     while player.hand.length > 3
       player.hand.remove_at 0

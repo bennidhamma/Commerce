@@ -4,8 +4,8 @@ Description: View the first card in other players hands.
 HasAttack: true
 Action: |
   for player in players
-    if player != current_player
-      game.log current_player, "#{player.name} has #{player.hand[0]"
+    if player != player
+      game.log player, "#{player.name} has #{player.hand[0]"
     end
   end
 Cost: 30

@@ -34,7 +34,7 @@ namespace ForgottenArts.Commerce
 		{
 			var scope = engine.CreateScope ();
 			scope.SetVariable ("game", game);
-			scope.SetVariable ("current_player", game.CurrentPlayer);
+			scope.SetVariable ("player", game.CurrentPlayer);
 			scope.SetVariable ("players", game.Players);
 			scope.SetVariable ("turn", game.CurrentTurn);
 			scope.SetVariable ("bank", game.Bank);
@@ -59,6 +59,9 @@ namespace ForgottenArts.Commerce
 			return args.Error;
 		}
 
+		/**
+		 * Allows cards to modify attack rolls, for either the offense or the defense.
+		 */
 		public int ExecuteModifyAttack (Game game, Card card) 
 		{
 			try
@@ -73,6 +76,9 @@ namespace ForgottenArts.Commerce
 			return 0;
 		}
 
+		/**
+		 * Allows cards to modify the ship discovery roll.
+		 */
 		public int ExecuteModifyDiscovery (Game game, Card card) 
 		{
 			try
@@ -87,6 +93,9 @@ namespace ForgottenArts.Commerce
 			return 0;
 		}
 
+		/**
+		 * Allows cards to change the purchase cost of new cards.
+		 */
 		public void ExecuteModifyPurchaseCard (Game game, Card card, string purchaseCard, Dictionary<string, int> modifications) 
 		{
 			try
@@ -94,6 +103,22 @@ namespace ForgottenArts.Commerce
 				var script = Engine.CreateScriptSourceFromString (card.ModifyAttack);
 				var scope = SetupScope(game);
 				scope.SetVariable ("mods", modifications);
+				script.Execute (SetupScope(game));
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine (e);
+			}
+		}
+
+		public void ExecuteCalamity (Game game, Card card, PlayerGame primaryPlayer, PlayerGame secondaryPlayer)
+		{
+			try
+			{
+				var script = Engine.CreateScriptSourceFromString (card.Calamity);
+				var scope = SetupScope(game);
+				scope.SetVariable ("primary_player", primaryPlayer);
+				scope.SetVariable ("secondary_player", secondaryPlayer);
 				script.Execute (SetupScope(game));
 			}
 			catch (Exception e)

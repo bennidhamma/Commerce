@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace ForgottenArts.Commerce.Server
@@ -55,7 +56,7 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
-		public List<string> TradeCards {
+		public IEnumerable<string> TradeCards {
 			get;
 			set;
 		}
@@ -72,7 +73,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Log = player.Log;
 			this.Hexes = player.Hexes;
 			this.Gold = player.Gold;
-			this.TradeCards = player.TradeCards;
+			this.TradeCards = from c in player.TradeCards select c.Card;
 		}
 	}
 }

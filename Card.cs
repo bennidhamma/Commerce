@@ -28,7 +28,7 @@ namespace ForgottenArts.Commerce
 		public string ModifyDiscovery {get; set;}
 
 		// These apply to Trade cards.
-		public string CalamityEffect {get; set;}
+		public string Calamity {get; set;}
 		public List<int> TradeValues {get; set;}
 		public int TradeLevel {get; set;}
 	}

@@ -92,6 +92,11 @@ namespace ForgottenArts.Commerce
 			Log (null, message);
 		}
 
+		public void Log (string message, params object[] formatArgs)
+		{
+			Log (null, string.Format(message, formatArgs));
+		}
+
 		public void Log (PlayerGame player, string message)
 		{
 			var entry = new LogEntry () {

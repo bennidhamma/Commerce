@@ -16,7 +16,7 @@ namespace ForgottenArts.Commerce.Server
 			set;
 		}
 
-		public List<string> TradeCards {
+		public IEnumerable<string> TradeCards {
 			get;
 			set;
 		}
@@ -56,7 +56,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Id = game.Id;
 			this.Status = game.Status;
 			this.Gold = player.Gold;
-			this.TradeCards = player.TradeCards;
+			this.TradeCards = from c in player.TradeCards select c.Card;
 			this.TradeCardCounts = from p in game.Players select new KeyValuePair<string, int> (p.PlayerKey, p.TradeCards.Count);
 			this.MyOffers = from o in game.Trades where o.PlayerKey == player.PlayerKey select new OfferView (game, player, o);
 			this.OtherOffers = from o in game.Trades where o.PlayerKey != player.PlayerKey select new OfferView (game, player, o);

@@ -186,7 +186,10 @@ namespace ForgottenArts.Commerce
 					if (game.TradeCards [level].Count == 0)
 						continue;
 					// Move the trade card from the game trade cards pile to the player pile.
-					player.TradeCards.Add (game.TradeCards [level] [0]);
+					var ti = new TradeCardInfo () {
+						Card = game.TradeCards [level] [0]
+					};
+					player.TradeCards.Add (ti);
 					game.TradeCards [level].RemoveAt (0);
 				}
 			}
@@ -483,8 +486,12 @@ namespace ForgottenArts.Commerce
 
 		public void GiveTradeCard(PlayerGame a, PlayerGame b, string card)
 		{
-			a.TradeCards.Remove (card);
-			b.TradeCards.Add (card);
+			a.RemoveTradeCard (card);
+			var ti = new TradeCardInfo () {
+				Card = card,
+				FromPlayerKey = a.PlayerKey
+			};
+			b.TradeCards.Add (ti);
 		}
 
 		bool ValidateOffers (Game game)
@@ -527,7 +534,7 @@ namespace ForgottenArts.Commerce
 				} else {
 					count++;
 				}
-				player.TradeCards.Remove(card);
+				player.RemoveTradeCard (card);
 			}
 
 			// Flush the last set.

@@ -6,7 +6,7 @@ NeedsHex: true
 Action: |
   if hex.current_population >= 6 and not hex.has_colony
     hex.has_colony = true
-    game.log("#{current_player.player.display_name} built a colony.")
+    game.log("#{player.player.display_name} built a colony.")
   else
     args.error = "You must have at least 6 colonists on a hex to build a colony there."
   end
