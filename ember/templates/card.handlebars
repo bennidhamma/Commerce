@@ -8,6 +8,9 @@
 {{#if description}}
 <p>{{description}}</p>
 {{/if}}
+{{#if cost}}
+<p>{{cost}} gold</p>
+{{/if}}
 {{#if view.setValues3}}
 <section class="set set3">
 {{#each view.setValues3}}<span class=set-value>{{this}}</span>{{/each}}

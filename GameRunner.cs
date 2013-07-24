@@ -202,6 +202,8 @@ namespace ForgottenArts.Commerce
 
 		public void EndTradingPhase (Game game)
 		{
+			ResolveCalamities (game);
+
 			// Sort players in order of smallest population - colonies count for 5.
 			game.Players = new List<PlayerGame>(game.Players.OrderBy(p => p.Hexes.Sum(h => h.HasColony ? 5 : h.CurrentPopulation)));
 
@@ -216,6 +218,32 @@ namespace ForgottenArts.Commerce
 
 			game.Status = GameState.Running;
 			NewTurn (game, false);
+		}
+
+		public void ResolveCalamities (Game game)
+		{
+			// Remove calamity cards from player's trade cards.
+			var calamities = new List<CalamityArgs>();
+			foreach (var p in game.Players) {
+				p.TradeCards.RemoveAll ( tradeCard => {
+					var card = cards[tradeCard.Card];
+					if (card.Calamity != null) {
+						var calamityArgs = new CalamityArgs () {
+							Card = card,
+							PrimaryPlayer = p,
+							SecondaryPlayer = game.GetPlayer (tradeCard.FromPlayerKey)
+						};
+						calamities.Add (calamityArgs);
+						return true;
+					}
+					return false;
+				});
+			}
+
+			// Resolve calamities in order of trade level.
+			foreach (var args in calamities.OrderBy (c => c.Card.TradeLevel)) {
+				ScriptManager.Manager.ExecuteCalamity (game, args.Card, args.PrimaryPlayer, args.SecondaryPlayer);
+			}
 		}
 
 		public bool CheckForGameEnd (Game game)
@@ -543,5 +571,12 @@ namespace ForgottenArts.Commerce
 
 			return true;
 		}
+	}
+
+	public class CalamityArgs
+	{
+		public Card Card {get; set;}
+		public PlayerGame PrimaryPlayer {get; set;}
+		public PlayerGame SecondaryPlayer {get; set;}
 	}
 }

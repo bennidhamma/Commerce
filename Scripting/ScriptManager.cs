@@ -103,7 +103,7 @@ namespace ForgottenArts.Commerce
 				var script = Engine.CreateScriptSourceFromString (card.ModifyAttack);
 				var scope = SetupScope(game);
 				scope.SetVariable ("mods", modifications);
-				script.Execute (SetupScope(game));
+				script.Execute (scope);
 			}
 			catch (Exception e)
 			{
@@ -119,7 +119,7 @@ namespace ForgottenArts.Commerce
 				var scope = SetupScope(game);
 				scope.SetVariable ("primary_player", primaryPlayer);
 				scope.SetVariable ("secondary_player", secondaryPlayer);
-				script.Execute (SetupScope(game));
+				script.Execute (scope);
 			}
 			catch (Exception e)
 			{
