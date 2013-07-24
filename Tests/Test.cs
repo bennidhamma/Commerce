@@ -13,6 +13,7 @@ namespace Tests
 		public void Setup()
 		{
 			ScriptManager.Manager.Setup (Config.DllPath);
+			GameRunner.Instance.Repository = new TestRepository ();
 		}
 
 		[Test()]
@@ -127,6 +128,24 @@ namespace Tests
 			Assert.That (g.Win, Is.Not.Null);
 			Assert.That (g.Win.Player, Is.EqualTo (p1));
 			Assert.That (g.Win.Suit, Is.EqualTo("Wheat"));
+		}
+
+		[Test]
+		public void FamineTest () {
+			Game g = new Game ();
+			PlayerGame p1 = new PlayerGame () {
+				Player = new Player() {DisplayName = "Player 1"}
+			};
+			p1.Game = g;
+			p1.AddHex (20, 20);
+			g.Players.Add (p1);
+
+			CardCatalog catalog = new CardCatalog();
+			catalog.LoadCards("cards/trade", CardType.Trade);
+			
+			ScriptManager.Manager.ExecuteCalamity (g, catalog["Famine"], p1, null);
+
+			Assert.That (p1.Hexes[0].CurrentPopulation, Is.EqualTo(8));
 		}
 	}
 }

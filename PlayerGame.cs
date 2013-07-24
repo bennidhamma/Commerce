@@ -111,6 +111,10 @@ namespace ForgottenArts.Commerce
 			var index = TradeCards.FindIndex (t => t.Card == card);
 			if (index >= 0) 
 				TradeCards.RemoveAt (index);
+			var cardObject = GameRunner.Instance.Cards[card];
+
+			// Always return the trade card back to the appropriate trade level pile.
+			game.TradeCards[cardObject.TradeLevel].Add(card);
 		}
 
 		public void ReceiveMatch (Match match)
@@ -176,19 +180,55 @@ namespace ForgottenArts.Commerce
 			return gameId + "-" + playerKey;
 		}
 
-		public void ReduceColonies (int number, string reason)
+		public int ReduceColonies (int number, string reason)
 		{
+			int reduced = 0;
 			number = Math.Min (number, this.Hexes.Count (h => h.HasColony));
 			foreach (var hex in this.Hexes) {
 				if (hex.HasColony) {
 					hex.HasColony = false;
 					hex.CurrentPopulation = hex.PopulationLimit;
+					reduced++;
 					if (--number <= 0) {
 						break;
 					}
 				}
 			}
 			this.Game.Log ("{0} lost {1} colonies due to {2}.", this.Player.DisplayName, number, reason);
+			return reduced;
+		}
+
+		public void RemovePopulation (int amountToRemove, string reason)
+		{
+			if (amountToRemove <= 0)
+				return;
+			int currentTotal = this.Hexes.Sum (h => h.CurrentPopulation);
+
+			// If the player does not have enough free population to remove, reduce cities.
+			// Each city reduced counts for 4 population.
+			int excess = amountToRemove - currentTotal;
+			if (excess > 0) {
+				// TODO: remove magic number.
+				int numberOfColoniesToRemove = (excess / 4) + 1;
+				int coloniesReduced = ReduceColonies (numberOfColoniesToRemove, reason);
+				amountToRemove -= coloniesReduced * 4;
+			}
+
+			// You can only remove as many people as there are.
+			amountToRemove = Math.Min (amountToRemove, currentTotal);
+			int populationRemoved = amountToRemove;
+
+			// Now remove, round robin, one from each hex with a population until
+			while (amountToRemove > 0) {
+				foreach (var hex in from h in Hexes where h.CurrentPopulation > 0 select h) {
+					hex.CurrentPopulation--;
+					if (amountToRemove-- <= 0) {
+						break;
+					}
+				}
+			}
+
+			this.Game.Log ("{0} of {1}'s colonists died due to {2}.", populationRemoved, this.Player.DisplayName, reason);
 		}
 	}
 

@@ -1,0 +1,28 @@
+Name: Famine
+ImageUrl: famine.png
+Calamity: |
+  players.each { |p|
+    starveCount = 0
+    # 12 if primary player
+    case p
+    when primary_player
+      starveCount = 12
+    # 0 if secondary player
+    when secondary_player
+      starveCount = 0
+    # Other players lose 2d4.
+    else
+      starveCount = ((2 + rand(4) + rand(4)) / 2).round
+    end
+    # Minus 4 for each held
+    num_grains = p.trade_cards.count {|c| c.card == "Wheat"}
+    puts "num_grains: ", num_grains
+    # Unless player holds Fertilizers, in which case double.
+    if p.technology_cards.include? "Fertilizers"
+      num_grains *= 2
+    end
+    starveCount -= num_grains * 4;
+    if starveCount > 0
+      p.remove_population starveCount, "a terrible famine!"
+    end
+  }

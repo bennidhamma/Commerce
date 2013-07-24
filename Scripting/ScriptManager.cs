@@ -113,13 +113,14 @@ namespace ForgottenArts.Commerce
 
 		public void ExecuteCalamity (Game game, Card card, PlayerGame primaryPlayer, PlayerGame secondaryPlayer)
 		{
+
+			var script = Engine.CreateScriptSourceFromString (card.Calamity);
+			var scope = SetupScope(game);
+			scope.SetVariable ("primary_player", primaryPlayer);
+			scope.SetVariable ("secondary_player", secondaryPlayer);
 			try
 			{
-				var script = Engine.CreateScriptSourceFromString (card.Calamity);
-				var scope = SetupScope(game);
-				scope.SetVariable ("primary_player", primaryPlayer);
-				scope.SetVariable ("secondary_player", secondaryPlayer);
-				script.Execute (scope);
+				script.Compile (new MyErrorListener()).Execute (scope);
 			}
 			catch (Exception e)
 			{
@@ -134,9 +135,10 @@ namespace ForgottenArts.Commerce
 			{
 				if (started)
 					return;
-				var setup = new ScriptRuntimeSetup() ;
-				setup.LanguageSetups.Add(Ruby.CreateRubySetup());
-				engine = Ruby.CreateRuntime(setup).GetRubyEngine();
+
+				engine = Ruby.CreateEngine ( x => {
+					x.ExceptionDetail = true;
+				});
 				string baseScript = string.Format ("require '{0}'\n", dllPath ?? Config.DllPath) + 
 					Config.ReadAllText ("base.rb");
 				engine.Execute (baseScript);
@@ -152,6 +154,14 @@ namespace ForgottenArts.Commerce
 		private ScriptManager ()
 		{
 			
+		}
+	}
+
+	class MyErrorListener : ErrorListener
+	{
+		public override void ErrorReported(ScriptSource source, string message, Microsoft.Scripting.SourceSpan span, int errorCode, Microsoft.Scripting.Severity severity)
+		{
+			Console.WriteLine("{0},{1}: {2}", span.Start.Line, span.Start.Column, message);
 		}
 	}
 }

@@ -1,0 +1,4 @@
+Name: Earthquake
+ImageUrl: earthquake.png
+Calamity: |
+  primary_player.reduce_colonies 2, "a terrible earthquake."  

@@ -30,7 +30,7 @@ TradingCards:
   - 
     Spices: 9
     Tobacco: 9
-    Plague: 1
+    "Small Pox": 1
   # Level 5
   - 
     Chocolate: 9
@@ -40,7 +40,7 @@ TradingCards:
   - 
     Silver: 8
     Furs: 8
-    Treachery: 1
+    Lawsuit: 1
   # Level 7
   - 
     Marble: 7

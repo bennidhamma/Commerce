@@ -163,6 +163,17 @@ namespace ForgottenArts.Commerce
 			//TODO: notify new current player it is their turn.
 		}
 
+		public void HandleStarvation (Game game)
+		{
+			foreach (var p in game.Players) {
+				foreach (var h in p.Hexes) {
+					if (!h.HasColony && h.CurrentPopulation > h.PopulationLimit) {
+						h.CurrentPopulation = h.PopulationLimit;
+					}
+				}
+			}
+		}
+
 		private void ExtendTradeTime (Game game)
 		{
 			game.TradeEnd = DateTime.Now;
@@ -203,6 +214,7 @@ namespace ForgottenArts.Commerce
 		public void EndTradingPhase (Game game)
 		{
 			ResolveCalamities (game);
+			HandleStarvation (game);
 
 			// Sort players in order of smallest population - colonies count for 5.
 			game.Players = new List<PlayerGame>(game.Players.OrderBy(p => p.Hexes.Sum(h => h.HasColony ? 5 : h.CurrentPopulation)));
