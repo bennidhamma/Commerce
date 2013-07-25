@@ -185,6 +185,51 @@ namespace Tests
 			
 			Assert.That (p1.Hexes[0].CurrentPopulation, Is.EqualTo(12));
 		}
+
+		void AddTradeCards (PlayerGame p, params string[] cards)
+		{
+			foreach (string card in cards) {
+				p.TradeCards.Add (new TradeCardInfo () {
+					Card = card
+				});
+			}
+		}
+
+		[Test]
+		public void NativeRaidTest () {
+			Game g = new Game();
+			var p1 = AddPlayer (g);
+			AddTradeCards (p1, "Wheat", "Wheat", "Coffee", "Coffee");
+			
+			CardCatalog catalog = new CardCatalog();
+			catalog.LoadCards("cards/trade", CardType.Trade);
+			
+			ScriptManager.Manager.ExecuteCalamity (g, catalog["Native Raid"], p1, null);
+			
+			Assert.That (p1.TradeCards.Count, Is.EqualTo(2));
+
+			foreach (var log in p1.Log) {
+				Console.WriteLine (log.ToString());
+			}
+		}
+
+		[Test]
+		public void LawsuitTest () {
+			Game g = new Game();
+			var p1 = AddPlayer (g);
+			var p2 = AddPlayer (g);
+			p1.AddHex (10, 10);
+			p1.Hexes[0].HasColony = true;
+
+			CardCatalog catalog = new CardCatalog();
+			catalog.LoadCards("cards/trade", CardType.Trade);
+
+			ScriptManager.Manager.ExecuteCalamity (g, catalog["Lawsuit"], p1, p2);
+
+			Assert.That (p1.Hexes.Count, Is.EqualTo(0));
+			Assert.That (p2.Hexes.Count, Is.EqualTo(1));
+			Assert.That (p2.Hexes[0].PopulationLimit, Is.EqualTo(10));
+		}
 	}
 }
 

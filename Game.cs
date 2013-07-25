@@ -87,6 +87,14 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		public void Debug (string context, params object[] os)
+		{
+			Console.WriteLine (context);
+			foreach (var o in os) {
+				Console.WriteLine (o);
+			}
+		}
+
 		public void Log (string message)
 		{
 			Log (null, message);

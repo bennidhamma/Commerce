@@ -139,7 +139,7 @@ namespace ForgottenArts.Commerce
 				engine = Ruby.CreateEngine ( x => {
 					x.ExceptionDetail = true;
 				});
-				string baseScript = string.Format ("require '{0}'\n", dllPath ?? Config.DllPath) + 
+				string baseScript = string.Format ("require '{0}'\nusing_clr_extensions ForgottenArts::Commerce\n", dllPath ?? Config.DllPath) + 
 					Config.ReadAllText ("base.rb");
 				engine.Execute (baseScript);
 				started = true;
