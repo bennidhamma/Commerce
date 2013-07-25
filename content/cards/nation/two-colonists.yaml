@@ -1,0 +1,8 @@
+Name: Two Colonist
+ImageUrl: two-colonist.png
+Description: Choose a hex to land two colonists. +1 Action.
+NeedsHex: true
+Action: |
+  hex.add_colonist 2
+  turn.actions += 1
+Cost: 50

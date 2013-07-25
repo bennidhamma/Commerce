@@ -1,6 +1,6 @@
 /* Put your CSS here */
 html, body {
-    margin: 20px;
+  margin: 20px;
 }
 
 h2 {
@@ -61,7 +61,6 @@ h2 {
 }
 
 .card {
-
   box-shadow:2px 2px 10px rgba(0,0,0,0.4);
   padding: 2px;
   background: #889;
@@ -75,7 +74,6 @@ h2 {
   transition: margin 400ms, -webkit-transform 400ms;
   &:hover {
     -webkit-transform: scale(1.2, 1.2);
-    margin: 0 0 5px 0;
     position: relative;
     z-index: 1;
   }

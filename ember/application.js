@@ -266,7 +266,8 @@ var GameController = Ember.Controller.extend({
       cards[i] = cardObjects[cards[i]];
     }
     cards = _.sortBy(cards, function(c) {
-      return c.tradeLevel + '.' + c.name;
+      if (!c) {console.log(c)}
+      return c && c.tradeLevel + '.' + c.name;
     });
     game.set('tradeCards', cards);
   },

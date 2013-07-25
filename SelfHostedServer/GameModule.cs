@@ -72,7 +72,8 @@ namespace ForgottenArts.Commerce.Server
 					cardKeys.Add (card);
 				}
 			}
-			return from key in cardKeys select GameRunner.Instance.Cards[key];
+			var cards = GameRunner.Instance.Cards;
+			return from key in cardKeys where cards[key] != null select new CardView(cards[key]);
 		}
 
 		public dynamic AuthenticatePlayer (dynamic parameters)

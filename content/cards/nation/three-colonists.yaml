@@ -1,0 +1,8 @@
+Name: Three Colonist
+ImageUrl: three-colonist.png
+Description: Choose a hex to land three colonists. +1 Action.
+NeedsHex: true
+Action: |
+  hex.add_colonist 3
+  turn.actions += 1
+Cost: 80

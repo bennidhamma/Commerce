@@ -63,6 +63,7 @@ namespace ForgottenArts.Commerce.Server
 
 		public PlayerGameView (Game game, PlayerGame player)
 		{
+			var cards = GameRunner.Instance.Cards;
 			this.Id = game.Id;
 			this.Status = game.Status;
 			this.Hand = player.Hand;
@@ -73,7 +74,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Log = player.Log;
 			this.Hexes = player.Hexes;
 			this.Gold = player.Gold;
-			this.TradeCards = from c in player.TradeCards select c.Card;
+			this.TradeCards = from c in player.TradeCards where cards[c.Card] != null select c.Card;
 		}
 	}
 }

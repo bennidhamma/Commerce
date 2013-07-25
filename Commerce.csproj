@@ -69,6 +69,7 @@
     <Compile Include="TransferObjects\TradeView.cs" />
     <Compile Include="TransferObjects\OfferView.cs" />
     <Compile Include="TransferObjects\MatchView.cs" />
+    <Compile Include="TransferObjects\CardView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

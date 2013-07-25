@@ -114,7 +114,7 @@ namespace ForgottenArts.Commerce
 			var cardObject = GameRunner.Instance.Cards[card];
 
 			// Always return the trade card back to the appropriate trade level pile.
-			game.TradeCards[cardObject.TradeLevel].Add(card);
+			game.TradeCards[cardObject.TradeLevel-1].Add(card);
 		}
 
 		public void ReceiveMatch (Match match)

@@ -53,16 +53,6 @@ namespace ForgottenArts.Commerce
 		{
 		}
 
-		/// <summary>
-		/// Sanitize games, to avoid zombie games and such.
-		/// </summary>
-		public void Sanitize ()
-		{
-			foreach (var game in Games) {
-				Sanitize (game);
-			}
-		}
-
 		public IEnumerable<Game> Games {
 			get {
 				// Get the max id, to know when to stop searching for games.
@@ -76,6 +66,16 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		/// <summary>
+		/// Sanitize games, to avoid zombie games and such.
+		/// </summary>
+		public void Sanitize ()
+		{
+			foreach (var game in Games) {
+				Sanitize (game);
+			}
+		}
+		
 		public void Sanitize(Game game) 
 		{
 			bool put = false;
@@ -239,6 +239,9 @@ namespace ForgottenArts.Commerce
 			foreach (var p in game.Players) {
 				p.TradeCards.RemoveAll ( tradeCard => {
 					var card = cards[tradeCard.Card];
+					if (card == null) {
+						return true;
+					}
 					if (card.Calamity != null) {
 						var calamityArgs = new CalamityArgs () {
 							Card = card,
@@ -326,7 +329,10 @@ namespace ForgottenArts.Commerce
 				player.Discards.Push (cardKey);
 			}
 			game.CurrentTurn.CurrentCard = null;
-			game.CurrentTurn.Actions--;
+			if (player.Hand.Count == 0)
+				game.CurrentTurn.Actions = 0;
+			else
+				game.CurrentTurn.Actions--;
 			MaybeNewTurn(game);
 			return true;
 		}
@@ -348,10 +354,17 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("Not enough gold to purchase card");
 			}
 
+			if (game.Bank[cardKey] <= 0) {
+				throw new InvalidOperationException ("The bank does not have this card.");
+			}
+
 			game.CurrentPlayer.Gold -= card.Cost;
 
 			// Add card to hand.
 			player.Discards.Push (cardKey);
+
+			// Remove from bank.
+			game.Bank[cardKey]--;
 
 			// Deduct buy
 			if (--game.CurrentTurn.Buys <= 0) {

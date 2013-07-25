@@ -1,0 +1,19 @@
+Name: Native Raid
+ImageUrl: native_raid.png
+Calamity: |
+  players.each { |p|
+    p.trade_cards.shuffle
+    case p
+    when primary_player
+      num = p.trade_cards.count / 2
+    when secondary_player
+      num = 0
+    else
+      num = (1 + rand(4)).round
+    end
+    if num
+      p.trade_cards.remove_range 0, num
+      game.log "#{player.player.display_name} lost #{num} cards due to " +
+               "a terrible native raid!"
+    end
+  }

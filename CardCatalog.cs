@@ -46,7 +46,7 @@ namespace ForgottenArts.Commerce
 
 		public Card this [string cardKey] {
 			get {
-				return cards[cardKey];
+				return cards.ContainsKey (cardKey) ? cards[cardKey] : null;
 			}
 			set {
 				cards[cardKey] = value;
@@ -84,6 +84,7 @@ namespace ForgottenArts.Commerce
 			var newTradingCardLevels = new List<Dictionary<string, int>>();
 			foreach (dynamic level in gameInfo.TradingCards) {
 				var dict = new Dictionary<string, int> ();
+				// The position in the trading card levels pile is 0-8 (zero based).
 				newTradingCardLevels.Add(dict);
 				foreach (string key in level.Keys) {
 					int q = Convert.ToInt32 (level[key]);
@@ -91,6 +92,7 @@ namespace ForgottenArts.Commerce
 					// Only calamity cards are actually defined. Other commodities are
 					// created implicitly by virtue of existence in the config yaml.
 					if (!cards.ContainsKey(key)) {
+						// Note: trading levels are of the range [1-9] (one-based).
 						CreateTradeCard(key, newTradingCardLevels.Count, q);
 					}
 				}

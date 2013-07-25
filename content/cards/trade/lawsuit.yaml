@@ -1,0 +1,12 @@
+Name: Lawsuit
+ImageUrl: lawsuit.png
+Calamity: |
+  hexes = primary_player.hexes.to_a.shuffle
+  hex = hexes.find {|h| h.has_colony} 
+  if hex and secondary_player
+    primary_player.hexes.remove hex
+    secondary_player.hexes.add hex
+    game.log "#{primary_player.player.display_name} lost a terrible " +
+             "lawsuit and had to give a colony to " +
+             "#{secondary_player.player.display_name}!"
+  end    
