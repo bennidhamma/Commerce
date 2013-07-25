@@ -130,15 +130,21 @@ namespace Tests
 			Assert.That (g.Win.Suit, Is.EqualTo("Wheat"));
 		}
 
+		PlayerGame AddPlayer (Game g)
+		{
+			var p = new PlayerGame () {
+				Player = new Player () {DisplayName = "Player " + g.Players.Count}
+			};
+			p.Game = g;
+			g.Players.Add (p);
+			return p;
+		}
+
 		[Test]
 		public void FamineTest () {
 			Game g = new Game ();
-			PlayerGame p1 = new PlayerGame () {
-				Player = new Player() {DisplayName = "Player 1"}
-			};
-			p1.Game = g;
+			var p1 = AddPlayer (g);
 			p1.AddHex (20, 20);
-			g.Players.Add (p1);
 
 			CardCatalog catalog = new CardCatalog();
 			catalog.LoadCards("cards/trade", CardType.Trade);
@@ -146,6 +152,38 @@ namespace Tests
 			ScriptManager.Manager.ExecuteCalamity (g, catalog["Famine"], p1, null);
 
 			Assert.That (p1.Hexes[0].CurrentPopulation, Is.EqualTo(8));
+		}
+
+		[Test]
+		public void SmallPoxTest () {
+			Game g = new Game();
+			var p1 = AddPlayer (g);
+			var p2 = AddPlayer (g);
+			p1.AddHex (20, 20);
+			p2.AddHex (20, 20);
+
+			CardCatalog catalog = new CardCatalog();
+			catalog.LoadCards("cards/trade", CardType.Trade);
+			
+			ScriptManager.Manager.ExecuteCalamity (g, catalog["Small Pox"], p1, null);
+
+			Assert.That (p1.Hexes[0].CurrentPopulation, Is.EqualTo(6));
+			Assert.That (p2.Hexes[0].CurrentPopulation, Is.EqualTo(12));
+		}
+
+		[Test]
+		public void SmallPoxWithAntibioticsTest () {
+			Game g = new Game();
+			var p1 = AddPlayer (g);
+			p1.AddHex (20, 20);
+			p1.TechnologyCards.Add ("Antibiotics");
+
+			CardCatalog catalog = new CardCatalog();
+			catalog.LoadCards("cards/trade", CardType.Trade);
+			
+			ScriptManager.Manager.ExecuteCalamity (g, catalog["Small Pox"], p1, null);
+			
+			Assert.That (p1.Hexes[0].CurrentPopulation, Is.EqualTo(12));
 		}
 	}
 }

@@ -1,0 +1,23 @@
+Name: Small Pox
+ImageUrl: smallpox.png
+Calamity: |
+  # Primary player loses 14. All other players lose 8.
+  # This number is reduced by 6 if a given player owns Antibiotics.
+  players.each { |p|
+    kill_count = 0
+    # 12 if primary player
+    case p
+    when primary_player
+      kill_count = 14
+    # 0 if secondary player
+    else
+      kill_count = 8
+    end
+    # Unless player holds Antibiotics, in which case double.
+    if p.technology_cards.include? "Antibiotics"
+      kill_count -= 6
+    end
+    if kill_count > 0
+      p.remove_population kill_count, "a terrible outbreak of small pox!"
+    end
+  }
