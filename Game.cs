@@ -127,8 +127,10 @@ namespace ForgottenArts.Commerce
 		{
 			foreach (var p in this.Players) {
 				foreach (var h in p.Hexes) {
-					if (h.Id == hexId)
+					if (h.Id == hexId) {
+						h.Player = p;
 						return h;
+					}
 				}
 			}
 			return null;

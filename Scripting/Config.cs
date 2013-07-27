@@ -201,7 +201,8 @@ namespace ForgottenArts.Commerce
 		
 		public static string ReadAllText (string path)
 		{
-			return File.ReadAllText (Path.Combine (ContentDirectory, path));
+			string text = File.ReadAllText (Path.Combine (ContentDirectory, path));
+			return text;
 		}
 	}
 }

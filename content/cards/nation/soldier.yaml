@@ -1,0 +1,10 @@
+Name: Soldier
+ImageUrl: soldier.png
+Description: Select an enemy hex. Roll on the attack table.
+Cost: 30
+Action: |
+  roll = 1 + rand(100)
+  event = { "roll" => roll }
+  player.handle_card_events "AttackEvent", event
+  roll = event["roll"]
+  attack_roll roll, args, game, hex, player

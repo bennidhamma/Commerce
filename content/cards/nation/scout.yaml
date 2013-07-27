@@ -1,7 +1,6 @@
 Name: Scouts
 ImageUrl: scouts.png
 Description: View the first card in other players hands.
-HasAttack: true
 Action: |
   for player in players
     if player != player

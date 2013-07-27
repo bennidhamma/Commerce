@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace ForgottenArts.Commerce
 {
@@ -17,6 +18,9 @@ namespace ForgottenArts.Commerce
 			}
 		}
 		public bool HasColony {get; set;}
+
+		[IgnoreDataMember]
+		public PlayerGame Player {get; set;}
 
 		public void AddColonist (int count = 1)
 		{

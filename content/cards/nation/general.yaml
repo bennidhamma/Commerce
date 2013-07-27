@@ -1,6 +1,5 @@
 Name: General
 ImageUrl: general.png
-HasAttack: true
 Description: |
   Other players remove cards from the top of their hand
   until they have only three cards left.

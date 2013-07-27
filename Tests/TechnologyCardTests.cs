@@ -19,7 +19,7 @@ namespace Tests
 				Good = "Cotton",
 				Size = 1
 			};
-			ScriptManager.Manager.ExecuteCardEvent (new Game(), cottonGin, null, e);
+			ScriptManager.Manager.ExecuteCardEvent (new Game(), cottonGin, null, "ModifyTradeSetEvent", e);
 
 			Assert.That(e.Size, Is.EqualTo(2));
 		}

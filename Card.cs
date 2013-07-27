@@ -16,7 +16,6 @@ namespace ForgottenArts.Commerce
 		public string Name {get; set;}
 		public string ImageUrl {get; set;}
 		public string Description {get; set;}
-		public bool HasAttack {get; set;}
 		public bool NeedsHex {get; set;}
 		public int Cost {get; set;}
 

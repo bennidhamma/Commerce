@@ -2,11 +2,14 @@ GameType: Basic
 StartingBank:
   # Nation Cards
   "One Colonist": 9
+  "Two Colonists": 9
+  "Three Colonists": 9
   Ship: 9
   Colony: 9
   Marketplace: 9
   Sawmill: 9
   Gold: 9
+  Soldier: 9
   # Technology Cards
   "Cotton Gin": 4 
 StartingDeck:

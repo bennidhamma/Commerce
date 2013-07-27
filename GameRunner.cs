@@ -83,6 +83,7 @@ namespace ForgottenArts.Commerce
 				NewTurn(game);
 				put = true;
 			}
+
 			foreach (var player in game.Players)
 			{
 				if (player.GameId != game.Id) {
@@ -90,6 +91,16 @@ namespace ForgottenArts.Commerce
 					put = true;
 				}
 			}
+
+			// See if we need to add any new cards to the bank. This is mainly a debug utillity. We probably don't want to do this to real games :)
+			foreach (var kvp in cards.StartingBank)
+			{
+				if (!game.Bank.ContainsKey(kvp.Key)) {
+					game.Bank.Add (kvp.Key, kvp.Value);
+					put = true;
+				}
+			}
+
 			if (put) {
 				Save (game);
 			}
@@ -483,12 +494,12 @@ namespace ForgottenArts.Commerce
 			// Execute trade.
 			foreach (string card in match.Offer1.Cards)
 			{
-				GiveTradeCard(firstPlayer, player, card);
+				firstPlayer.GiveTradeCard(player, card);
 			}
 
 			foreach (string card in match.Offer2.Cards)
 			{
-				GiveTradeCard(player, firstPlayer, card);
+				player.GiveTradeCard(firstPlayer, card);
 			}
 
 			game.Matches.RemoveAll (m => m.MatchId == match.MatchId);
@@ -546,16 +557,6 @@ namespace ForgottenArts.Commerce
 			return true;
 		}
 
-		public void GiveTradeCard(PlayerGame a, PlayerGame b, string card)
-		{
-			a.RemoveTradeCard (card);
-			var ti = new TradeCardInfo () {
-				Card = card,
-				FromPlayerKey = a.PlayerKey
-			};
-			b.TradeCards.Add (ti);
-		}
-
 		bool ValidateOffers (Game game)
 		{
 			int numRemoved = game.Trades.RemoveAll (o => {
@@ -594,7 +595,7 @@ namespace ForgottenArts.Commerce
 				} else {
 					count++;
 				}
-				player.RemoveTradeCard (card);
+				player.RemoveTradeCard (card, true);
 			}
 
 			// Flush the last set.

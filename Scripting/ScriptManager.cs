@@ -59,14 +59,14 @@ namespace ForgottenArts.Commerce
 			return args.Error;
 		}
 
-		public void ExecuteCardEvent (Game game, Card card, PlayerGame player, object cardEvent)
+		public void ExecuteCardEvent (Game game, Card card, PlayerGame player, string type, object cardEvent)
 		{
 			try
 			{
 				var script = Engine.CreateScriptSourceFromString (card.Event);
 				var scope = SetupScope(game);
 				scope.SetVariable ("event", cardEvent);
-				scope.SetVariable ("event_type", cardEvent.GetType().Name);
+				scope.SetVariable ("event_type", type);
 				script.Compile (new MyErrorListener()).Execute (scope);
 			}
 			catch (Exception e)
@@ -103,7 +103,7 @@ namespace ForgottenArts.Commerce
 				engine = Ruby.CreateEngine ( x => {
 					x.ExceptionDetail = true;
 				});
-				string baseScript = string.Format ("require '{0}'\nusing_clr_extensions ForgottenArts::Commerce\n", dllPath ?? Config.DllPath) + 
+				string baseScript = string.Format ("require '{0}'\n", dllPath ?? Config.DllPath) + 
 					Config.ReadAllText ("base.rb");
 				engine.Execute (baseScript);
 				started = true;

@@ -1,0 +1,80 @@
+require 'mscorlib'
+include System::Collections::Generic
+include ForgottenArts::Commerce
+include System
+
+load_assembly 'System.Core'
+using_clr_extensions System::Linq
+
+class Object
+    def to_seq(type = Object)
+        System::Linq::Enumerable.method(:of_type).of(type).call(self.to_a)
+    end
+
+    def to_arr(type = Object)
+        System::Array.of(type).new(self.to_a)
+    end
+
+    def discovery_roll(roll, args, game, player)
+      pop = ((2 + rand(6) + rand(6)) / 2).round
+      case roll
+      when 1..10
+        args.trash_card = true
+        log = "lost a ship"
+      when 11..30
+        log = "found nothing"
+      when 31..90
+        if player.hexes.count < 9
+          player.add_hex pop
+          log = "found a hex"
+        end
+      else
+        if player.hexes.count < 9
+          player.add_hex pop, (1 + rand(6))
+          log = "found a hex with friendly natives"
+        end
+      end
+      game.log "#{player.name} rolled on the discovery table and " + log
+    end
+
+    def attack_roll(roll, args, game, hex, player)
+      case roll
+      when 1..10
+        args.trash_card = true
+        log = "Defeat! Card is trashed."
+      when 11..40
+        log = "Defeat!"
+      when 40..50
+        hex.player.discard_to 3
+        log = "Enemy player discards to 3."
+      when 50..80
+        hex.has_colony = false
+        hex.current_population - hex.population_limit
+        log = "Victory! Enemry colony is reduced."
+        if hex.player.trade_cards.count 
+          card = hex.player.trade_cards.sample.card
+          hex.player.give_trade_card player, card
+          log += " Enemy player surrended one " + card
+        end
+      when 80..90
+        hex.has_colony = false
+        hex.current_population = 0
+        log = "Victory! Enemry colony is destroyed."
+        if hex.player.trade_cards.count 
+          card = hex.player.trade_cards.sample.card
+          hex.player.give_trade_card player, card
+          log += " Enemy player surrended one " + card
+        end
+      else
+        hex.player.hexes.remove(hex)
+        player.hexes.add(hex)
+        log = "Victory! Enemy colony is captured!"
+        if hex.player.trade_cards.count 
+          card = hex.player.trade_cards.sample.card
+          hex.player.give_trade_card player, card
+          log += " Enemy player surrended one " + card
+        end
+      end
+      game.log "#{player.name} attacked #{hex.player.name} and ... " + log
+    end
+end

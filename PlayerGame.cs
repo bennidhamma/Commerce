@@ -7,9 +7,21 @@ namespace ForgottenArts.Commerce
 {
 	public class PlayerGame
 	{
-		public int HandSize = 5;
+		int handSize = 5;
+		public int HandSize {
+			get {
+				return handSize;
+			}
+			set {
+				handSize = value;
+			}
+		}
 
 		public string PlayerKey {get; set;}
+		public string Name {get {
+				return Player.DisplayName;
+			}
+		}
 		public long GameId {get; set;}
 		public int Score {get; set;}
 		public int Gold {get; set;}
@@ -63,13 +75,19 @@ namespace ForgottenArts.Commerce
 
 		public void HandleCardEvents (object cardEvent)
 		{
+			var type = cardEvent.GetType().Name;
+			HandleCardEvents (type, cardEvent);
+		}
+
+		public void HandleCardEvents (string type, object cardEvent)
+		{
 			// Only nation cards held in hand and technology cards can respond to events.
 			foreach (var key in Hand.Union (TechnologyCards)) {
 				var card = GameRunner.Instance.Cards[key];
 				if (card == null)
 					continue;
 				if (card.Event != null) {
-					ScriptManager.Manager.ExecuteCardEvent (this.Game, card, this, cardEvent);
+					ScriptManager.Manager.ExecuteCardEvent (this.Game, card, this, type, cardEvent);
 				}
 			}
 		}
@@ -93,7 +111,12 @@ namespace ForgottenArts.Commerce
 		}
 
 		public void DrawHand () {
-			while (Hand.Count < HandSize) {
+			Draw (HandSize - Hand.Count);
+		}
+
+		public void Draw (int number)
+		{
+			for (int i = 0; i < number; i++) {
 				if (Deck.Count == 0) {
 					if (Discards.Count == 0) {
 						//no more cards to draw.
@@ -109,6 +132,19 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		public void Discard (int number)
+		{
+			while (Hand.Count > 0 && number-- > 0) {
+				Discards.Push (Hand[0]);
+				Hand.RemoveAt(0);
+			}
+		}
+
+		public void DiscardTo (int number)
+		{
+			Discard (Hand.Count - number);
+		}
+
 		public bool HasTradeCards (List<string> cards)
 		{
 			// There's probably a more optimal way to do this.
@@ -122,15 +158,32 @@ namespace ForgottenArts.Commerce
 			return true;
 		}
 
-		public void RemoveTradeCard (string card)
+		public bool RemoveTradeCard (string card, bool returnToStore)
 		{
 			var index = TradeCards.FindIndex (t => t.Card == card);
 			if (index >= 0) 
 				TradeCards.RemoveAt (index);
-			var cardObject = GameRunner.Instance.Cards[card];
+			else
+				return false;
 
-			// Always return the trade card back to the appropriate trade level pile.
-			game.TradeCards[cardObject.TradeLevel-1].Add(card);
+			if (returnToStore) {
+				var cardObject = GameRunner.Instance.Cards[card];
+				// return the trade card back to the appropriate trade level pile.
+				game.TradeCards[cardObject.TradeLevel-1].Add(card);
+			}
+			return true;
+		}
+
+		public bool GiveTradeCard(PlayerGame player, string card)
+		{
+			if (!RemoveTradeCard (card, false))
+				return false;
+			var ti = new TradeCardInfo () {
+				Card = card,
+				FromPlayerKey = this.PlayerKey
+			};
+			player.TradeCards.Add (ti);
+			return true;
 		}
 
 		public void ReceiveMatch (Match match)

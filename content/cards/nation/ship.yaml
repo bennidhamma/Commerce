@@ -1,29 +1,12 @@
 Name: Ship
 ImageUrl: ship.png
 Description: Roll on the Discovery Table.
-HasAttack: false
 Cost: 50
 Action: |
   num_cities = game.players.reduce {|p| p.hexes.length}
   roll = 1 + rand(100) - num_cities
-  pop = ((2 + rand(6) + rand(6)) / 2).round
   # Allow other cards to modify discovery roll.
-  case roll
-  when 1..10
-    args.trash_card = true
-    log = "lost a ship"
-  when 11..30
-    log = "found nothing"
-  when 31..90
-    if player.hexes.count < 9
-      player.add_hex pop
-      log = "found a hex"
-    end
-  else
-    if player.hexes.count < 9
-      player.add_hex pop, (1 + rand(6))
-      log = "found a hex with friendly natives"
-    end
-  end
-  game.log("#{player.player.display_name} " +
-    "rolled on the discovery table and " + log)  
+  event = { "roll" => roll }
+  player.handle_card_events "DiscoveryEvent", event
+  roll = event["roll"]
+  discovery_roll roll, args, game, player
