@@ -358,10 +358,19 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("The bank does not have this card.");
 			}
 
+			if (card.Type == CardType.Technology && player.TechnologyCards.Contains(cardKey)) {
+				throw new InvalidOperationException ("You already have this technology card.");
+			}
+
 			game.CurrentPlayer.Gold -= card.Cost;
 
-			// Add card to hand.
-			player.Discards.Push (cardKey);
+			if (card.Type == CardType.Nation) {
+				// Add card to hand.
+				player.Discards.Push (cardKey);
+			} else { // Technology card.
+				player.TechnologyCards.Add (cardKey);
+			}
+
 
 			// Remove from bank.
 			game.Bank[cardKey]--;
@@ -574,13 +583,11 @@ namespace ForgottenArts.Commerce
 
 			string currentCard = null;
 			int count = 0;
-			Card cardObject = null;
 
 			foreach (string card in cards) {
 				if (card != currentCard) {
 					if (currentCard != null) {
-						cardObject = this.cards [currentCard];
-						player.Gold += cardObject.TradeLevel * count * count;
+						RedeemSet (game, player, currentCard, count);
 					}
 					count = 1;
 					currentCard = card;
@@ -591,10 +598,25 @@ namespace ForgottenArts.Commerce
 			}
 
 			// Flush the last set.
-			cardObject = this.cards[currentCard];
-			player.Gold += cardObject.TradeLevel * count * count;
+			if (count > 0) {
+				RedeemSet (game, player, currentCard, count);
+			}
 
 			return true;
+		}
+
+		void RedeemSet (Game game, PlayerGame player, string currentCard, int count)
+		{
+			var cardObject = this.cards [currentCard];
+			var modifyTradeSet = new ModifyTradeSetEvent () {
+				Size = count,
+				Good = currentCard,
+				Position = game.CurrentTurn.TradeSetsRedeemed
+			};
+			player.HandleCardEvents (modifyTradeSet);
+			count = modifyTradeSet.Size;
+			player.Gold += cardObject.TradeLevel * count * count;
+			game.CurrentTurn.TradeSetsRedeemed++;
 		}
 	}
 

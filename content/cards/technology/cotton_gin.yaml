@@ -1,0 +1,10 @@
+Name: Cotton Gin
+Category: Science
+ImageUrl: cotton-gin.png
+Cost: 100
+Description: When trading a set of Cotton, increase the size of the set by 1.
+Event: |
+  game.debug event_type, event
+  if event_type == "ModifyTradeSetEvent" and event.good == "Cotton"
+    event.size += 1
+  end

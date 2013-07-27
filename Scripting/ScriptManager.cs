@@ -59,51 +59,15 @@ namespace ForgottenArts.Commerce
 			return args.Error;
 		}
 
-		/**
-		 * Allows cards to modify attack rolls, for either the offense or the defense.
-		 */
-		public int ExecuteModifyAttack (Game game, Card card) 
+		public void ExecuteCardEvent (Game game, Card card, PlayerGame player, object cardEvent)
 		{
 			try
 			{
-				var script = Engine.CreateScriptSourceFromString (card.ModifyAttack);
-				return script.Execute (SetupScope(game));
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine (e);
-			}
-			return 0;
-		}
-
-		/**
-		 * Allows cards to modify the ship discovery roll.
-		 */
-		public int ExecuteModifyDiscovery (Game game, Card card) 
-		{
-			try
-			{
-				var script = Engine.CreateScriptSourceFromString (card.ModifyDiscovery);
-				return script.Execute (SetupScope(game));
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine (e);
-			}
-			return 0;
-		}
-
-		/**
-		 * Allows cards to change the purchase cost of new cards.
-		 */
-		public void ExecuteModifyPurchaseCard (Game game, Card card, string purchaseCard, Dictionary<string, int> modifications) 
-		{
-			try
-			{
-				var script = Engine.CreateScriptSourceFromString (card.ModifyAttack);
+				var script = Engine.CreateScriptSourceFromString (card.Event);
 				var scope = SetupScope(game);
-				scope.SetVariable ("mods", modifications);
-				script.Execute (scope);
+				scope.SetVariable ("event", cardEvent);
+				scope.SetVariable ("event_type", cardEvent.GetType().Name);
+				script.Compile (new MyErrorListener()).Execute (scope);
 			}
 			catch (Exception e)
 			{

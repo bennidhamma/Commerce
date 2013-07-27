@@ -7,6 +7,7 @@ namespace ForgottenArts.Commerce.Server
 	public class CardView
 	{
 		public CardType Type {get; set;}
+		public string Category {get; set;}
 		public string Name {get; set;}
 		public string ImageUrl {get; set;}
 		public string Description {get; set;}
@@ -21,6 +22,7 @@ namespace ForgottenArts.Commerce.Server
 				return;
 			}
 			this.Type = card.Type;
+			this.Category = card.Category;
 			this.Name = card.Name;
 			this.Description = card.Description;
 			this.ImageUrl = card.ImageUrl;

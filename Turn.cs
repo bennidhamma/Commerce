@@ -17,6 +17,12 @@ namespace ForgottenArts.Commerce
 		public Turn ()
 		{
 		}
+
+		// Statistics.
+		public int TradeSetsRedeemed {
+			get;
+			set;
+		}
 	}
 }
 

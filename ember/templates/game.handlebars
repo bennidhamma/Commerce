@@ -22,8 +22,20 @@
 <section class="buy-phase">
   Click a card to buy it, or <button {{action skip 'buy'}}>Skip Buys</button>.
   <h2>Bank</h2>
+  <h3>Nation Cards</h3>
   <section class="bank">
-  {{#each stack in bank}}
+  {{#each stack in nationBank}}
+    <section class=stack>
+      {{#each stack}}
+      {{view App.CardView content=this cardSource="bank"}}
+      {{/each}}
+    </section>
+  {{/each}}
+  </section>
+  
+  <h3>Technology Cards</h3>
+  <section class="bank">
+  {{#each stack in techBank}}
     <section class=stack>
       {{#each stack}}
       {{view App.CardView content=this cardSource="bank"}}
@@ -56,6 +68,13 @@
   {{#if hasCardsToRedeem}}
   <button {{action redeem}}>Redeem Trade Cards</button>
   {{/if}}
+</section>
+
+<h2>Technology Cards</h2>
+<section class="technology-cards">
+  {{#each content.technologyCards}}
+    {{view App.CardView content=this cardSource="technologyCards"}}
+  {{/each}}
 </section>
 
 <h2>Deck Count: {{content.deckCount}}</h2>
@@ -97,6 +116,13 @@
     {{view App.OfferView content=this source="other"}}
   {{/each}}
   </ul>
+</section>
+
+<h2>Technology Cards</h2>
+<section class="technology-cards">
+  {{#each content.technologyCards}}
+    {{view App.CardView content=this cardSource="technologyCards"}}
+  {{/each}}
 </section>
 
 {{/unless}}

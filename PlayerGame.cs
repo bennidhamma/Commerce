@@ -55,6 +55,22 @@ namespace ForgottenArts.Commerce
 				foreach (var card in TradeCards) {
 					yield return card.Card;
 				}
+				foreach (var card in TechnologyCards) {
+					yield return card;
+				}
+			}
+		}
+
+		public void HandleCardEvents (object cardEvent)
+		{
+			// Only nation cards held in hand and technology cards can respond to events.
+			foreach (var key in Hand.Union (TechnologyCards)) {
+				var card = GameRunner.Instance.Cards[key];
+				if (card == null)
+					continue;
+				if (card.Event != null) {
+					ScriptManager.Manager.ExecuteCardEvent (this.Game, card, this, cardEvent);
+				}
 			}
 		}
 

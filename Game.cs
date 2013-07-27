@@ -82,6 +82,8 @@ namespace ForgottenArts.Commerce
 
 		public PlayerGame CurrentPlayer {
 			get {
+				if (Players.Count == 0)
+					return null;
 				var key = CurrentTurn.PlayerKey ?? Players[0].PlayerKey;
 				return GetPlayer(key);
 			}

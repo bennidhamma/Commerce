@@ -41,13 +41,30 @@ var GameController = Ember.Controller.extend({
     return this.get('isMyTurn') && !game.currentTurn.actions && game.currentTurn.buys;
   }.property('content.currentTurn.actions', 'content.currentTurn.buys'),
 
-  'bank': function () {
+  'nationBank': function () {
     var game = this.get('content');
     var ret = [];
     for(var k in game.bank) {
       var stack = [];
       for (var i = 0; i < game.bank[k]; i++) {
-        stack.push(this.cards[k]);
+        var card = this.cards[k];
+        if (card.type == "Nation")
+          stack.push(this.cards[k]);
+      }
+      ret.push(stack);
+    }
+    return ret;
+  }.property('content.bank'),
+
+  'techBank': function () {
+    var game = this.get('content');
+    var ret = [];
+    for(var k in game.bank) {
+      var stack = [];
+      for (var i = 0; i < game.bank[k]; i++) {
+        var card = this.cards[k];
+        if (card.type == "Technology")
+          stack.push(this.cards[k]);
       }
       ret.push(stack);
     }
@@ -214,6 +231,12 @@ var GameController = Ember.Controller.extend({
         game.discards[i] = cards[game.discards[i]];
       }
       game.set('discards', game.get('discards').toArray().reverse());
+    }
+
+    if (game.technologyCards) {
+      for (i = 0; i < game.technologyCards.length; i++) {
+        game.technologyCards[i] = cards[game.technologyCards[i]];
+      }
     }
 
     if (game.tradeCards) {

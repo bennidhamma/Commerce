@@ -52,6 +52,9 @@ function connect (gameId, playerKey) {
     socket = new WebSocket(config.socketBase);
     socket.onopen = setPlayer;
     socket.onmessage = receiveMessage;
+    socket.onclose = function () {
+      setTimeout(function() {connect(gameId, playerKey);}, 1000);
+    }
   } else {
     setPlayer();
   }

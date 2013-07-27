@@ -12,6 +12,7 @@ namespace ForgottenArts.Commerce
 	public class Card
 	{
 		public CardType Type {get; set;}
+		public string Category {get; set;}
 		public string Name {get; set;}
 		public string ImageUrl {get; set;}
 		public string Description {get; set;}
@@ -21,16 +22,31 @@ namespace ForgottenArts.Commerce
 
 		// Action applies to Nation cards.
 		public string Action {get; set;}
-
-		// These apply to either nation or technology cards.
-		public string ModifyPurchaseCost {get; set;}
-		public string ModifyAttack {get; set;}
-		public string ModifyDiscovery {get; set;}
+		// Event applies to Nation and Technology cards.
+		public string Event {get; set;}
 
 		// These apply to Trade cards.
 		public string Calamity {get; set;}
 		public List<int> TradeValues {get; set;}
 		public int TradeLevel {get; set;}
+	}
+
+	// Card Events:
+	public class ModifyTradeSetEvent 
+	{
+		public string Good {get; set;}
+
+		// The position this trade set is for this player's turn.
+		public int Position { get; set; }
+
+		// The size of the trade set.
+		public int Size {get; set;}
+
+		public override string ToString ()
+		{
+			return string.Format ("[ModifyTradeSetEvent: Good={0}, Position={1}, Size={2}]", Good, Position, Size);
+		}
+		
 	}
 }
 

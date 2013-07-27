@@ -1,14 +1,17 @@
 GameType: Basic
 StartingBank:
+  # Nation Cards
   "One Colonist": 9
   Ship: 9
   Colony: 9
   Marketplace: 9
   Sawmill: 9
   Gold: 9
+  # Technology Cards
+  "Cotton Gin": 4 
 StartingDeck:
-  "One Colonist": 4
-  Ship: 2
+  "One Colonist": 5
+  Ship: 1
   Colony: 2
   Gold: 2
 TradingCards:
@@ -35,7 +38,7 @@ TradingCards:
   - 
     Chocolate: 9
     Sugar: 9
-    "Resource Shortage": 1  
+    "Native Raid": 1  
   # Level 6
   - 
     Silver: 8
@@ -48,11 +51,11 @@ TradingCards:
     Strike: 1
   # Level 8
   - 
-    Whiskey: 9
-    Gems: 9
-    Revolution: 1
+    Whiskey: 6
+    Gems: 6
+    "Native Uprising": 1
   # Level 9
   - 
-    Ivory: 9
+    Ivory: 5
     "Gold Bullion": 9  
-    "Native Uprising": 1
+    Revolution: 1
