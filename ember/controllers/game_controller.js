@@ -215,29 +215,29 @@ var GameController = Ember.Controller.extend({
     game.skip(phase);
   },
 
-  'prepareGame': function (game) {
-    this.set('cardsToRedeem', []);
+  prepareCards: function (arr) {
+    if (!arr) 
+      return;
     var cards = this.get('cards');
-    // Update game hand.
-    if (game.hand) {
-      for (var i = 0; i < game.hand.length; i++) {
-        game.hand[i] = cards[game.hand[i]];
+    for (var i = 0; i < arr.length; i++) {
+      if (typeof(arr[i]) == "string") {
+        arr[i] = cards[arr[i]];
       }
     }
+  },
+
+  'prepareGame': function (game) {
+    this.set('cardsToRedeem', []);
+    this.prepareCards (game.hand);
+    this.prepareCards (game.discards);
 
     if (game.discards) {
+      this.prepareCards (game.discards);
       // Update discards -- some trickiness with getting the order right.
-      for (i = 0; i < game.discards.length; i++) {
-        game.discards[i] = cards[game.discards[i]];
-      }
       game.set('discards', game.get('discards').toArray().reverse());
     }
 
-    if (game.technologyCards) {
-      for (i = 0; i < game.technologyCards.length; i++) {
-        game.technologyCards[i] = cards[game.technologyCards[i]];
-      }
-    }
+    this.prepareCards (game.technologyCards);
 
     if (game.tradeCards) {
       this.updateTradeCards (game.get('tradeCards').toArray(), game);
@@ -254,6 +254,15 @@ var GameController = Ember.Controller.extend({
       // Update offers.
       for (i = 0; i < game.otherOffers.length; i++) {
         this.prepareOffer (game.otherOffers[i]);
+      }
+    }
+
+    // Other players
+    if (game.otherPlayers) {
+      for (i = 0; i < game.otherPlayers.length; i++) {
+        var other = game.otherPlayers[i];
+        this.prepareCards (other.discards);
+        this.prepareCards (other.technologyCards);
       }
     }
 

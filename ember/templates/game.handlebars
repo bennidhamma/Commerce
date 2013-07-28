@@ -2,127 +2,147 @@
   {{notification}}
 </section>
 {{#unless isTrading}}
-<header>
-  <h2><img {{bindAttr src="content.currentTurn.playerPhoto"}}>
-    {{content.currentTurn.playerName}}</h2>
-<div># Actions: {{content.currentTurn.actions}}</div>
-<div># Buys: {{content.currentTurn.buys}}</div>
-</header>
+  <section {{bindAttr class=":currentTurn playerColor"}}>
+    <h2><img {{bindAttr src="content.currentTurn.playerPhoto"}}>
+      {{content.currentTurn.playerName}}</h2>
+  <div># Actions: {{content.currentTurn.actions}}</div>
+  <div># Buys: {{content.currentTurn.buys}}</div>
+  </section>
 
-<h2>Gold: {{content.gold}}</h2>
+  <section class="me">
+    <h2>Gold: {{content.gold}}</h2>
 
-{{#if isActionPhase}}
-<section class="action-phase">
-  It is your turn. Click a card to play it.
-  Or <button {{action skip 'action'}}>Skip Actions</button>.
-</section>
-{{/if}}
+    {{#if isActionPhase}}
+    <section class="action-phase">
+      It is your turn. Click a card to play it.
+      Or <button {{action skip 'action'}}>Skip Actions</button>.
+    </section>
+    {{/if}}
 
-{{#if isBuyPhase}}
-<section class="buy-phase">
-  Click a card to buy it, or <button {{action skip 'buy'}}>Skip Buys</button>.
-  <h2>Bank</h2>
-  <h3>Nation Cards</h3>
-  <section class="bank">
-  {{#each stack in nationBank}}
-    <section class=stack>
-      {{#each stack}}
-      {{view App.CardView content=this cardSource="bank"}}
+    {{#if isBuyPhase}}
+    <section class="buy-phase">
+      Click a card to buy it, or <button {{action skip 'buy'}}>Skip Buys</button>.
+      <h2>Bank</h2>
+      <h3>Nation Cards</h3>
+      <section class="bank">
+      {{#each stack in nationBank}}
+        <section class=stack>
+          {{#each stack}}
+          {{view App.CardView content=this cardSource="bank"}}
+          {{/each}}
+        </section>
+      {{/each}}
+      </section>
+      
+      <h3>Technology Cards</h3>
+      <section class="bank">
+      {{#each stack in techBank}}
+        <section class=stack>
+          {{#each stack}}
+          {{view App.CardView content=this cardSource="bank"}}
+          {{/each}}
+        </section>
+      {{/each}}
+      </section>
+    </section>
+    {{/if}}
+
+    <section class="hand">
+    {{#each content.hand}}
+      {{view App.CardView content=this cardSource="hand"}}
+    {{/each}}
+    </section>
+    <h2>Deck Count: {{content.deckCount}}</h2>
+    <section class="discards">
+    {{#each content.discards}}
+      {{view App.CardView content=this cardSource="discards"}}
+    {{/each}}
+    </section>
+
+    <section class="hexes">
+    {{#each content.hexes}}
+      {{view App.HexView content=this}}
+    {{/each}}  
+    </section>
+
+    <h2>Trade Cards</h2>
+    <section class="trade-cards">
+      {{#each content.tradeCards}}
+        {{view App.CardView content=this cardSource="tradeCards"}}
+      {{/each}}
+      {{#if hasCardsToRedeem}}
+      <button {{action redeem}}>Redeem Trade Cards</button>
+      {{/if}}
+    </section>
+
+    <section class="technology-cards">
+      {{#each content.technologyCards}}
+        {{view App.CardView content=this cardSource="technologyCards"}}
       {{/each}}
     </section>
-  {{/each}}
+
   </section>
-  
-  <h3>Technology Cards</h3>
-  <section class="bank">
-  {{#each stack in techBank}}
-    <section class=stack>
-      {{#each stack}}
-      {{view App.CardView content=this cardSource="bank"}}
-      {{/each}}
-    </section>
-  {{/each}}
+  <section class="others">
+    {{#each content.otherPlayers}} 
+      <section {{bindAttr class="color"}}>
+        <h2><img {{bindAttr src="photo"}}> {{name}}</h2>
+        Hand Size: {{handSize}}
+        Deck Size: {{deckSize}}
+        <section class="discards">
+        {{#each discards}}
+          {{view App.CardView content=this cardSource="other-discards"}}
+        {{/each}}
+        </section>
+        <section class="hexes">
+        {{#each hexes}}
+          {{view App.HexView content=this}}
+        {{/each}}  
+        </section>
+        <section class="technology-cards">
+        {{#each technologyCards}}
+          {{view App.CardView content=this cardSource="other-technologyCards"}}
+        {{/each}}
+        </section>
+      </section>
+    {{/each}}
   </section>
-</section>
-{{/if}}
-
-<h2>Hand</h2>
-<section class="hand">
-{{#each content.hand}}
-  {{view App.CardView content=this cardSource="hand"}}
-{{/each}}
-</section>
-
-<h2>Hexes</h2>
-<section class="hexes">
-{{#each content.hexes}}
-  {{view App.HexView content=this}}
-{{/each}}  
-</section>
-
-<h2>Trade Cards</h2>
-<section class="trade-cards">
-  {{#each content.tradeCards}}
-    {{view App.CardView content=this cardSource="tradeCards"}}
-  {{/each}}
-  {{#if hasCardsToRedeem}}
-  <button {{action redeem}}>Redeem Trade Cards</button>
-  {{/if}}
-</section>
-
-<h2>Technology Cards</h2>
-<section class="technology-cards">
-  {{#each content.technologyCards}}
-    {{view App.CardView content=this cardSource="technologyCards"}}
-  {{/each}}
-</section>
-
-<h2>Deck Count: {{content.deckCount}}</h2>
-
-<h2>Discards</h2>
-<section class="discards">
-{{#each content.discards}}
-  {{view App.CardView content=this cardSource="discards"}}
-{{/each}}
-</section>
-
 
 {{else}}
-<!-- Ths is the trading phase. -->
-<button {{action doneTrading}}>Done Trading</button>
-<h2>Trading Phase - Your Trade Cards</h2>
-<section class="trade-cards">
-  {{#each content.tradeCards}}
-    {{view App.CardView content=this cardSource="tradeCards"}}
-  {{/each}}
-  {{#if readyToListOffer}}
-  <button {{action listOffer}}>List Trade Offer</button>
-  <button {{action cancelOffer}}>Cancel Offer</button>
-  {{/if}}
-</section>
+  <!-- Ths is the trading phase. -->
+  <button {{action doneTrading}}>Done Trading</button>
+  <h2>Trading Phase - Your Trade Cards</h2>
+  <section class="trade-cards">
+    {{#each content.tradeCards}}
+      {{view App.CardView content=this cardSource="tradeCards"}}
+    {{/each}}
+    {{#if readyToListOffer}}
+    <button {{action listOffer}}>List Trade Offer</button>
+    <button {{action cancelOffer}}>Cancel Offer</button>
+    {{/if}}
+  </section>
 
-<h2>Offers</h2>
-<section class="offers">
-  <canvas id="offerCanvas">
-    
-  </canvas>
-  <ul class="my">
-  {{#each content.myOffers}}
-    {{view App.OfferView content=this source="my"}}
-  {{/each}}
-  </ul>
-  <ul class="other">
-  {{#each content.otherOffers}}
-    {{view App.OfferView content=this source="other"}}
-  {{/each}}
-  </ul>
-</section>
+  <h2>Offers</h2>
+  <section class="offers">
+    <canvas id="offerCanvas">
+      
+    </canvas>
+    <ul class="my">
+    {{#each content.myOffers}}
+      {{view App.OfferView content=this source="my"}}
+    {{/each}}
+    </ul>
+    <ul class="other">
+    {{#each content.otherOffers}}
+      {{view App.OfferView content=this source="other"}}
+    {{/each}}
+    </ul>
+  </section>
 
-<h2>Technology Cards</h2>
-<section class="technology-cards">
-  {{#each content.technologyCards}}
-    {{view App.CardView content=this cardSource="technologyCards"}}
-  {{/each}}
-</section>
+  <h2>Technology Cards</h2>
+  <section class="technology-cards">
+    {{#each content.technologyCards}}
+      {{view App.CardView content=this cardSource="technologyCards"}}
+    {{/each}}
+  </section>
 
 {{/unless}}

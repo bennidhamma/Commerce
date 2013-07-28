@@ -5,8 +5,11 @@ using System.Linq;
 
 namespace ForgottenArts.Commerce
 {
+
 	public class PlayerGame
 	{
+		public static string[] Colors = new string[] {"Blue", "Red", "Green", "Yellow", "White", "Black", "Orange", "Purple"};
+
 		int handSize = 5;
 		public int HandSize {
 			get {
@@ -22,6 +25,7 @@ namespace ForgottenArts.Commerce
 				return Player.DisplayName;
 			}
 		}
+		public string Color {get; set;}
 		public long GameId {get; set;}
 		public int Score {get; set;}
 		public int Gold {get; set;}

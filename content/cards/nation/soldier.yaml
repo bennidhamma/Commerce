@@ -2,6 +2,7 @@ Name: Soldier
 ImageUrl: soldier.png
 Description: Select an enemy hex. Roll on the attack table.
 Cost: 30
+NeedsHex: true
 Action: |
   roll = 1 + rand(100)
   event = { "roll" => roll }

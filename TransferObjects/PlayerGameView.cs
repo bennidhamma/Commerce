@@ -6,6 +6,9 @@ namespace ForgottenArts.Commerce.Server
 {
 	public class PlayerGameView
 	{
+		public string Name {get; set;}
+		public string Photo {get; set;}
+		public string Color {get; set;}
 		public long Id { get; set; }
 		public GameState Status { get; set; }
 		public List<Hex> Hexes { get; set; }
@@ -18,11 +21,15 @@ namespace ForgottenArts.Commerce.Server
 		public List<LogEntry> Log { get; set; }
 		public int Gold { get; set; }
 		public IEnumerable<string> TradeCards { get; set; }
+		public IEnumerable<OtherPlayerView> OtherPlayers {get; set;}
 
 		public PlayerGameView (Game game, PlayerGame player)
 		{
 			var cards = GameRunner.Instance.Cards;
 			this.Id = game.Id;
+			this.Name = player.Name;
+			this.Photo = player.Player.Photo;
+			this.Color = player.Color;
 			this.Status = game.Status;
 			this.Hand = player.Hand;
 			this.Discards = player.Discards;
@@ -34,6 +41,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Hexes = player.Hexes;
 			this.Gold = player.Gold;
 			this.TradeCards = from c in player.TradeCards where cards[c.Card] != null select c.Card;
+			this.OtherPlayers = from p in game.Players where p != player select new OtherPlayerView (p);
 		}
 	}
 }

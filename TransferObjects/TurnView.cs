@@ -10,6 +10,7 @@ namespace ForgottenArts.Commerce.Server
 		public string PlayerKey {get; set;}
 		public string PlayerPhoto {get; set;}
 		public string PlayerName {get; set;}
+		public string PlayerColor {get; set;}
 
 		public TurnView (Game game, Turn turn)
 		{
@@ -19,6 +20,7 @@ namespace ForgottenArts.Commerce.Server
 			this.PlayerKey = game.CurrentPlayer.Player.PlusId;
 			this.PlayerPhoto = game.CurrentPlayer.Player.Photo;
 			this.PlayerName = game.CurrentPlayer.Player.DisplayName;
+			this.PlayerColor = game.CurrentPlayer.Color;
 		}
 	}
 }
