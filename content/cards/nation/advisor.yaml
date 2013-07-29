@@ -1,0 +1,7 @@
+Name: Advisor
+ImageUrl: advisor.png
+Description: Draw 3 cards. +1 Action.
+Cost: 70
+Action: |
+  player.draw 3
+  turn.actions += 1

@@ -1,14 +1,26 @@
+@import url(http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic);
+
 /* Put your CSS here */
 html, body {
-  margin: 20px;
+  margin: 5px;
+  font-family: 'Lora', serif;
+  color: white;
+  background: black;
+  padding: 0;
 }
 
 h2 {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+h3 {
   font-size: 1.1em;
 }
 
 .notification-bar {
   background:yellow;
+  color: black;
   font-weight: bold;
   text-align: center;
   position: fixed;
@@ -40,6 +52,25 @@ h2 {
       }
     }
   }
+}
+
+.main-layout {
+  display: -webkit-flex;
+  flex-flow: row nowrap;
+  align-content: center;
+  align-items: center;
+}
+
+.me {
+  order: 1;
+  flex: 3;
+  -webkit-flex: 3;
+}
+
+.others {
+  order: 2;
+  flex: 2;
+  -webkit-flex: 2;
 }
 
 .hex {
@@ -78,7 +109,7 @@ h2 {
     z-index: 1;
   }
   header {
-    background: #eee;
+    background: #333;
     font-weight:bold;
     padding: 3px;
     font-size: 1em;
@@ -94,7 +125,8 @@ h2 {
     font-size: 0.8em;
     line-height: 15px;
     padding: 3px;
-    background: white;
+    background: #eee;
+    color: black;
     margin: 3px 0;
     border-radius: 3px;
   }
@@ -103,7 +135,8 @@ h2 {
     .set-value {
       width: 23%;
       border: 1px solid black;
-      background: white;
+      background: #eee;
+      color: black;
       display:inline-block;
       font-size: 0.8em;
       font-weight:bold;
@@ -123,18 +156,34 @@ h2 {
   }
 }
 
+.hand {
+  margin-left: 20px;
+}
+
 .discards {
-  margin-left: 80px;
+  margin-left: 106px;
+  height: 180px;
   .card {
-    margin-left: -80px;
+    margin-left: -106px;
   }
 }
 
+.technology-cards, .trade-cards {
+  margin-left: 20px;
+}
+
+.buy-phase {
+  background: rgba(255,255,255,0.2);
+  padding: 5px;
+}
+
 .bank {
-  height: 220px;
+  margin-left: 20px;
   .stack {
     display:inline-block;
     margin-right:10px;
+    vertical-align: top;
+    height: 160px;
     .card {
       position: relative;
       display:block;
@@ -166,4 +215,31 @@ h2 {
       }
     }
   }
+}
+
+.currentTurn {
+  div {
+    float: right;
+    margin-right:20px;
+  }
+}
+
+section.me,section.other {
+  padding: 5px;
+}
+
+.Blue {
+  background: linear-gradient(to bottom, rgba(122,188,255,0.5) 0%,rgba(96,171,248,0.5) 44%,rgba(64,150,238,0.5) 100%);
+}
+
+.Red {
+  background: linear-gradient(to bottom, rgba(169,3,41,0.5) 0%,rgba(143,2,34,0.5) 44%,rgba(109,0,25,0.5) 100%);
+}
+
+.Green {
+  background: linear-gradient(to bottom, rgba(14,112,35,0.5) 0%,rgba(59,119,51,0.5) 36%,rgba(100,178,76,0.5) 100%);
+}
+
+.Yellow {
+  background: linear-gradient(to bottom, rgba(241,231,103,0.5) 0%,rgba(254,182,69,0.5) 100%); 
 }

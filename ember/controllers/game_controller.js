@@ -45,11 +45,12 @@ var GameController = Ember.Controller.extend({
     var game = this.get('content');
     var ret = [];
     for(var k in game.bank) {
+      var card = this.cards[k];
+      if (card.type != "Nation")
+        continue;
       var stack = [];
       for (var i = 0; i < game.bank[k]; i++) {
-        var card = this.cards[k];
-        if (card.type == "Nation")
-          stack.push(this.cards[k]);
+        stack.push(this.cards[k]);
       }
       ret.push(stack);
     }
@@ -60,11 +61,12 @@ var GameController = Ember.Controller.extend({
     var game = this.get('content');
     var ret = [];
     for(var k in game.bank) {
+      var card = this.cards[k];
+      if (card.type != "Technology")
+        continue;
       var stack = [];
       for (var i = 0; i < game.bank[k]; i++) {
-        var card = this.cards[k];
-        if (card.type == "Technology")
-          stack.push(this.cards[k]);
+        stack.push(this.cards[k]);
       }
       ret.push(stack);
     }
@@ -333,6 +335,7 @@ var GameController = Ember.Controller.extend({
     var p1 = this.getOfferPoint(match.offer1Id);
     var p2 = this.getOfferPoint(match.offer2Id);
     
+    ctx.strokeStyle = 'white';
     ctx.beginPath();
     ctx.moveTo (p1.x, p1.y);
     ctx.lineTo (p2.x, p2.y);

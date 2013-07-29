@@ -102,6 +102,7 @@ namespace ForgottenArts.Commerce
 			}
 
 			if (game.Players.Count > 0 && string.IsNullOrEmpty(game.Players[0].Color)) {
+				put = true;
 				for (var i = 0; i < game.Players.Count; i++) {
 					game.Players[i].Color = PlayerGame.Colors[i];
 				}

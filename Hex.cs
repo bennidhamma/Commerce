@@ -24,7 +24,7 @@ namespace ForgottenArts.Commerce
 
 		public void AddColonist (int count = 1)
 		{
-			CurrentPopulation++;
+			CurrentPopulation += count;
 		}
 	}
 }

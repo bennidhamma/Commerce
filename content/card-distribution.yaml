@@ -10,6 +10,9 @@ StartingBank:
   Sawmill: 9
   Gold: 9
   Soldier: 9
+  Cavalry: 9
+  Cannon: 9
+  Advisor: 9
   # Technology Cards
   "Cotton Gin": 4 
 StartingDeck:
