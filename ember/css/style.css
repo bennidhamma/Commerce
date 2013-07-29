@@ -72,6 +72,14 @@ h3 {
   -webkit-flex: 2; }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000376}}
+.log {
+  -webkit-flex: 1; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000378}}
+  .log .log-entry {
+    padding: 5px;
+    border-bottom: 1px dotted gray; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000384}}
 .hex {
   background: url(/images/hex/empty.png) no-repeat;
   width: 80px;
@@ -84,12 +92,12 @@ h3 {
   font-size: 1.8em;
   color: white;
   -webkit-text-stroke: 1px black; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000388}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000396}}
   .hex.has-colony {
     background: url(/images/hex/colony.png) no-repeat;
     text-indent: -9999px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\0000394}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003102}}
 .card {
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
   padding: 2px;
@@ -102,12 +110,12 @@ h3 {
   -webkit-transform: scale(0.8, 0.8);
   margin: -18px -18px -18px -30px;
   transition: -webkit-transform 300ms; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003106}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003114}}
   .card:hover {
     -webkit-transform: scale(1.2, 1.2);
     position: relative;
     z-index: 1; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003111}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003119}}
   .card header {
     background: #333;
     font-weight: bold;
@@ -115,12 +123,12 @@ h3 {
     font-size: 1em;
     text-align: center;
     margin-bottom: 2px; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003119}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003127}}
   .card img {
     width: 120px;
     height: 80px;
     background: white; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003124}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003132}}
   .card p {
     font-size: 0.8em;
     line-height: 15px;
@@ -129,7 +137,7 @@ h3 {
     color: black;
     margin: 3px 0;
     border-radius: 3px; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003135}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003143}}
   .card section.set .set-value {
     width: 23%;
     border: 1px solid black;
@@ -139,99 +147,99 @@ h3 {
     font-size: 0.8em;
     font-weight: bold;
     text-align: center; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003146}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003154}}
   .card section.set.set3 {
     text-align: right; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003152}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003160}}
 .selected {
   box-shadow: 0px 0px 20px blue; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003154}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003162}}
   .selected.secret {
     box-shadow: 0 0 20px red; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003159}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003167}}
 .hand {
   margin-left: 20px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003163}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003171}}
 .discards {
   margin-left: 106px;
   height: 180px; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003166}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003174}}
   .discards .card {
     margin-left: -106px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003171}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003179}}
 .technology-cards, .trade-cards {
   margin-left: 20px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003175}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003183}}
 .buy-phase {
   background: rgba(255, 255, 255, 0.2);
   padding: 5px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003180}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003188}}
 .bank {
   margin-left: 20px; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003182}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003190}}
   .bank .stack {
     display: inline-block;
     margin-right: 10px;
     vertical-align: top;
     height: 160px; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003187}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003195}}
     .bank .stack .card {
       position: relative;
       display: block;
       margin-bottom: -181px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003195}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003203}}
 .offers {
   position: relative; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003197}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003205}}
   .offers canvas {
     position: absolute; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003200}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003208}}
   .offers ul {
     display: inline-block;
     position: relative;
     list-style: none;
     margin: 0; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003203}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003211}}
     .offers ul.my {
       margin-right: 20em; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003208}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003216}}
     .offers ul li {
       border: 1px solid black;
       border-radius: 5px;
       background: white; }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003212}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003220}}
       .offers ul li .card {
         -webkit-transform: scale(0.6, 0.6);
         margin: -25px -25px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003221}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003229}}
 .currentTurn div {
   float: right;
   margin-right: 20px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003227}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003235}}
 section.me, section.other {
   padding: 5px; }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003231}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003239}}
 .Blue {
   background: linear-gradient(to bottom, rgba(122, 188, 255, 0.5) 0%, rgba(96, 171, 248, 0.5) 44%, rgba(64, 150, 238, 0.5) 100%); }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003235}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003243}}
 .Red {
   background: linear-gradient(to bottom, rgba(169, 3, 41, 0.5) 0%, rgba(143, 2, 34, 0.5) 44%, rgba(109, 0, 25, 0.5) 100%); }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003239}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003247}}
 .Green {
   background: linear-gradient(to bottom, rgba(14, 112, 35, 0.5) 0%, rgba(59, 119, 51, 0.5) 36%, rgba(100, 178, 76, 0.5) 100%); }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003243}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003251}}
 .Yellow {
   background: linear-gradient(to bottom, rgba(241, 231, 103, 0.5) 0%, rgba(254, 182, 69, 0.5) 100%); }

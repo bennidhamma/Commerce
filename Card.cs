@@ -44,8 +44,18 @@ namespace ForgottenArts.Commerce
 		public override string ToString ()
 		{
 			return string.Format ("[ModifyTradeSetEvent: Good={0}, Position={1}, Size={2}]", Good, Position, Size);
-		}
-		
+		}	
+	}
+
+	public class PurchaseEvent {
+		public Card Card {get; set;}
+		public int Cost {get; set;}
+	}
+
+	public class Property {
+		public PlayerGame Player {get; set;}
+		public object Source {get; set;}
+		public string Key {get; set;}
+		public object Value {get; set;}
 	}
 }
-

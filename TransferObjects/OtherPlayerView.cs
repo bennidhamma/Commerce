@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ForgottenArts.Commerce
 {
@@ -23,7 +24,7 @@ namespace ForgottenArts.Commerce
 		public int DeckSize {get; set;}
 		public Stack<string> Discards {get; set;}
 		public List<string> TechnologyCards {get; set;}
-		public List<Hex> Hexes {get; set;}
+		public IEnumerable<HexView> Hexes {get; set;}
 
 		public OtherPlayerView (PlayerGame other)
 		{
@@ -34,7 +35,7 @@ namespace ForgottenArts.Commerce
 			this.DeckSize = other.Deck.Count;
 			this.Discards = other.Discards;
 			this.TechnologyCards = other.TechnologyCards;
-			this.Hexes = other.Hexes;
+			this.Hexes = from h in other.Hexes select new HexView (h);
 		}
 	}
 }

@@ -13,8 +13,12 @@ StartingBank:
   Cavalry: 9
   Cannon: 9
   Advisor: 9
+  "City Walls": 9
+  "Farm Equipment" : 9
   # Technology Cards
   "Cotton Gin": 4 
+  "Chemistry": 4
+  "Fertilizers": 4
 StartingDeck:
   "One Colonist": 5
   Ship: 1

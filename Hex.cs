@@ -19,6 +19,18 @@ namespace ForgottenArts.Commerce
 		}
 		public bool HasColony {get; set;}
 
+		public int GetPopulationLimit ()
+		{
+			var hp = new Property () {
+				Player = this.Player,
+				Source = this,
+				Key = "hex.population_limit",
+				Value = PopulationLimit
+			};
+			Player.HandleCardEvents (hp);
+			return (int) hp.Value;
+		}
+
 		[IgnoreDataMember]
 		public PlayerGame Player {get; set;}
 

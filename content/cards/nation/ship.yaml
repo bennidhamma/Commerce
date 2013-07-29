@@ -5,8 +5,4 @@ Cost: 50
 Action: |
   num_cities = game.players.reduce {|p| p.hexes.length}
   roll = 1 + rand(100) - num_cities
-  # Allow other cards to modify discovery roll.
-  event = { "roll" => roll }
-  player.handle_card_events "DiscoveryEvent", event
-  roll = event["roll"]
   discovery_roll roll, args, game, player

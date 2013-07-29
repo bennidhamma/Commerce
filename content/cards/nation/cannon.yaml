@@ -5,7 +5,4 @@ Cost: 80
 NeedsHex: true
 Action: |
   roll = 11 + rand(100)
-  event = { "roll" => roll }
-  player.handle_card_events "AttackEvent", event
-  roll = event["roll"]
   attack_roll roll, args, game, hex, player

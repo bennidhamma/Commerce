@@ -110,6 +110,12 @@
         </section>
       {{/each}}
     </section>
+
+    <section class="log">
+      {{#each content.log}}
+        <div class=log-entry>{{message}}</div>      
+      {{/each}}
+    </section>
   </section> <!-- end main-layout -->
 
 {{else}}

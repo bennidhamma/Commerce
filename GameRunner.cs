@@ -185,8 +185,8 @@ namespace ForgottenArts.Commerce
 		{
 			foreach (var p in game.Players) {
 				foreach (var h in p.Hexes) {
-					if (!h.HasColony && h.CurrentPopulation > h.PopulationLimit) {
-						h.CurrentPopulation = h.PopulationLimit;
+					if (!h.HasColony && h.CurrentPopulation > h.GetPopulationLimit()) {
+						h.CurrentPopulation = h.GetPopulationLimit();
 					}
 				}
 			}
@@ -334,7 +334,8 @@ namespace ForgottenArts.Commerce
 			}
 
 			game.CurrentTurn.CurrentCard = cardKey;
-			var error = ScriptManager.Manager.ExecuteCardAction (player.Game, card, cardArgs);
+			game.Log ("{0} played {1}.", player.Name, cardKey);
+			var error = ScriptManager.Manager.ExecuteCardAction (game, card, cardArgs);
 			if (error != null) {
 				throw new InvalidOperationException (error);
 			}
@@ -368,7 +369,14 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("You don't have any buys remaining");
 			}
 
-			if (card.Cost > game.CurrentPlayer.Gold) {
+			var purchaseEvent = new PurchaseEvent () {
+				Card = card,
+				Cost = card.Cost
+			};
+			player.HandleCardEvents (purchaseEvent);
+			var cost = purchaseEvent.Cost;
+
+			if (cost > game.CurrentPlayer.Gold) {
 				throw new InvalidOperationException ("Not enough gold to purchase card");
 			}
 
@@ -380,7 +388,7 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("You already have this technology card.");
 			}
 
-			game.CurrentPlayer.Gold -= card.Cost;
+			game.CurrentPlayer.Gold -= cost;
 
 			if (card.Type == CardType.Nation) {
 				// Add card to hand.
@@ -388,7 +396,6 @@ namespace ForgottenArts.Commerce
 			} else { // Technology card.
 				player.TechnologyCards.Add (cardKey);
 			}
-
 
 			// Remove from bank.
 			game.Bank[cardKey]--;

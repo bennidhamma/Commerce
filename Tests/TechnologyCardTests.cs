@@ -43,6 +43,19 @@ namespace Tests
 			
 			Assert.That(e.Size, Is.EqualTo(2));
 		}
+
+		[Test]
+		public void FertilizersTest () {
+			Game g = new Game ();
+			var p1 = AddPlayer (g);
+			p1.AddHex (1, 1);
+			p1.TechnologyCards.Add ("Fertilizers");
+			
+			CardCatalog catalog = new CardCatalog();
+			catalog.LoadCards("cards/technology", CardType.Technology);
+			GameRunner.Instance.Cards = catalog;
+
+			Assert.That(p1.Hexes[0].GetPopulationLimit(), Is.EqualTo(2));
+		}
 	}
 }
-

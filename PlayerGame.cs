@@ -41,7 +41,21 @@ namespace ForgottenArts.Commerce
 		public List<Match> ReceivedMatches {get; set; }
 		public bool DoneTrading { get; set; }
 
-		public List<Hex> Hexes {get; set;}
+		List<Hex> hexes;
+		public List<Hex> Hexes {
+			get {
+				return hexes;
+			}
+			set {
+				if (value != null)
+				{
+					foreach (var hex in value) {
+						hex.Player = this;
+					}
+				}
+				hexes = value;
+			}
+		}
 
 		public List<LogEntry> Log { get; set; }
 
@@ -102,7 +116,8 @@ namespace ForgottenArts.Commerce
 				Id = GameRunner.Instance.Repository.NewId (),
 				PopulationLimit = populationLimit,
 				CurrentPopulation = currentPopulation,
-				HasColony = false
+				HasColony = false,
+				Player = this
 			};
 			this.Hexes.Add (hex);
 		}

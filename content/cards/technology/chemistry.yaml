@@ -1,0 +1,8 @@
+Name: Chemistry
+Category: Science
+ImageUrl: chemistry.png
+Description: Discounts science purchases by 15.
+Event: |
+  if event_type == "PurchaseEvent" and event.card.category == "Science"
+    event.cost -= 15
+  end

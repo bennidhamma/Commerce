@@ -71,6 +71,7 @@
     <Compile Include="TransferObjects\MatchView.cs" />
     <Compile Include="TransferObjects\CardView.cs" />
     <Compile Include="TransferObjects\OtherPlayerView.cs" />
+    <Compile Include="TransferObjects\HexView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

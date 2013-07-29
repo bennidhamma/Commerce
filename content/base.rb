@@ -6,6 +6,17 @@ include System
 load_assembly 'System.Core'
 using_clr_extensions System::Linq
 
+class AttackEvent
+  attr_accessor :roll
+  attr_accessor :attacker
+  attr_accessor :defender
+  attr_accessor :city_walls
+end
+
+class DiscoveryEvent
+  attr_accessor :roll
+end
+
 class Object
     def to_seq(type = Object)
         System::Linq::Enumerable.method(:of_type).of(type).call(self.to_a)
@@ -17,6 +28,11 @@ class Object
 
     def discovery_roll(roll, args, game, player)
       pop = ((2 + rand(6) + rand(6)) / 2).round
+      # Allow other cards to modify discovery roll.
+      event = DiscoveryEvent.new
+      event.roll = roll
+      player.handle_card_events "DiscoveryEvent", event
+      roll = event.roll
       case roll
       when 1..10
         args.trash_card = true
@@ -38,6 +54,12 @@ class Object
     end
 
     def attack_roll(roll, args, game, hex, player)
+      event = AttackEvent.new
+      event.roll = roll
+      event.attacker = player
+      event.defender = hex.player
+      player.handle_card_events "AttackEvent", event
+      roll = event.roll
       case roll
       when 1..10
         args.trash_card = true

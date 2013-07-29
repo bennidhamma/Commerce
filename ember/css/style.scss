@@ -73,6 +73,14 @@ h3 {
   -webkit-flex: 2;
 }
 
+.log {
+  -webkit-flex: 1;
+  .log-entry {
+    padding:5px;
+    border-bottom: 1px dotted gray;
+  }
+}
+
 .hex {
   background:url(/images/hex/empty.png) no-repeat;
   width: 80px;
