@@ -7,6 +7,8 @@ html, body {
   color: white;
   background: black;
   padding: 0;
+  -webkit-user-select: none;
+  cursor: default;
 }
 
 h2 {
@@ -92,7 +94,7 @@ h3 {
   font-weight: bold;
   font-size: 1.8em;
   color: white;
-  -webkit-text-stroke: 1px black;
+  text-shadow: 0 0 8px black;
   &.has-colony {
     background:url(/images/hex/colony.png) no-repeat;
     text-indent:-9999px;

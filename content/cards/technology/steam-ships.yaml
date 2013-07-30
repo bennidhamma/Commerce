@@ -1,0 +1,8 @@
+Name: Steam Ships
+ImageUrl: steam-ships.yaml
+Category: Science
+Cost: 200
+Requires: 
+  - Steam Engine
+Description: |
+  Roll twice on the discovery table each time you play a ship.

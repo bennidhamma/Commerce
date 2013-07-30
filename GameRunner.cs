@@ -388,6 +388,15 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("You already have this technology card.");
 			}
 
+			if (card.Requires != null)
+			{
+				foreach (var required in card.Requires) {
+					if (!player.AllCards.Contains (required)) {
+						throw new InvalidOperationException ("Purchasing card requires " + string.Join (", ", card.Requires));
+					}
+				}
+			}
+
 			game.CurrentPlayer.Gold -= cost;
 
 			if (card.Type == CardType.Nation) {

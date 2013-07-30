@@ -62,8 +62,19 @@ namespace ForgottenArts.Commerce
 				};
 				foreach (string key in cardObject.Keys) {
 					try {
-						var prop = cardType.GetProperty (key);
-						prop.SetValue (card, Convert.ChangeType(cardObject[key], prop.PropertyType), null);
+						switch (key) {
+						case "Requires":
+							var requires = new List<string> ();
+							foreach (dynamic require in cardObject.Requires) {
+								requires.Add (require);
+							}
+							card.Requires = requires;
+							break;
+						default:
+							var prop = cardType.GetProperty (key);
+							prop.SetValue (card, Convert.ChangeType(cardObject[key], prop.PropertyType), null);
+							break;
+						}
 					}
 					catch {
 						Console.WriteLine ("Unable to parse property " + key);

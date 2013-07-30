@@ -592,11 +592,11 @@ helpers = helpers || Ember.Handlebars.helpers; data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n<section class=\"set set1\">\n");
+  data.buffer.push("\n  <section class=\"set set1\">\n  ");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "view.setValues1", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</section>\n");
+  data.buffer.push("\n  </section>\n");
   return buffer;
   }
 function program2(depth0,data) {
@@ -612,7 +612,7 @@ function program2(depth0,data) {
 function program4(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n<p>");
+  data.buffer.push("\n  <p>");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "description", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push("</p>\n");
@@ -622,7 +622,7 @@ function program4(depth0,data) {
 function program6(depth0,data) {
   
   var buffer = '', hashTypes;
-  data.buffer.push("\n<p>");
+  data.buffer.push("\n  <p>");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "cost", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
   data.buffer.push(" gold</p>\n");
@@ -632,22 +632,42 @@ function program6(depth0,data) {
 function program8(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n<section class=\"set set3\">\n");
+  data.buffer.push("\n  <p>\n  ");
   hashTypes = {};
-  stack1 = helpers.each.call(depth0, "view.setValues3", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "requires", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</section>\n");
+  data.buffer.push("\n  </p>\n");
+  return buffer;
+  }
+function program9(depth0,data) {
+  
+  var buffer = '', hashTypes;
+  data.buffer.push("\n    ");
+  hashTypes = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
+  data.buffer.push(" \n  ");
   return buffer;
   }
 
-function program10(depth0,data) {
+function program11(depth0,data) {
   
   var buffer = '', stack1, hashTypes;
-  data.buffer.push("\n<section class=\"set set2\">\n");
+  data.buffer.push("\n  <section class=\"set set3\">\n  ");
+  hashTypes = {};
+  stack1 = helpers.each.call(depth0, "view.setValues3", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n  </section>\n");
+  return buffer;
+  }
+
+function program13(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes;
+  data.buffer.push("\n  <section class=\"set set2\">\n  ");
   hashTypes = {};
   stack1 = helpers.each.call(depth0, "view.setValues2", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n</section>\n");
+  data.buffer.push("\n  </section>\n");
   return buffer;
   }
 
@@ -657,12 +677,12 @@ function program10(depth0,data) {
   data.buffer.push("\n<header>");
   hashTypes = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "name", {hash:{},contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data})));
-  data.buffer.push("</header>\n<!--<img ");
+  data.buffer.push("</header>\n<img ");
   hashTypes = {'src': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'src': ("relImageUrl")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">-->\n");
+  data.buffer.push(">\n");
   hashTypes = {};
   stack1 = helpers['if'].call(depth0, "description", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
@@ -672,11 +692,15 @@ function program10(depth0,data) {
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "view.setValues3", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "requires", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   hashTypes = {};
-  stack1 = helpers['if'].call(depth0, "view.setValues2", {hash:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "view.setValues3", {hash:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n");
+  hashTypes = {};
+  stack1 = helpers['if'].call(depth0, "view.setValues2", {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
   return buffer;

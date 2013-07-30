@@ -13,6 +13,7 @@ namespace ForgottenArts.Commerce.Server
 		public string Description {get; set;}
 		public bool NeedsHex {get; set;}
 		public int Cost {get; set;}
+		public List<string> Requires {get; set;}
 		public List<int> TradeValues {get; set;}
 		public int TradeLevel {get; set;}
 
@@ -28,6 +29,7 @@ namespace ForgottenArts.Commerce.Server
 			this.ImageUrl = card.ImageUrl;
 			this.NeedsHex = card.NeedsHex;
 			this.Cost = card.Cost;
+			this.Requires = card.Requires;
 			this.TradeLevel = card.TradeLevel;
 			this.TradeValues = card.TradeValues;
 		}

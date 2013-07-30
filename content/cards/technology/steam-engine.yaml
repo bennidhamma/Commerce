@@ -1,0 +1,11 @@
+Name: Steam Engine
+Category: Science
+ImageUrl: steam-engine.png
+Cost: 150
+Requires: 
+  - Cotton Gin
+Description: Discounts science purchases by 15.
+Event: |
+  if event_type == "PurchaseEvent" and event.card.category == "Science"
+    event.cost -= 15
+  end

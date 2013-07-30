@@ -19,6 +19,9 @@ namespace ForgottenArts.Commerce
 		public bool NeedsHex {get; set;}
 		public int Cost {get; set;}
 
+		// List of required cards in order to purchase.
+		public List<string> Requires {get; set;}
+
 		// Action applies to Nation cards.
 		public string Action {get; set;}
 		// Event applies to Nation and Technology cards.

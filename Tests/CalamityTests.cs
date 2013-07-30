@@ -88,7 +88,7 @@ namespace Tests
 		public void NativeRaidTest () {
 			Game g = new Game();
 			var p1 = AddPlayer (g);
-			AddTradeCards (p1, "Wheat", "Wheat", "Coffee", "Coffee");
+			AddTradeCards (p1, "Corn", "Corn", "Coffee", "Coffee");
 			
 			CardCatalog catalog = new CardCatalog();
 			catalog.LoadCards("cards/trade", CardType.Trade);

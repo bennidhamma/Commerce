@@ -1,0 +1,7 @@
+Name: Antibiotics
+ImageUrl: antibiotics.png
+Category: Science
+Cost: 100
+Requires: 
+  - Chemistry
+Description: Reduces the effect of Small Pox.

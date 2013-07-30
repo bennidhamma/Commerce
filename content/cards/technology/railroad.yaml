@@ -1,0 +1,14 @@
+Name: Railroad
+ImageUrl: railroad.png
+Cost: 200
+Requires:
+  - Steam Engine
+Description: +10 to your attack rolls. -10 to attack rolls against you.
+Event: |
+  if event_type == "AttackEvent"
+    if event.attacker == player
+      event.roll += 10
+    elsif event.defender == player
+      event.roll -= 10
+    end
+  end

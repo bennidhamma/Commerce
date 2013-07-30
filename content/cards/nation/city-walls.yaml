@@ -4,7 +4,7 @@ Cost: 75
 Description: Draw 2 cards when played. Subtract 20 from attack rolls against you.
 Action: player.draw 2
 Event: |
-  if event_type = "AttackEvent" and event.defender == player and not event.city_walls
+  if event_type == "AttackEvent" and event.defender == player and not event.city_walls
     game.debug "City Walls", roll
     event.city_walls = 1
     event.roll -= 20

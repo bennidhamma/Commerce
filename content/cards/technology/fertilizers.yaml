@@ -3,7 +3,7 @@ ImageUrl: fertilizers.yaml
 Category: Science
 Cost: 200
 Description: |
-  Increases the effect of Wheat during Famine.
+  Increases the effect of Corn during Famine.
   Population limits of all friendly hexes are increased by one.
 Event: |
   if event_type == "Property" and event.key == "hex.population_limit"

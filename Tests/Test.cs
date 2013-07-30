@@ -91,13 +91,13 @@ namespace Tests
 			GameRunner gr = new GameRunner ();
 			gr.Start (g);
 
-			p1.Hand = new List<string>() {"Wood", "Wood", "Wheat", "Wheat"};
+			p1.Hand = new List<string>() {"Wood", "Wood", "Corn", "Corn"};
 
 			gr.Buy (g, p1, "Scouts");
 
 			Assert.That(p1.Hand.Contains ("Scouts"));
 
-			Assert.That(p1.Hand.Sum(c=> c == "Wheat" ? 1 : 0), Is.EqualTo (1));
+			Assert.That(p1.Hand.Sum(c=> c == "Corn" ? 1 : 0), Is.EqualTo (1));
 
 			Assert.That(p1.Hand.Sum(c=> c == "Wood" ? 1 : 0), Is.EqualTo (1));
 		}
@@ -119,7 +119,7 @@ namespace Tests
 			gr.Start (g);
 
 			for (int i = 0; i < 9; i++) {
-				p1.Deck.Push("Wheat");
+				p1.Deck.Push("Corn");
 			}
 
 			gr.CheckForGameEnd (g);
@@ -127,7 +127,7 @@ namespace Tests
 			Assert.That (g.Status, Is.EqualTo (GameState.Finished));
 			Assert.That (g.Win, Is.Not.Null);
 			Assert.That (g.Win.Player, Is.EqualTo (p1));
-			Assert.That (g.Win.Suit, Is.EqualTo("Wheat"));
+			Assert.That (g.Win.Suit, Is.EqualTo("Corn"));
 		}
 	}
 }

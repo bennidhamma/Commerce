@@ -19,6 +19,11 @@ StartingBank:
   "Cotton Gin": 4 
   "Chemistry": 4
   "Fertilizers": 4
+  "Steam Engine": 4
+  "Steam Ships": 4
+  "Antibiotics": 4
+  "Navigation": 4
+  "Railroad": 4
 StartingDeck:
   "One Colonist": 5
   Ship: 1
@@ -28,7 +33,7 @@ TradingCards:
   # Level 1
   - 
     Timber: 9
-    Wheat: 9
+    Corn: 9
   # Level 2
   - 
     Coffee: 9
