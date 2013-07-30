@@ -74,6 +74,12 @@ namespace ForgottenArts.Commerce
 				return GetInt("DefaultTradeDurationSeconds", 60 * 5);
 			}
 		}
+
+		public static int MaxNumberOfHexes {
+			get {
+				return GetInt("MaxNumberOfHexes", 9);
+			}
+		}
         
         public static bool FileExists (string name)
         {

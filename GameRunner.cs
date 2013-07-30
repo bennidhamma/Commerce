@@ -90,6 +90,9 @@ namespace ForgottenArts.Commerce
 					player.GameId = game.Id;
 					put = true;
 				}
+				if (player.Hexes.Count > Config.MaxNumberOfHexes) {
+					player.Hexes = player.Hexes.Take (Config.MaxNumberOfHexes).ToList ();
+				}
 			}
 
 			// See if we need to add any new cards to the bank. This is mainly a debug utillity. We probably don't want to do this to real games :)

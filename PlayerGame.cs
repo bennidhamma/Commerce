@@ -108,8 +108,12 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
-		public void AddHex (int populationLimit, int currentPopulation = 0)
+		public bool AddHex (int populationLimit, int currentPopulation = 0)
 		{
+			if (Hexes.Count >= Config.MaxNumberOfHexes) {
+				Console.WriteLine ("Too many hexes.");
+				return false;
+			}
 			var hex = new Hex () {
 				Id = GameRunner.Instance.Repository.NewId (),
 				PopulationLimit = populationLimit,
@@ -117,7 +121,17 @@ namespace ForgottenArts.Commerce
 				HasColony = false,
 				Player = this
 			};
+			return AddHex (hex);
+		}
+
+		public bool AddHex (Hex hex)
+		{
+			if (Hexes.Count >= Config.MaxNumberOfHexes) {
+				Console.WriteLine ("Too many hexes.");
+				return false;
+			}
 			this.Hexes.Add (hex);
+			return true;
 		}
 
 		public bool Defends () 

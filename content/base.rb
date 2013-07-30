@@ -88,8 +88,9 @@ class Object
           log += " Enemy player surrended one " + card
         end
       else
-        hex.player.hexes.remove(hex)
-        player.hexes.add(hex)
+        if player.add_hex hex
+          hex.player.hexes.remove hex
+        end
         log = "Victory! Enemy colony is captured!"
         if hex.player.trade_cards.count 
           card = hex.player.trade_cards.sample.card

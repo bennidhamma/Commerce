@@ -21,6 +21,9 @@ Calamity: |
     if p.technology_cards.include? "Fertilizers"
       num_grains *= 2
     end
+    if p.technology_cards.include? "Whaling"
+      num_grains += p.hand.count { |c| c == "Ship" }
+    end
     starve_count -= num_grains * 4;
     if starve_count > 0
       p.remove_population starve_count, "a terrible famine!"

@@ -27,6 +27,10 @@ StartingBank:
   Electricity: 4
   Banking: 4
   Corporations: 4
+  Whaling: 4
+  Conscription: 4
+  Impressionism: 4
+  Opera: 4
 StartingDeck:
   "One Colonist": 5
   Ship: 1
@@ -59,21 +63,21 @@ TradingCards:
     "Native Raid": 1  
   # Level 6
   - 
-    Silver: 8
-    Furs: 8
+    Silver: 9
+    Furs: 9
     Lawsuit: 1
   # Level 7
   - 
-    Marble: 7
-    Oil: 7
+    Marble: 8
+    Oil: 8
     Strike: 1
   # Level 8
   - 
-    Whiskey: 6
-    Gems: 6
+    Whiskey: 7
+    Gems: 7
     "Native Uprising": 1
   # Level 9
   - 
-    Ivory: 5
+    Ivory: 6
     "Gold Bullion": 9  
     Revolution: 1

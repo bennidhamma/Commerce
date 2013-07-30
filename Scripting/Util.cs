@@ -156,6 +156,19 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		public object this [string key]
+		{
+			get 
+			{
+				foreach (var entry in _mapping.Children)
+				{
+					if ((entry.Key as YamlScalarNode).Value == key)
+						return entry.Value;
+				}
+				return false;
+			}
+		}
+
 		#region IEnumerable implementation
 		
 		IEnumerator IEnumerable.GetEnumerator ()
