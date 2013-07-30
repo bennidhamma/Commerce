@@ -59,6 +59,10 @@ namespace ForgottenArts.Commerce
 		public int GoldPerColony {get ;set;}
 	}
 
+	public class TurnEvent {
+
+	}
+
 	public class Property {
 		public PlayerGame Player {get; set;}
 		public object Source {get; set;}

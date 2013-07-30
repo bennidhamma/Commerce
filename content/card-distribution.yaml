@@ -17,14 +17,16 @@ StartingBank:
   "Farm Equipment" : 9
   # Technology Cards
   "Cotton Gin": 4 
-  "Chemistry": 4
+  Chemistry: 4
   "Fertilizers": 4
   "Steam Engine": 4
   "Steam Ships": 4
-  "Antibiotics": 4
-  "Navigation": 4
-  "Railroad": 4
-  "Electricity": 4
+  Antibiotics: 4
+  Navigation: 4
+  Railroad: 4
+  Electricity: 4
+  Banking: 4
+  Corporations: 4
 StartingDeck:
   "One Colonist": 5
   Ship: 1

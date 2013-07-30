@@ -1,0 +1,11 @@
+Name: Banking
+ImageUrl: banking.png
+Category: Governance
+Cost: 200
+Description: +1 Buy each turn. +1 Gold / colony during taxation.
+Event: |
+  if event_type == "TaxationEvent"
+    event.gold_per_colony += 1
+  elsif event_type == "TurnEvent"
+    turn.buys += 1
+  end

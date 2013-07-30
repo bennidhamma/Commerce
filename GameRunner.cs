@@ -178,6 +178,9 @@ namespace ForgottenArts.Commerce
 			game.CurrentTurn.PlayerKey = game.Players[game.CurrentTurn.Count % game.Players.Count].PlayerKey;
 			game.CurrentTurn.Count++;
 			game.CurrentTurn.TradeSetsRedeemed = 0;
+
+			game.CurrentPlayer.HandleCardEvents (new TurnEvent ());
+
 			CheckForGameEnd (game);
 			//TODO: notify new current player it is their turn.
 		}
@@ -293,6 +296,7 @@ namespace ForgottenArts.Commerce
 			// Resolve calamities in order of trade level.
 			foreach (var args in calamities.OrderBy (c => c.Card.TradeLevel)) {
 				ScriptManager.Manager.ExecuteCalamity (game, args.Card, args.PrimaryPlayer, args.SecondaryPlayer);
+				game.TradeCards[args.Card.TradeLevel-1].Add (args.Card.Name);
 			}
 		}
 
@@ -425,6 +429,8 @@ namespace ForgottenArts.Commerce
 
 			// Remove from bank.
 			game.Bank[cardKey]--;
+
+			game.Log ("{0} bought {1}.", player.Name, cardKey);
 
 			// Deduct buy
 			if (--game.CurrentTurn.Buys <= 0) {

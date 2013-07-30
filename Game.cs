@@ -127,7 +127,7 @@ namespace ForgottenArts.Commerce
 
 		public static IEnumerable<LogEntry> GetLog (long gameId)
 		{
-			return GameRunner.Instance.Repository.GetList<LogEntry> ("game-log-" + gameId).Take (50);
+			return GameRunner.Instance.Repository.GetList<LogEntry> ("game-log-" + gameId).Reverse().Take (20);
 		}
 
 		public Hex GetHex (int hexId)

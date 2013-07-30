@@ -158,15 +158,15 @@ namespace ForgottenArts.Commerce.Server
 			var game = repository.Get<Game>(Game.GetKey(gameId));
 			var player = game.GetPlayer(playerKey);
 			var request = this.Bind<T>();
-			Console.WriteLine ("set up request: ", (DateTime.Now - time).TotalMilliseconds);
+			Console.WriteLine ("set up request: " + (DateTime.Now - time).TotalMilliseconds);
 			time = DateTime.Now;
 			try
 			{
 				if (func(game, player, request)) {
-					Console.WriteLine ("executing func: ", (DateTime.Now - time).TotalMilliseconds);
+					Console.WriteLine ("executing func: " + (DateTime.Now - time).TotalMilliseconds);
 					time = DateTime.Now;
 					this.repository.Put(game.GetKey(), game);
-					Console.WriteLine ("game saved: ", (DateTime.Now - time).TotalMilliseconds);
+					Console.WriteLine ("game saved: " + (DateTime.Now - time).TotalMilliseconds);
 					time = DateTime.Now;
 					if (PlayerSocketServer.Instance != null) {
 						foreach (var p in game.Players) {
@@ -175,7 +175,7 @@ namespace ForgottenArts.Commerce.Server
 							PlayerSocketServer.Instance.Send(message, channel, p);
 						}
 					}
-					Console.WriteLine ("sockets updated: ", (DateTime.Now - time).TotalMilliseconds);
+					Console.WriteLine ("sockets updated: " + (DateTime.Now - time).TotalMilliseconds);
 				}
 
 				return string.Empty;

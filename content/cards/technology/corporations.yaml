@@ -1,0 +1,11 @@
+Name: Corporations
+ImageUrl: corporations.yaml
+Category: Governance
+Cost: 400
+Description: Adds one to the first traded set per turn. +1 Gold / colony during taxation.
+Event: |
+  if event_type == "ModifyTradeSetEvent" and event.position == 0
+    event.size += 1
+  elsif event_type == "TaxationEvent"
+    event.gold_per_colony += 1
+  end
