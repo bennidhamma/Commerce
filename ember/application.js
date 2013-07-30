@@ -121,7 +121,7 @@ var GameController = Ember.Controller.extend({
         if (elem.hasClass('selected')) {
           // If this is the only selected card in a set, add a third select mode 
           // which is to select all cards in the set.
-          var cardClass = '.trade-cards .' + card;
+          var cardClass = '.trade-cards .' + Em.String.dasherize(card);
           var cardCount = $(cardClass).length;
           if ($(cardClass + '.selected').length == 1 && cardCount > 1) {
             $(cardClass).addClass('selected');
@@ -41461,9 +41461,24 @@ var CardView = Ember.View.extend({
 
   templateName: 'card',
 
-  classNameBindings: ['context.type', 'context.name', 'context.category'],
+  classNameBindings: ['cssType', 'cssName', 'cssCategory'],
 
   classNames: ['card'],
+    
+  cssType: function() {
+    return Em.String.dasherize(this.get('context.type'));
+  }.property('context.type'),
+
+  cssCategory: function() {
+    var category = this.get('context.category');
+    if (!category)
+      return '';
+    return Em.String.dasherize(category.replace('&amp; ',''));
+  }.property('context.category'),
+
+  cssName: function() {
+    return Em.String.dasherize(this.get('context.name'));
+  }.property('context.name'),
   
   setValues1: function () {
     return this.setValues(0, 4);

@@ -5,6 +5,7 @@ include System
 
 load_assembly 'System.Core'
 using_clr_extensions System::Linq
+using_clr_extensions ForgottenArts::Commerce
 
 class AttackEvent
   attr_accessor :roll

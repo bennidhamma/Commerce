@@ -41,7 +41,7 @@ namespace Tests
 
 		public void Append<T> (string key, T message)
 		{
-			throw new NotImplementedException ();
+			Console.WriteLine ("{0}: {1}", key, message);
 		}
 
 		#endregion

@@ -72,7 +72,8 @@ namespace ForgottenArts.Commerce
 							break;
 						default:
 							var prop = cardType.GetProperty (key);
-							prop.SetValue (card, Convert.ChangeType(cardObject[key], prop.PropertyType), null);
+							var value = cardObject[key];
+							prop.SetValue (card, Convert.ChangeType(value, prop.PropertyType), null);
 							break;
 						}
 					}

@@ -1,0 +1,11 @@
+Name: Conscription
+Category: Governance
+ImageUrl: conscription.png
+Cost: 200
+Description: -10 to attack rolls against your hexes. Soldiers cost 10 gold less.
+Event: |
+  if event_type == "AttackEvent" and event.defender == player
+    event.roll -= 10
+  elsif event_type == "PurchaseEvent" and event.card.name == "Soldier"
+    event.cost -= 10
+  end

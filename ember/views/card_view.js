@@ -5,9 +5,24 @@ var CardView = Ember.View.extend({
 
   templateName: 'card',
 
-  classNameBindings: ['context.type', 'context.name', 'context.category'],
+  classNameBindings: ['cssType', 'cssName', 'cssCategory'],
 
   classNames: ['card'],
+    
+  cssType: function() {
+    return Em.String.dasherize(this.get('context.type'));
+  }.property('context.type'),
+
+  cssCategory: function() {
+    var category = this.get('context.category');
+    if (!category)
+      return '';
+    return Em.String.dasherize(category.replace('&amp; ',''));
+  }.property('context.category'),
+
+  cssName: function() {
+    return Em.String.dasherize(this.get('context.name'));
+  }.property('context.name'),
   
   setValues1: function () {
     return this.setValues(0, 4);

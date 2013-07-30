@@ -114,12 +114,12 @@ h3 {
   transition: -webkit-transform 300ms; }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003116}}
   .card:hover {
-    -webkit-transform: scale(1.2, 1.2);
+    -webkit-transform: scale(1.4, 1.4);
     position: relative;
     z-index: 1; }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003121}}
   .card header {
-    background: #333;
+    background: rgba(0, 0, 0, 0.5);
     font-weight: bold;
     padding: 3px;
     font-size: 1em;
@@ -132,10 +132,10 @@ h3 {
     background: white; }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003134}}
   .card p {
-    font-size: 0.8em;
+    font-size: 0.7em;
     line-height: 15px;
     padding: 3px;
-    background: #eee;
+    background: rgba(255, 255, 255, 0.6);
     color: black;
     margin: 3px 0;
     border-radius: 3px; }
@@ -245,3 +245,15 @@ section.me, section.other {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003253}}
 .Yellow {
   background: linear-gradient(to bottom, rgba(241, 231, 103, 0.5) 0%, rgba(254, 182, 69, 0.5) 100%); }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003257}}
+.science {
+  background: #28289c; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003261}}
+.governance {
+  background: #366d2e; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003265}}
+.arts-culture {
+  background: #8d1515; }

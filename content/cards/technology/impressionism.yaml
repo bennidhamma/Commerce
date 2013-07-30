@@ -1,0 +1,11 @@
+Name: Impressionism
+Category: Arts &amp; Culture
+ImageUrl: impressionism.png
+Cost: 150
+Requires:
+  - Esotericism
+Description: Discounts Science and Philosopy purchases by 15.
+Event: |
+  if event_type == "PurchaseEvent" and (event.card.category == "Science" or event.card.category == "Philosphy")
+    event.cost -= 15
+  end

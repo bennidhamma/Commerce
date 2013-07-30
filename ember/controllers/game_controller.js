@@ -103,7 +103,7 @@ var GameController = Ember.Controller.extend({
         if (elem.hasClass('selected')) {
           // If this is the only selected card in a set, add a third select mode 
           // which is to select all cards in the set.
-          var cardClass = '.trade-cards .' + card;
+          var cardClass = '.trade-cards .' + Em.String.dasherize(card);
           var cardCount = $(cardClass).length;
           if ($(cardClass + '.selected').length == 1 && cardCount > 1) {
             $(cardClass).addClass('selected');

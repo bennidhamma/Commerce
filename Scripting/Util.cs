@@ -156,19 +156,6 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
-		public object this [string key]
-		{
-			get 
-			{
-				foreach (var entry in _mapping.Children)
-				{
-					if ((entry.Key as YamlScalarNode).Value == key)
-						return entry.Value;
-				}
-				return false;
-			}
-		}
-
 		#region IEnumerable implementation
 		
 		IEnumerator IEnumerable.GetEnumerator ()
@@ -200,8 +187,9 @@ namespace ForgottenArts.Commerce
 	}
 
 	public static class Util {
-		public static void Shuffle<T>(this List<T> list) {
-			list.Sort((a,b) => Config.Random.Next(-1, 1));
+		public static void Shuffle<T> (this List<T> list)
+		{
+			list.Sort ((a,b) => Config.Random.Next (-1, 1));
 		}
 	}
 }

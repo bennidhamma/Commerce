@@ -1,0 +1,9 @@
+Name: Opera
+ImageUrl: opera.png
+Category: Arts &amp; Culture
+Cost: 175
+Description: +1 Action each turn.
+Event: |
+  if event_type == "TurnEvent"
+    turn.actions += 1
+  end
