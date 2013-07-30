@@ -2,6 +2,8 @@ Name: Fertilizers
 ImageUrl: fertilizers.yaml
 Category: Science
 Cost: 200
+Requires:
+  - Chemistry
 Description: |
   Increases the effect of Corn during Famine.
   Population limits of all friendly hexes are increased by one.

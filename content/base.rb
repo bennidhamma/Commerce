@@ -64,12 +64,12 @@ class Object
       when 1..10
         args.trash_card = true
         log = "Defeat! Card is trashed."
-      when 11..40
+      when 11..60
         log = "Defeat!"
-      when 40..50
+      when 60..70
         hex.player.discard_to 3
         log = "Enemy player discards to 3."
-      when 50..80
+      when 70..80
         hex.has_colony = false
         hex.current_population - hex.population_limit
         log = "Victory! Enemry colony is reduced."

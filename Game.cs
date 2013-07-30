@@ -56,6 +56,7 @@ namespace ForgottenArts.Commerce
 			Bank = new Dictionary<string, int> ();
 			Trades = new List<Offer> ();
 			Matches = new List<Match> ();
+			Trash = new List<string> ();
 			CurrentTurn = new Turn ();
 		} 
 
