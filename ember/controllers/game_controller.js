@@ -283,6 +283,8 @@ var GameController = Ember.Controller.extend({
     this.set('content', game);
 
     this.updateMatches (game);
+    
+    game.getLog();
   },
 
   'updateTradeCards': function (cards, game) {

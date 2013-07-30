@@ -68,6 +68,7 @@ namespace ForgottenArts.Commerce
 			ReceivedMatches = new List<Match> ();
 		}
 
+		[IgnoreDataMember]
 		public IEnumerable<string> AllCards {
 			get {
 				foreach (var card in Deck) {

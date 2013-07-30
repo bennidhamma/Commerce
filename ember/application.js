@@ -301,6 +301,8 @@ var GameController = Ember.Controller.extend({
     this.set('content', game);
 
     this.updateMatches (game);
+    
+    game.getLog();
   },
 
   'updateTradeCards': function (cards, game) {
@@ -808,6 +810,16 @@ var Game = Ember.Object.extend({
   acceptMatch: function (matchId) {
     this.sendCommand ('match/accept', {matchId: matchId});
   },
+
+
+  // Getters
+  getLog: function () {
+    var self = this;
+    $.get(config.serverUrlBase + '/api/game/' + this.id + '/log', function(log) {
+      self.set('log', log);
+    }, "json");
+  }
+
 });
 
 Game.reopenClass({

@@ -177,6 +177,7 @@ namespace ForgottenArts.Commerce
 			game.CurrentTurn.Buys = StartingBuys;
 			game.CurrentTurn.PlayerKey = game.Players[game.CurrentTurn.Count % game.Players.Count].PlayerKey;
 			game.CurrentTurn.Count++;
+			game.CurrentTurn.TradeSetsRedeemed = 0;
 			CheckForGameEnd (game);
 			//TODO: notify new current player it is their turn.
 		}

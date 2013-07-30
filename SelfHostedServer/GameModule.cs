@@ -153,14 +153,21 @@ namespace ForgottenArts.Commerce.Server
 
 		dynamic GenericAction<T>(long gameId, Func<Game, PlayerGame, T, bool> func)
 		{
+			var time = DateTime.Now;
 			var playerKey = this.Request.Headers["Player"].First();
 			var game = repository.Get<Game>(Game.GetKey(gameId));
 			var player = game.GetPlayer(playerKey);
 			var request = this.Bind<T>();
+			Console.WriteLine ("set up request: ", (DateTime.Now - time).TotalMilliseconds);
+			time = DateTime.Now;
 			try
 			{
 				if (func(game, player, request)) {
+					Console.WriteLine ("executing func: ", (DateTime.Now - time).TotalMilliseconds);
+					time = DateTime.Now;
 					this.repository.Put(game.GetKey(), game);
+					Console.WriteLine ("game saved: ", (DateTime.Now - time).TotalMilliseconds);
+					time = DateTime.Now;
 					if (PlayerSocketServer.Instance != null) {
 						foreach (var p in game.Players) {
 							string channel = string.Empty;
@@ -168,7 +175,9 @@ namespace ForgottenArts.Commerce.Server
 							PlayerSocketServer.Instance.Send(message, channel, p);
 						}
 					}
+					Console.WriteLine ("sockets updated: ", (DateTime.Now - time).TotalMilliseconds);
 				}
+
 				return string.Empty;
 			}
 			catch (InvalidOperationException e)
