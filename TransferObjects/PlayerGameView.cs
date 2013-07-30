@@ -37,7 +37,6 @@ namespace ForgottenArts.Commerce.Server
 			this.TechnologyCards = player.TechnologyCards;
 			this.CurrentTurn = new TurnView(game, game.CurrentTurn);
 			this.Bank = game.Bank;
-			this.Log = (from l in player.Log orderby l.Timestamp descending select l).Take (100);
 			this.Hexes = from h in player.Hexes select new HexView (h);
 			this.Gold = player.Gold;
 			this.TradeCards = from c in player.TradeCards where cards[c.Card] != null select c.Card;

@@ -136,7 +136,7 @@ function program1(depth0,data) {
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'class': (":currentTurn content.currentTurn.playerColor")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">\n    <h2><img ");
+  data.buffer.push(">\n    <h2>\n      <img ");
   hashTypes = {'src': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'src': ("content.currentTurn.playerPhoto")

@@ -192,6 +192,21 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		public void HandleTaxation (Game game)
+		{
+			foreach (var p in game.Players)
+			{
+				int numberOfColonies = p.Hexes.Count (h => h.HasColony);
+				var te = new TaxationEvent () {
+					GoldPerColony = 1
+				};
+				p.HandleCardEvents (te);
+				p.Gold += numberOfColonies * te.GoldPerColony;
+				game.Log ("{0} received {1} gold from {2} {3}", p.Name, numberOfColonies * te.GoldPerColony, 
+				          numberOfColonies, numberOfColonies == 1 ? "colony" : "colonies");
+			}
+		}
+
 		private void ExtendTradeTime (Game game)
 		{
 			game.TradeEnd = DateTime.Now;
@@ -231,6 +246,7 @@ namespace ForgottenArts.Commerce
 
 		public void EndTradingPhase (Game game)
 		{
+			HandleTaxation (game);
 			ResolveCalamities (game);
 			HandleStarvation (game);
 

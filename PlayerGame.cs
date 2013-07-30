@@ -57,15 +57,12 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
-		public List<LogEntry> Log { get; set; }
-
 		public PlayerGame () {
 			Deck = new Stack<string> ();
 			TradeCards = new List<TradeCardInfo> ();
 			TechnologyCards = new List<string> ();
 			Hand = new List<string> ();
 			Discards = new Stack<string> ();
-			Log = new List<LogEntry> ();
 			Hexes = new List<Hex> ();
 			ProposedMatches = new List<Match> ();
 			ReceivedMatches = new List<Match> ();
@@ -236,11 +233,6 @@ namespace ForgottenArts.Commerce
 			set {
 				game = value;
 			}
-		}
-
-		public void PublishLogEntry (LogEntry entry)
-		{
-			this.Log.Add (entry);
 		}
 
 		public void Send (object message, string channel)

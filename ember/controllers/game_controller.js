@@ -101,10 +101,22 @@ var GameController = Ember.Controller.extend({
       elem = $(elem);
       if (this.get('isMyTurn')) {
         if (elem.hasClass('selected')) {
-          elem.removeClass('selected');
-          var idx = this.cardsToRedeem.indexOf(card);
-          if (idx > -1) {
-            this.cardsToRedeem.removeAt(idx);
+          // If this is the only selected card in a set, add a third select mode 
+          // which is to select all cards in the set.
+          var cardClass = '.trade-cards .' + card;
+          var cardCount = $(cardClass).length;
+          if ($(cardClass + '.selected').length == 1 && cardCount > 1) {
+            $(cardClass).addClass('selected');
+            // Add one less than total card count to account for the additioal cards we are selecting.
+            for (var i = 0; i < cardCount - 1; i++) {
+              this.cardsToRedeem.push (card);
+            }
+          } else {
+            $(cardClass).removeClass('selected');
+            var idx;
+            while((idx = this.cardsToRedeem.indexOf(card)) > -1) {
+              this.cardsToRedeem.removeAt(idx);
+            }
           }
         } else {
           this.cardsToRedeem.pushObject(card);

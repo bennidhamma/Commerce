@@ -56,6 +56,15 @@ namespace ForgottenArts.Commerce
 				return list;
 			}
 		}
+
+		public void Append<T> (string key, T message)
+		{
+			using (var redisClient = new RedisClient()) {
+				var typed = redisClient.As<T> ();
+				var list = typed.Lists[key];
+				list.Add (message);
+			}
+		}
 	}
 }
 

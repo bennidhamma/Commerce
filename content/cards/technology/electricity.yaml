@@ -1,0 +1,12 @@
+Name: Electricity
+ImageUrl: electricity.png
+Cost: 250
+Requires:
+  - Steam Engine
+Description: Discounts science purchases by 20. +1 gold / colony during taxation.
+Event: |
+  if event_type == "PurchaseEvent" and event.card.category == "Science"
+    event.cost -= 20
+  elsif event_type == "TaxationEvent"
+    event.gold_per_colony += 1
+  end

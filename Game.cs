@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ForgottenArts.Commerce
 {
@@ -112,16 +113,21 @@ namespace ForgottenArts.Commerce
 		{
 			var entry = new LogEntry () {
 				Message = message,
-				Timestamp = DateTime.Now
+				Timestamp = DateTime.Now,
 			};
-			if (player != null) {
-				player.PublishLogEntry (entry);
-			}
-			else {
-				foreach (var p in this.Players) {
-					p.PublishLogEntry (entry);
-				}
-			}
+			if (player != null)
+				entry.PlayerKey = player.PlayerKey;
+			AppendToLog (entry);
+		}
+
+		private void AppendToLog (LogEntry entry)
+		{
+			GameRunner.Instance.Repository.Append<LogEntry> ("game-log-" + this.Id, entry);
+		}
+
+		public static IEnumerable<LogEntry> GetLog (long gameId)
+		{
+			return GameRunner.Instance.Repository.GetList<LogEntry> ("game-log-" + gameId).Take (50);
 		}
 
 		public Hex GetHex (int hexId)

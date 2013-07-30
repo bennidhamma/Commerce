@@ -5,7 +5,7 @@ var CardView = Ember.View.extend({
 
   templateName: 'card',
 
-  classNameBindings: ['context.type'],
+  classNameBindings: ['context.type', 'context.name', 'context.category'],
 
   classNames: ['card'],
   

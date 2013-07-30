@@ -119,10 +119,22 @@ var GameController = Ember.Controller.extend({
       elem = $(elem);
       if (this.get('isMyTurn')) {
         if (elem.hasClass('selected')) {
-          elem.removeClass('selected');
-          var idx = this.cardsToRedeem.indexOf(card);
-          if (idx > -1) {
-            this.cardsToRedeem.removeAt(idx);
+          // If this is the only selected card in a set, add a third select mode 
+          // which is to select all cards in the set.
+          var cardClass = '.trade-cards .' + card;
+          var cardCount = $(cardClass).length;
+          if ($(cardClass + '.selected').length == 1 && cardCount > 1) {
+            $(cardClass).addClass('selected');
+            // Add one less than total card count to account for the additioal cards we are selecting.
+            for (var i = 0; i < cardCount - 1; i++) {
+              this.cardsToRedeem.push (card);
+            }
+          } else {
+            $(cardClass).removeClass('selected');
+            var idx;
+            while((idx = this.cardsToRedeem.indexOf(card)) > -1) {
+              this.cardsToRedeem.removeAt(idx);
+            }
           }
         } else {
           this.cardsToRedeem.pushObject(card);
@@ -1085,7 +1097,7 @@ function program1(depth0,data) {
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'class': (":currentTurn content.currentTurn.playerColor")
   },contexts:[],types:[],hashTypes:hashTypes,data:data})));
-  data.buffer.push(">\n    <h2><img ");
+  data.buffer.push(">\n    <h2>\n      <img ");
   hashTypes = {'src': "STRING"};
   data.buffer.push(escapeExpression(helpers.bindAttr.call(depth0, {hash:{
     'src': ("content.currentTurn.playerPhoto")
@@ -41437,7 +41449,7 @@ var CardView = Ember.View.extend({
 
   templateName: 'card',
 
-  classNameBindings: ['context.type'],
+  classNameBindings: ['context.type', 'context.name', 'context.category'],
 
   classNames: ['card'],
   

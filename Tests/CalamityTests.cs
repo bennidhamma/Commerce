@@ -96,10 +96,6 @@ namespace Tests
 			ScriptManager.Manager.ExecuteCalamity (g, catalog["Native Raid"], p1, null);
 			
 			Assert.That (p1.TradeCards.Count, Is.EqualTo(2));
-			
-			foreach (var log in p1.Log) {
-				Console.WriteLine (log.ToString());
-			}
 		}
 		
 		[Test]

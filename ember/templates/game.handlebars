@@ -3,7 +3,8 @@
 </section>
 {{#unless isTrading}}
   <section {{bindAttr class=":currentTurn content.currentTurn.playerColor"}}>
-    <h2><img {{bindAttr src="content.currentTurn.playerPhoto"}}>
+    <h2>
+      <img {{bindAttr src="content.currentTurn.playerPhoto"}}>
       {{content.currentTurn.playerName}}
       <div>Actions: {{content.currentTurn.actions}}</div>
       <div>Buys: {{content.currentTurn.buys}}</div>

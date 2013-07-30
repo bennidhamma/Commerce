@@ -29,6 +29,7 @@ namespace ForgottenArts.Commerce.Server
 			Get["/player/{id}/games"] = GetGames;
 			Get["/game/{game}"] = GetGame;
 			Get["/game/{id}/cards"] = GetGameCards;
+			Get["/game/{id}/log"] = GetGameLog;
 
 			// Player phase endpoints.
 			Post["/game/{game}/playCard"] = PlayCard;
@@ -74,6 +75,11 @@ namespace ForgottenArts.Commerce.Server
 			}
 			var cards = GameRunner.Instance.Cards;
 			return from key in cardKeys where cards[key] != null select new CardView(cards[key]);
+		}
+
+		dynamic GetGameLog (dynamic arg)
+		{
+			return Game.GetLog (arg.id);
 		}
 
 		public dynamic AuthenticatePlayer (dynamic parameters)

@@ -11,6 +11,7 @@ namespace ForgottenArts.Commerce
 		T Get<T> (string key);
 		IEnumerable<T> GetAll<T> ();
 		IList<T> GetList<T> (string key);
+		void Append<T> (string key, T message);
 	}
 }
 

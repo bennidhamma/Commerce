@@ -24,6 +24,7 @@ StartingBank:
   "Antibiotics": 4
   "Navigation": 4
   "Railroad": 4
+  "Electricity": 4
 StartingDeck:
   "One Colonist": 5
   Ship: 1

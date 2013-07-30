@@ -134,7 +134,7 @@ namespace ForgottenArts.Commerce
 			var card = new Card () {
 				Type = CardType.Trade,
 				Name = key,
-				ImageUrl = key + ".png",
+				ImageUrl = key.ToLower () + ".png",
 				TradeValues = tradeValues,
 				TradeLevel = level
 			};

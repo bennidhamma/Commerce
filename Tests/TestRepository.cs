@@ -39,6 +39,11 @@ namespace Tests
 			}
 		}
 
+		public void Append<T> (string key, T message)
+		{
+			throw new NotImplementedException ();
+		}
+
 		#endregion
 
 		public TestRepository ()
