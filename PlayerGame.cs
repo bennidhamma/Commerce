@@ -19,6 +19,16 @@ namespace ForgottenArts.Commerce
 				handSize = value;
 			}
 		}
+		public int GetHandSize () {
+			var p = new Property () {
+				Player = this,
+				Source = this,
+				Key = "player.hand_size",
+				Value = handSize
+			};
+			HandleCardEvents (p);
+			return (int)p.Value;
+		}
 
 		public string PlayerKey {get; set;}
 		public string Name {get {
@@ -54,6 +64,12 @@ namespace ForgottenArts.Commerce
 					}
 				}
 				hexes = value;
+			}
+		}
+
+		public int NumberOfColonies {
+			get {
+				return Hexes.Count (h => h.HasColony);
 			}
 		}
 
@@ -142,7 +158,7 @@ namespace ForgottenArts.Commerce
 		}
 
 		public void DrawHand () {
-			Draw (HandSize - Hand.Count);
+			Draw (GetHandSize() - Hand.Count);
 		}
 
 		public void Draw (int number)
@@ -174,6 +190,21 @@ namespace ForgottenArts.Commerce
 		public void DiscardTo (int number)
 		{
 			Discard (Hand.Count - number);
+		}
+
+		public void GainTradeCard (int count = 1)
+		{
+			var game = this.game;
+			var cardKeys = (from l in game.TradeCards from c in l select c).ToList().Shuffle().Take(count);
+			foreach (var cardKey in cardKeys) {
+				var card = GameRunner.Instance.Cards[cardKey];
+				game.TradeCards[card.TradeLevel-1].Remove(cardKey);
+				var ti = new TradeCardInfo () {
+					Card = cardKey
+				};
+				TradeCards.Add (ti);
+			}
+
 		}
 
 		public bool HasTradeCards (List<string> cards)

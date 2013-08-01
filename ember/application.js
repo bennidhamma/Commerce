@@ -41466,7 +41466,10 @@ var CardView = Ember.View.extend({
   classNames: ['card'],
     
   cssType: function() {
-    return Em.String.dasherize(this.get('context.type'));
+    var type = this.get('context.type');
+    if (!type)
+       return '';
+    return Em.String.dasherize(type);
   }.property('context.type'),
 
   cssCategory: function() {
@@ -41477,7 +41480,8 @@ var CardView = Ember.View.extend({
   }.property('context.category'),
 
   cssName: function() {
-    return Em.String.dasherize(this.get('context.name'));
+    var name = this.get('context.name');
+    return Em.String.dasherize(name);
   }.property('context.name'),
   
   setValues1: function () {

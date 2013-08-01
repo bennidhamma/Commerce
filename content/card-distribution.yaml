@@ -31,6 +31,13 @@ StartingBank:
   Conscription: 4
   Impressionism: 4
   Opera: 4
+  Radio: 4
+  Democracy: 4
+  Fascism: 4
+  Esotericism: 4
+  Evangalism: 4
+  Utilitarianism: 4
+  Marxism: 4
 StartingDeck:
   "One Colonist": 5
   Ship: 1

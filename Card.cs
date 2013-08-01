@@ -22,6 +22,9 @@ namespace ForgottenArts.Commerce
 		// List of required cards in order to purchase.
 		public List<string> Requires {get; set;}
 
+		// List of cards that cannot be owned when purchasing:
+		public List<string> Excludes {get; set;}
+
 		// Action applies to Nation cards.
 		public string Action {get; set;}
 		// Event applies to Nation and Technology cards.

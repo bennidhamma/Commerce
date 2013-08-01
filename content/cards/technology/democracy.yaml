@@ -1,0 +1,18 @@
+Name: Democracy
+Category: Governance
+ImageUrl: democracy.png
+Cost: 500
+Requires:
+  - Utilitarianism
+Excludes:
+  - Communism
+  - Fascism
+Description: |
+  Randomly draw one extra trade card. +1 gold / colony during taxation.
+  Cannot be bought if player owns Fascism or Communism.
+Event:
+  if event_type == "TaxationEvent"
+    event.gold_per_colony += 1
+  elsif event_type == "DistributeTradeCardsEvent"
+    player.gain_trade_card
+  end

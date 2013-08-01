@@ -1,0 +1,11 @@
+Name: Marxism
+ImageUrl: marxism.png
+Cost: 200
+Requires:
+  - Utilitarianism
+Category: Philosophy
+Description: Increases hand size by 1.
+Event: |
+  if event_type == "Property" and event.key == "player.hand_size"
+    player.hand_size += 1
+  end 

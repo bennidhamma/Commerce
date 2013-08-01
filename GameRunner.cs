@@ -232,7 +232,7 @@ namespace ForgottenArts.Commerce
 			// For each player and distribute trade cards, starting with players with the fewest number of colonies.
 			foreach (var player in from p in game.Players orderby p.Hexes.Count(h => h.HasColony) select p) {
 				int colonyCount = player.Hexes.Count (h => h.HasColony);
-				for (int level = 0; level < colonyCount; ++level) {
+				for (int level = 0; level < colonyCount && level < game.TradeCards.Count; ++level) {
 					// Continue on to next trade card level if all the trade cards at this level have run out.
 					if (game.TradeCards [level].Count == 0)
 						continue;
@@ -412,13 +412,14 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("You already have this technology card.");
 			}
 
-			if (card.Requires != null)
+			if (card.Requires != null && card.Requires.Except(player.AllCards).Take (1).Count () > 0)
 			{
-				foreach (var required in card.Requires) {
-					if (!player.AllCards.Contains (required)) {
-						throw new InvalidOperationException ("Purchasing card requires " + string.Join (", ", card.Requires));
-					}
-				}
+				throw new InvalidOperationException ("Purchasing card requires " + string.Join (", ", card.Requires));
+			}
+
+			if (card.Excludes != null && card.Excludes.Intersect(player.AllCards).Take (1).Count > 0)
+			{
+				throw new InvalidOperationException ("Cannot purchase card due to exclusions:" + string.Join (card.Excludes));
 			}
 
 			game.CurrentPlayer.Gold -= cost;

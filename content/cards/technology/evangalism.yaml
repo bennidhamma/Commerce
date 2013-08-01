@@ -1,0 +1,8 @@
+Name: Evangalism
+ImageUrl: evangalism.png
+Cost: 500
+Requires:
+  - Utilitarianism
+  - Esotericism
+Category: Philosophy
+Description: Reduces the effect of Native Uprising.

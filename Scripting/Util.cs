@@ -187,9 +187,10 @@ namespace ForgottenArts.Commerce
 	}
 
 	public static class Util {
-		public static void Shuffle<T> (this List<T> list)
+		public static List<T> Shuffle<T> (this List<T> list)
 		{
 			list.Sort ((a,b) => Config.Random.Next (-1, 1));
+			return list;
 		}
 	}
 }

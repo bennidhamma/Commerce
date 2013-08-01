@@ -1,0 +1,25 @@
+Name: Fascism
+Category: Governance
+ImageUrl: fascism.png
+Cost: 500
+Requires:
+  - Utilitarianism
+Excludes:
+  - Communism
+  - Democracy
+Description: |
+  Increases the effects of Revolution and Strike.
+  Take a random trade card from another player each turn.
+  +2 gold / colony during taxation.
+  Cannot be bought if the player holds Democracy or Communism. 
+Event:
+  if event_type == "TaxationEvent"
+    event.gold_per_colony += 2
+  elsif event_type == "DistributeTradeCardsEvent"
+    # select a random other player.
+    other = players.to_set.difference([player]).to_a.sample
+    # select a random trade card info
+    card_info = other.trade_cards.to_a.sample
+    # give the trade card info to the current player.
+    other.give_trade_card player, card_info.card
+  end

@@ -1,0 +1,7 @@
+Name: Radio
+Category: Arts &amp; Culture
+ImageUrl: radio.png
+Cost: 300
+Requires:
+  - Electricity
+Description: Reduces the effects of Strike and Revolution
