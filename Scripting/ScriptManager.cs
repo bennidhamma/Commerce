@@ -71,14 +71,14 @@ namespace ForgottenArts.Commerce
 		{
 			try
 			{
-				var time = DateTime.Now;
+				//var time = DateTime.Now;
 				var scope = SetupScope(game);
 				scope.SetVariable ("event", cardEvent);
 				scope.SetVariable ("event_type", type);
-				Console.WriteLine ("ExecuteCardEvent::setting scope took: " + (DateTime.Now - time).TotalMilliseconds);
-				time = DateTime.Now;
+				//Console.WriteLine ("ExecuteCardEvent::setting scope took: " + (DateTime.Now - time).TotalMilliseconds);
+				//time = DateTime.Now;
 				card.CompiledCardEvent.Execute (scope);
-				Console.WriteLine ("ExecuteCardEvent::Execute took: " + (DateTime.Now - time).TotalMilliseconds);
+				//Console.WriteLine ("ExecuteCardEvent::Execute took: " + (DateTime.Now - time).TotalMilliseconds);
 
 			}
 			catch (Exception e)

@@ -5,7 +5,7 @@ Description: |
   If held in hand during buy phase, discounts Arts & Culture, Philosophy purchases by 20.
 Cost: 80
 Action: |
-  turn.actions += player.trade_cards.count {|c| c.card == "Coffee"}
+  turn.actions += player.trade_cards.to_a.count {|c| c.card == "Coffee"}
 Event: |
   if event_type == "PurchaseEvent" and event.card.category == "Philosophy"
     event.cost -= 20

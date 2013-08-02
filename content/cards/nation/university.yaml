@@ -7,6 +7,6 @@ Cost: 80
 Action: |
   player.draw_hand
 Event: |
-  if event_type == "PurchaseEvent" and (event.card.category == "Science" or event.card.category == "Philosphy")
+  if event_type == "PurchaseEvent" and (event.card.category == "Science" or event.card.category == "Philosophy")
     event.cost -= 20
   end
