@@ -132,11 +132,11 @@ namespace ForgottenArts.Commerce.Server
 			switch (game.Status) {
 			case GameState.Trading:
 				message = new TradeView (game, player);
-					channel = "tradeUpdate";
+				channel = "tradeUpdate";
 				break;
 			default:
 				message = new PlayerGameView (game, player);
-					channel = "gameUpdate";
+				channel = "gameUpdate";
 				break;
 			}
 			return message;
@@ -171,7 +171,9 @@ namespace ForgottenArts.Commerce.Server
 					if (PlayerSocketServer.Instance != null) {
 						foreach (var p in game.Players) {
 							string channel = string.Empty;
+							Console.WriteLine ("building view: " + (DateTime.Now - time).TotalMilliseconds);
 							object message = BuildGameView (game, p, out channel);
+							Console.WriteLine ("sending player message: " + (DateTime.Now - time).TotalMilliseconds);
 							PlayerSocketServer.Instance.Send(message, channel, p);
 						}
 					}

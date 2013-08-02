@@ -15,12 +15,14 @@ function setPlayer () {
 
 function send (channel, message) {
   message = channel + '\n' + message;
+  console.log('sending ', channel, message, performance.now());
   socket.send(message);
 }
 
 function receiveMessage (event) {
+  console.log ('receiving ', performance.now());
   var message = JSON.parse(event.data);
-
+  
   switch(message.channel) {
   case "gameUpdate":
   case "tradeUpdate":

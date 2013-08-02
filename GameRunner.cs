@@ -298,6 +298,10 @@ namespace ForgottenArts.Commerce
 
 			// Resolve calamities in order of trade level.
 			foreach (var args in calamities.OrderBy (c => c.Card.TradeLevel)) {
+				if (args.Card.TradeLevel < 1) {
+					Console.WriteLine ("Card {0} has bad trade level {1}", args.Card.Name, args.Card.TradeLevel);
+					continue;
+				}
 				ScriptManager.Manager.ExecuteCalamity (game, args.Card, args.PrimaryPlayer, args.SecondaryPlayer);
 				game.TradeCards[args.Card.TradeLevel-1].Add (args.Card.Name);
 			}

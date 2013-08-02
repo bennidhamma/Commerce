@@ -117,8 +117,12 @@ namespace ForgottenArts.Commerce
 			var key = player.GetKey ();
 			if (SocketsByPlayers.ContainsKey (key))
 			{
+				var now = DateTime.Now;
 				string data = PrepareMessage (message, channel);
+				Console.WriteLine ("Prepare Message took " + (DateTime.Now - now).TotalMilliseconds);
+				now = DateTime.Now;
 				SocketsByPlayers[key].SendText (data);
+				Console.WriteLine ("SendText took " + (DateTime.Now - now).TotalMilliseconds);
 			}
 		}
 

@@ -10,7 +10,7 @@ Excludes:
 Description: |
   Randomly draw one extra trade card. +1 gold / colony during taxation.
   Cannot be bought if player owns Fascism or Communism.
-Event:
+Event: |
   if event_type == "TaxationEvent"
     event.gold_per_colony += 1
   elsif event_type == "DistributeTradeCardsEvent"

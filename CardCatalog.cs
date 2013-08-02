@@ -88,6 +88,10 @@ namespace ForgottenArts.Commerce
 						Console.WriteLine ("Unable to parse property " + key);
 					}
 				}
+				if (card.Event != null)
+				{
+					card.CompiledCardEvent = ScriptManager.Manager.CompileCardEvent (card);
+				}
 				cards[card.Name] = card;
 			});
 		}

@@ -30,9 +30,11 @@ namespace ForgottenArts.Commerce
 			}
 		}
        	
+		ScriptScope scope = null;
 		public ScriptScope SetupScope (Game game)
 		{
-			var scope = engine.CreateScope ();
+			if (scope == null)
+				scope = engine.CreateScope ();
 			scope.SetVariable ("game", game);
 			scope.SetVariable ("player", game.CurrentPlayer);
 			scope.SetVariable ("players", game.Players);
@@ -59,15 +61,25 @@ namespace ForgottenArts.Commerce
 			return args.Error;
 		}
 
+		public CompiledCode CompileCardEvent (Card card)
+		{
+			var script = Engine.CreateScriptSourceFromString (card.Event);
+			return script.Compile (new MyErrorListener(card.Name));
+		}
+
 		public void ExecuteCardEvent (Game game, Card card, PlayerGame player, string type, object cardEvent)
 		{
 			try
 			{
-				var script = Engine.CreateScriptSourceFromString (card.Event);
+				var time = DateTime.Now;
 				var scope = SetupScope(game);
 				scope.SetVariable ("event", cardEvent);
 				scope.SetVariable ("event_type", type);
-				script.Compile (new MyErrorListener()).Execute (scope);
+				Console.WriteLine ("ExecuteCardEvent::setting scope took: " + (DateTime.Now - time).TotalMilliseconds);
+				time = DateTime.Now;
+				card.CompiledCardEvent.Execute (scope);
+				Console.WriteLine ("ExecuteCardEvent::Execute took: " + (DateTime.Now - time).TotalMilliseconds);
+
 			}
 			catch (Exception e)
 			{
@@ -77,14 +89,13 @@ namespace ForgottenArts.Commerce
 
 		public void ExecuteCalamity (Game game, Card card, PlayerGame primaryPlayer, PlayerGame secondaryPlayer)
 		{
-
 			var script = Engine.CreateScriptSourceFromString (card.Calamity);
 			var scope = SetupScope(game);
 			scope.SetVariable ("primary_player", primaryPlayer);
 			scope.SetVariable ("secondary_player", secondaryPlayer);
 			try
 			{
-				script.Compile (new MyErrorListener()).Execute (scope);
+				script.Compile (new MyErrorListener(card.Name)).Execute (scope);
 			}
 			catch (Exception e)
 			{
@@ -123,9 +134,16 @@ namespace ForgottenArts.Commerce
 
 	class MyErrorListener : ErrorListener
 	{
+		string context;
+
+		public MyErrorListener (string contextArg)
+		{
+			this.context = contextArg;
+		}
+
 		public override void ErrorReported(ScriptSource source, string message, Microsoft.Scripting.SourceSpan span, int errorCode, Microsoft.Scripting.Severity severity)
 		{
-			Console.WriteLine("{0},{1}: {2}", span.Start.Line, span.Start.Column, message);
+			Console.WriteLine("{0} {1},{2}: {3}", context, span.Start.Line, span.Start.Column, message);
 		}
 	}
 }

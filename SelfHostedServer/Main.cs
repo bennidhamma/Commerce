@@ -17,13 +17,13 @@ namespace ForgottenArts.Commerce.Server
 			PlayerSocketServer.Instance = new PlayerSocketServer ();
 			PlayerSocketServer.Instance.Init ();
 
+			// Setup scripts.
+			ScriptManager.Manager.Setup (Config.DllPath);
+
 			// Setup cards.
 			var cards = new CardCatalog ();
 			cards.Load ();
 			GameRunner.Instance.Cards = cards;
-
-			// Setup scripts.
-			ScriptManager.Manager.Setup (Config.DllPath);
 
 			// Sanitize games.
 			GameRunner.Instance.Sanitize();

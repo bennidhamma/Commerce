@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Scripting.Hosting;
 
 namespace ForgottenArts.Commerce
 {
@@ -29,6 +30,8 @@ namespace ForgottenArts.Commerce
 		public string Action {get; set;}
 		// Event applies to Nation and Technology cards.
 		public string Event {get; set;}
+		// Compiled version.
+		public CompiledCode CompiledCardEvent {get; set;}
 
 		// These apply to Trade cards.
 		public string Calamity {get; set;}

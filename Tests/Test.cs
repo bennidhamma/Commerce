@@ -16,6 +16,18 @@ namespace Tests
 			GameRunner.Instance.Repository = new TestRepository ();
 		}
 
+		[Test]
+		public void BasicScriptTest ()
+		{
+			var card = new Card () {
+				Event = "puts 'hello world'"
+			};
+			Game g = new Game ();
+			card.CompiledCardEvent = ScriptManager.Manager.CompileCardEvent (card);
+			for (int i  = 0; i < 100; i++)
+				ScriptManager.Manager.ExecuteCardEvent (g, card, null, "test", null);
+		}
+
 		[Test()]
 		public void LoadCardsTest ()
 		{

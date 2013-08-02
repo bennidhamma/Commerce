@@ -3,12 +3,11 @@ ImageUrl: esotericism.png
 Cost: 100
 Category: Philosophy
 Description: Discounts Governance/Philosophy by 25. Discounts Evangalism by an additional 50.
-Event:
+Event: |
   if event_type == "PurchaseEvent" 
     if event.card.category == "Governance" or event.card.category == "Philosophy"
       event.cost -= 25
-    end
-    if event.card.name == "Evangalism"
+    elsif event.card.name == "Evangalism"
       event.cost -= 50
     end
   end

@@ -38,6 +38,9 @@
     <Reference Include="ServiceStack.Text">
       <HintPath>..\lib\ServiceStack.Text.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Scripting">
+      <HintPath>..\lib\Microsoft.Scripting.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Test.cs" />
