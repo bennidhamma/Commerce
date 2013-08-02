@@ -1,0 +1,12 @@
+Name: University
+ImageUrl: university.png
+Description: |
+  When played, draw up to hand size.
+  If held in hand during buy phase, discounts Science, Philosophy purchases by 20.
+Cost: 80
+Action: |
+  player.draw_hand
+Event: |
+  if event_type == "PurchaseEvent" and (event.card.category == "Science" or event.card.category == "Philosphy")
+    event.cost -= 20
+  end

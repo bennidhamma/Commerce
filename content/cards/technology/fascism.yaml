@@ -12,7 +12,7 @@ Description: |
   Take a random trade card from another player each turn.
   +2 gold / colony during taxation.
   Cannot be bought if the player holds Democracy or Communism. 
-Event:
+Event: |
   if event_type == "TaxationEvent"
     event.gold_per_colony += 2
   elsif event_type == "DistributeTradeCardsEvent"

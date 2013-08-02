@@ -417,9 +417,9 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("Purchasing card requires " + string.Join (", ", card.Requires));
 			}
 
-			if (card.Excludes != null && card.Excludes.Intersect(player.AllCards).Take (1).Count > 0)
+			if (card.Excludes != null && card.Excludes.Intersect(player.AllCards).Take (1).Count () > 0)
 			{
-				throw new InvalidOperationException ("Cannot purchase card due to exclusions:" + string.Join (card.Excludes));
+				throw new InvalidOperationException ("Cannot purchase card due to exclusions:" + string.Join (", ", card.Excludes));
 			}
 
 			game.CurrentPlayer.Gold -= cost;

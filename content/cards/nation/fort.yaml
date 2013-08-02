@@ -1,0 +1,13 @@
+Name: Fort
+ImageUrl: fort.png
+Description: |
+  +3 Cards.
+  Subtract 40 from enemy attack rolls.
+Cost: 60 
+Action: |
+  player.draw 3
+Event: |
+  if event_type == "AttackEvent" and event.defender == player and not event.fort
+    event.fort = 1
+    event.roll -= 40
+  end

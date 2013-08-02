@@ -1,0 +1,5 @@
+Name: Gems
+ImageUrl: gems.png
+Cost: 100
+Description: Gain 50 gold.
+Action: player.gold += 50

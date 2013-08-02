@@ -1,0 +1,12 @@
+Name: Coffee House
+ImageUrl: coffee-house.png
+Description: |
+  +1 Action per Coffee.
+  If held in hand during buy phase, discounts Arts & Culture, Philosophy purchases by 20.
+Cost: 80
+Action: |
+  turn.actions += player.trade_cards.count {|c| c.card == "Coffee"}
+Event: |
+  if event_type == "PurchaseEvent" and event.card.category == "Philosophy"
+    event.cost -= 20
+  end

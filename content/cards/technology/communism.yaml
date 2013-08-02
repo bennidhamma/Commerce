@@ -1,0 +1,21 @@
+Name: Communism
+Category: Governance
+ImageUrl: communism.png
+Cost: 500
+Requires:
+  - Marxism
+  - Cotton Gin
+Excludes:
+  - Democracy
+  - Fascism
+Description: |
+  Reduces the effects of Strike and Revolution.
+  Increases hand size by 2.
+  -1 gold / colony during taxation.
+  Cannot be bought if player owns Fascism or Democracy.
+Event:
+  if event_type == "Property" and event.key == "player.hand_size"
+    player.hand_size += 2
+  elsif event_type == "TaxationEvent"
+    event.gold_per_colony -= 1
+  end

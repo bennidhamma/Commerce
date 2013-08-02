@@ -1,6 +1,6 @@
 Name: City Walls
 ImageUrl: city-walls.png
-Cost: 75
+Cost: 30
 Description: Draw 2 cards when played. Subtract 20 from attack rolls against you.
 Action: player.draw 2
 Event: |

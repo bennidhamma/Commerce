@@ -258,3 +258,7 @@ section.me, section.other {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003266}}
 .arts-culture {
   background: #8d1515; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/ben\/workspaces\/Commerce\/ember\/css\/style\.scss}line{font-family:\00003270}}
+.philosophy {
+  background: #b86905; }

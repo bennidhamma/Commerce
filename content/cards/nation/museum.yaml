@@ -1,0 +1,16 @@
+Name: Museum
+ImageUrl: musem.png
+Description: |
+  +1 Card.
+  +1 Action.
+  +1 Buy.
+  If held in hand during buy phase, discounts Arts & Culture by 15.
+Cost: 70 
+Action: |
+  turn.actions += 1
+  turn.buys += 1
+  player.draw 1
+Event: |
+  if event_type == "PurchaseEvent" and event.card.category == "Arts & Culture"
+    event.cost -= 15 
+  end

@@ -1,0 +1,10 @@
+Name: Opera House
+ImageUrl: opera-house.png
+Description: + 2 Actions. If held in hand during buy phase, discounts Arts & Culture, Philosophy purchases by 20.
+Cost: 80
+Action: |
+  turn.actions += 2
+Event: |
+  if event_type == "PurchaseEvent" and (event.card.category == "Arts & Culture" or event.card.category == "Governance")
+    event.cost -= 20
+  end

@@ -9,11 +9,17 @@ StartingBank:
   Marketplace: 9
   Sawmill: 9
   Gold: 9
+  Gems: 9
   Soldier: 9
   Cavalry: 9
   Cannon: 9
   Advisor: 9
+  University: 9
+  Museum: 9
+  "Coffee House": 9
+  "Opera House": 9
   "City Walls": 9
+  Fort: 9
   "Farm Equipment" : 9
   # Technology Cards
   "Cotton Gin": 4 
@@ -34,6 +40,7 @@ StartingBank:
   Radio: 4
   Democracy: 4
   Fascism: 4
+  Communism: 4
   Esotericism: 4
   Evangalism: 4
   Utilitarianism: 4

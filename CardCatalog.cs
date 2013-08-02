@@ -70,6 +70,13 @@ namespace ForgottenArts.Commerce
 							}
 							card.Requires = requires;
 							break;
+						case "Excludes":
+							var excludes = new List<string> ();
+							foreach (dynamic exclude in cardObject.Excludes) {
+								excludes.Add (exclude);
+							}
+							card.Excludes = excludes;
+							break;
 						default:
 							var prop = cardType.GetProperty (key);
 							var value = cardObject[key];

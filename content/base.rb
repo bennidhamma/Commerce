@@ -12,6 +12,7 @@ class AttackEvent
   attr_accessor :attacker
   attr_accessor :defender
   attr_accessor :city_walls
+  attr_accessor :fort
 end
 
 class DiscoveryEvent
