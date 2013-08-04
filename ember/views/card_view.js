@@ -25,6 +25,7 @@ var CardView = Ember.View.extend({
 
   cssName: function() {
     var name = this.get('context.name');
+    if (!name) return '';
     return Em.String.dasherize(name);
   }.property('context.name'),
   

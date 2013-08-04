@@ -229,7 +229,7 @@ var GameController = Ember.Controller.extend({
     game.skip(phase);
   },
 
-  prepareCards: function (arr) {
+  prepareCards: function (source, prop, arr) {
     if (!arr) 
       return;
     var cards = this.get('cards');
@@ -238,20 +238,19 @@ var GameController = Ember.Controller.extend({
         arr[i] = cards[arr[i]];
       }
     }
+    source.set(prop, arr);
   },
 
   'prepareGame': function (game) {
-    this.set('cardsToRedeem', []);
-    this.prepareCards (game.hand);
-    this.prepareCards (game.discards);
+    this.prepareCards (this, 'content.hand', game.hand);
+    this.prepareCards (this, 'content.hand', game.discards);
 
     if (game.discards) {
-      this.prepareCards (game.discards);
       // Update discards -- some trickiness with getting the order right.
       game.set('discards', game.get('discards').toArray().reverse());
     }
 
-    this.prepareCards (game.technologyCards);
+    this.prepareCards (this, 'content.technologyCards', game.technologyCards);
 
     if (game.tradeCards) {
       this.updateTradeCards (game.get('tradeCards').toArray(), game);
@@ -273,6 +272,7 @@ var GameController = Ember.Controller.extend({
 
     // Other players
     if (game.otherPlayers) {
+      var currentOtherPlayers = this.get('content.otherPlayers');
       for (i = 0; i < game.otherPlayers.length; i++) {
         var other = game.otherPlayers[i];
         this.prepareCards (other.discards);
@@ -288,18 +288,36 @@ var GameController = Ember.Controller.extend({
   },
 
   'updateTradeCards': function (cards, game) {
+    var update = false;
     if (!game) {
+      update = true;
       game = this.get('content');
     }
     var cardObjects = this.get('cards');
     for (i = 0; i < cards.length; i++) {
       cards[i] = cardObjects[cards[i]];
     }
+
     cards = _.sortBy(cards, function(c) {
       if (!c) {console.log(c)}
       return c && c.tradeLevel + '.' + c.name;
     });
-    game.set('tradeCards', cards);
+
+    var currentCards = this.get('content.tradeCards');
+    if (!currentCards || currentCards.length != cards.length) {
+      update = true;
+    } else {
+      for (i = 0; i < cards.length; i++) {
+        if (!update && currentCards && currentCards[i] != cards[i])
+          update = true;
+      }
+    }
+
+    if (update) {
+      // We should only clear cardsToRedeem when trade cards have changed. (Which ... how?)
+      this.set('cardsToRedeem', []);
+      this.set('content.tradeCards', cards);
+    }
   },
 
   'prepareOffer': function (offer) {

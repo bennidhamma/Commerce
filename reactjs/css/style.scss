@@ -1,0 +1,272 @@
+@import url(http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic);
+
+/* Put your CSS here */
+html, body {
+  margin: 5px;
+  font-family: 'Lora', serif;
+  color: white;
+  background: black;
+  padding: 0;
+  -webkit-user-select: none;
+  cursor: default;
+}
+
+h2 {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+h3 {
+  font-size: 1.1em;
+}
+
+.notification-bar {
+  z-index: 100;
+  background:yellow;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+  position: fixed;
+  top: 10px;
+  left: 10%;
+  width: 80%;
+  padding:5px;
+  border:1px solid black;
+  border-radius:5px;
+}
+
+.game-list {
+  margin: 0;
+  list-style-type:none;
+  li {
+    margin-bottom:1em;
+    padding-bottom:1em;
+    border-bottom: 1px solid gray;
+    .friend-thumb { 
+      display: inline-block;
+      img {
+        height:54px;
+        width:54px;
+        border: 2px solid white;
+      }
+
+      img.is-current {
+        border: 2px solid lightgreen;
+      }
+    }
+  }
+}
+
+.main-layout {
+  display: -webkit-flex;
+  flex-flow: row nowrap;
+  align-content: center;
+  align-items: center;
+}
+
+.me {
+  order: 1;
+  flex: 3;
+  -webkit-flex: 3;
+}
+
+.others {
+  order: 2;
+  flex: 2;
+  -webkit-flex: 2;
+}
+
+.log {
+  -webkit-flex: 1;
+  .log-entry {
+    padding:5px;
+    border-bottom: 1px dotted gray;
+  }
+}
+
+.hex {
+  background:url(/images/hex/empty.png) no-repeat;
+  width: 80px;
+  height: 65px;
+  margin:0;
+  display: inline-block;
+  line-height: 65px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.8em;
+  color: white;
+  text-shadow: 0 0 8px black;
+  &.has-colony {
+    background:url(/images/hex/colony.png) no-repeat;
+    text-indent:-9999px;
+  }
+}
+
+.card {
+  box-shadow:2px 2px 10px rgba(0,0,0,0.4);
+  padding: 2px;
+  background: #889;
+  width: 120px;
+  height: 180px;
+  border-radius:4px;
+  display:inline-block;
+  vertical-align: top;
+  -webkit-transform: scale(0.8, 0.8);
+  margin: -18px -18px -18px -30px;
+  transition: -webkit-transform 300ms;
+  &:hover {
+    -webkit-transform: scale(1.4, 1.4);
+    position: relative;
+    z-index: 1;
+  }
+  header {
+    background: rgba(0, 0, 0, 0.5);
+    font-weight:bold;
+    padding: 3px;
+    font-size: 1em;
+    text-align:center;
+    margin-bottom:2px;
+  }
+  img {
+    width: 120px;
+    height: 80px;
+    background:white;
+  }
+  p {
+    font-size: 0.7em;
+    line-height: 15px;
+    padding: 3px;
+    background: rgba(255,255,255,0.6);
+    color: black;
+    margin: 3px 0;
+    border-radius: 3px;
+  }
+
+  section.set {
+    .set-value {
+      width: 23%;
+      border: 1px solid black;
+      background: #eee;
+      color: black;
+      display:inline-block;
+      font-size: 0.8em;
+      font-weight:bold;
+      text-align:center;
+    }
+
+    &.set3 {
+      text-align:right;
+    }
+  }
+}
+
+.selected {
+  box-shadow:0px 0px 20px rgba(0,0,255,1);
+  &.secret {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 1);
+  }
+}
+
+.hand {
+  margin-left: 20px;
+}
+
+.discards {
+  margin-left: 106px;
+  height: 180px;
+  .card {
+    margin-left: -106px;
+  }
+}
+
+.technology-cards, .trade-cards {
+  margin-left: 20px;
+}
+
+.buy-phase {
+  background: rgba(255,255,255,0.2);
+  padding: 5px;
+}
+
+.bank {
+  margin-left: 20px;
+  .stack {
+    display:inline-block;
+    margin-right:10px;
+    vertical-align: top;
+    height: 160px;
+    .card {
+      position: relative;
+      display:block;
+      margin-bottom: -181px;
+    }
+  }
+}
+
+.offers {
+  position: relative;
+  canvas {
+    position: absolute;
+  }
+  ul {
+    display: inline-block;
+    position: relative;
+    &.my {
+      margin-right: 20em;
+    }
+    list-style: none;
+    margin: 0;
+    li {
+      border:1px solid black;
+      border-radius:5px;
+      background: white;
+      .card {
+        -webkit-transform:scale(0.6,0.6);
+        margin: -25px -25px;
+      }
+    }
+  }
+}
+
+.currentTurn {
+  div {
+    float: right;
+    margin-right:20px;
+  }
+}
+
+section.me,section.other {
+  padding: 5px;
+}
+
+.Blue {
+  background: linear-gradient(to bottom, rgba(122,188,255,0.5) 0%,rgba(96,171,248,0.5) 44%,rgba(64,150,238,0.5) 100%);
+}
+
+.Red {
+  background: linear-gradient(to bottom, rgba(169,3,41,0.5) 0%,rgba(143,2,34,0.5) 44%,rgba(109,0,25,0.5) 100%);
+}
+
+.Green {
+  background: linear-gradient(to bottom, rgba(14,112,35,0.5) 0%,rgba(59,119,51,0.5) 36%,rgba(100,178,76,0.5) 100%);
+}
+
+.Yellow {
+  background: linear-gradient(to bottom, rgba(241,231,103,0.5) 0%,rgba(254,182,69,0.5) 100%); 
+}
+
+.science {
+  background: rgb(40, 40, 156);
+}
+
+.governance {
+  background: rgb(54, 109, 46);
+}
+
+.arts-culture {
+  background: rgb(141, 21, 21);
+}
+
+.philosophy {
+  background: rgb(184, 105, 5);
+} 
