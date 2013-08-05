@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
 
 var config = require('config');
+var $ = require('jquery');
 
 var ready = {
 	isReady: false,
@@ -56,6 +57,7 @@ var Plus = {
 			contentType: 'application/json',
 			data: payload,
 			success: function (resp) {
+        console.log('auth: ', resp);
 				// list of games!
 			}
 		});
@@ -79,6 +81,7 @@ var Plus = {
  var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
  po.src = 'https://apis.google.com/js/client:plusone.js';
  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+ console.log(s, s.parentNode);
 })();
 
 module.exports = Plus;

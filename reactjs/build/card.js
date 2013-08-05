@@ -24,7 +24,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
     });
   });
 
-  var Card = React.createClass ({
+  var Card = React.createClass ({displayName: 'Card',
     getInitialState: function () {
       if (!cards) {
         waitingCards.push(this);
@@ -35,12 +35,12 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
 
     render: function () {
       var elems = [];
-      elems.push(<header>{this.state.name}</header>);
+      elems.push(React.DOM.header(null, this.state.name));
       if (this.state.imageUrl)
-        elems.push(<img src={this.state.imageUrl}/>)
+        elems.push(React.DOM.img( {src:this.state.imageUrl}))
       if (this.state.description) 
-        elems.push(<p>{this.state.description}</p>)
-      return <div class="card">{elems}</div>;
+        elems.push(React.DOM.p(null, this.state.description))
+      return React.DOM.div( {className:"card"}, elems);
     }
   });
 

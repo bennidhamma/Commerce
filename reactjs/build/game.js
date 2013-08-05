@@ -9,12 +9,12 @@ define(['react', 'jsx/card', 'jsx/game-list', 'main', 'jquery', 'game', 'jsx/gam
         console.log ('currentGame: ', currentGame);
         var renderOutput = null;
         if (currentGame) {
-          renderOutput = (<GameView game={currentGame} />);
+          renderOutput = (GameView( {game:currentGame} ));
         } else {
-          renderOutput = (<div>
-              <GameList />
-              <Card name="One Colonist"/>
-            </div>);
+          renderOutput = (React.DOM.div(null, 
+              GameList(null ),
+              Card( {name:"One Colonist"})
+            ));
         }
         React.renderComponent(renderOutput, document.getElementById("output"));
       });

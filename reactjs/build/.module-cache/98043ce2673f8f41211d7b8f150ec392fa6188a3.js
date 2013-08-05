@@ -3,18 +3,17 @@ define(['react', 'jsx/card', 'jsx/game-list', 'main', 'jquery', 'game', 'jsx/gam
     function (React, Card, GameList, Plus, $, gameServer, GameView) {
   var currentGame = null;
   var game = {
-    render: function(game) {
-      currentGame = game;
+    render: function() {
       Plus.ready(function() {
         console.log ('currentGame: ', currentGame);
         var renderOutput = null;
         if (currentGame) {
-          renderOutput = (<GameView game={currentGame} />);
+          renderOutput = (GameView( {game:currentGame} ));
         } else {
-          renderOutput = (<div>
-              <GameList />
-              <Card name="One Colonist"/>
-            </div>);
+          renderOutput = (React.DOM.div(null, 
+              GameList(null ),
+              Card( {name:"One Colonist"})
+            ));
         }
         React.renderComponent(renderOutput, document.getElementById("output"));
       });

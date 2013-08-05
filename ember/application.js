@@ -41352,7 +41352,6 @@ var Plus = {
 			firstName: plus.name.givenName,
 			lastName: plus.name.familyName
 		});
-		console.log(payload);
 		ready.setReady();
 		$.ajax({
 			url: config.serverUrlBase + '/api/player/auth',
