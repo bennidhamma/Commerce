@@ -14,13 +14,14 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
       for (var i = 0; i < waitingCards.length; i++) {
         var card = waitingCards[i];
         try {
-          card.setState(cards[card.props.name]);
+          card.setState(_.clone(cards[card.props.name]));
         }
         catch (e) {
           console.error(e);
         }
       }
       waitingCards = [];
+      Events.publish('/cards/loaded', [cards]);
     });
   });
 
@@ -30,7 +31,12 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         waitingCards.push(this);
         return {};
       }
-      return cards[this.props.name] || {};
+      return _.clone(cards[this.props.name]) || {};
+    },
+
+    click: function(evt) {
+      console.log('card clicked', this.props.name, this.props.cardSource);
+      Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state, this]);
     },
 
     render: function () {
@@ -40,8 +46,8 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         elems.push(<img src={this.state.imageUrl}/>)
       if (this.state.description) 
         elems.push(<p>{this.state.description}</p>)
-      return <div class="card">{elems}</div>;
-    }
+      return <div class="card" onClick={this.click}>{elems}</div>;
+    },
   });
 
   return Card;

@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-var Events = require('pubsub.js');
+var Events = require('pubsub');
 var config = require('config');
 
 var gameId_ = null;
@@ -28,11 +28,11 @@ function receiveMessage (event) {
   switch(message.channel) {
   case "gameUpdate":
   case "tradeUpdate":
-    var game = App.Game.create(message.body);
+    var game = message.body;
     Events.publish('/game/update', [game]);
     break;
   case 'newOffer':
-    var offer = App.Offer.create(message.body);
+    var offer = message.body;
     Events.publish('/offer/new', [offer]);
     break;
   case "newMatch":
