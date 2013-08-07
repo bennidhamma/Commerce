@@ -13,6 +13,10 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
         this.state.cards = cardsArg;
         this.setState(this.state);
       }.bind(this));
+      Events.subscribe('/game/update', function (game) {
+        this.state.game = game;
+        this.setState(this.state);
+      }.bind(this));
 
       return {
         notification: null,
@@ -147,29 +151,33 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       $('.card.Trade.selected').removeClass('selected secret');
     },
 
-    skip: function (phase) {
-      gameServer.skip(phase);
+    skipActions: function () {
+      gameServer.skip('action');
+    },
+
+    skipBuys: function () {
+      gameServer.skip('buy');
     },
 
     // Render functions.
     
     buildCards: function (cards, source) {
-      return cards.map(function(card) {
-        return <Card name={card} cardSource={source}/>;
+      return cards.map(function(card, i) {
+        return <Card name={card} key={"card-" + i} cardSource={source}/>;
       });
     },
 
     buildStack: function (card, count, source) {
       var cards = [];
       for (var i = 0; i < count; i++) {
-        cards.push (<Card name={card} cardSource={source}/>);
+        cards.push (<Card key={"c-" + i} name={card} cardSource={source}/>);
       }
-      return <section class="stack">{cards}</section>;
+      return <section key={card} class="stack">{cards}</section>;
     },
 
     buildHexes: function (hexes) {
-      return hexes.map(function(hex) {
-        return <Hex data={hex}/>;
+      return hexes.map(function(hex, i) {
+        return <Hex key={'h-' + i} data={hex}/>;
       });
     },
 
@@ -189,8 +197,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
         }
       }
     
-      return (<section class="buy-phase">
-        Click a card to buy it or <button onClick="this.skip">Skip Buys</button>
+      return (<section key="buy" class="buy-phase">
+        Click a card to buy it or <button onClick={this.skipBuys}>Skip Buys</button>
         <h2>Bank</h2>
         <h3>Nation Cards</h3>
         <section class="bank">
@@ -211,13 +219,18 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       var tradeCards = this.buildCards(game.tradeCards, "tradeCards");
       var hexes = this.buildHexes(game.hexes);
 
-      var store = null;
-      if (this.isBuyPhase()) {
-        store = this.buildStore (); 
+      var action = null;
+      if (this.isActionPhase()) {
+        action = <div>
+          It is your turn. Click a card to play it, or 
+          <button onClick={this.skipActions}>Skip Actions</button>
+        </div>; 
+      } else if (this.isBuyPhase()) {
+        action = this.buildStore (); 
       }
 
       return <section class={"me " + game.color}>
-          {store}
+          {action}
           <section class="hexes">{hexes}</section>
           <section class="hand">{hand}</section>
           <section class="discards">{discards}</section>
@@ -236,7 +249,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     
     render: function () {
       var sections = [
-        <section class="notification-bar" style={this.state.notification ? {} : {display:'none'}}>
+        <section key="n" class="notification-bar" style={this.state.notification ? {} : {display:'none'}}>
           {this.state.notification}
         </section>
       ];
@@ -245,7 +258,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       if (game.status == "Running") {
         // Add the current turn section.
         sections.push(
-          <section class={"currentTurn " + game.currentTurn.playerColor}>
+          <section key="t" class={"currentTurn " + game.currentTurn.playerColor}>
             <h2>
               <img src={game.currentTurn.playerPhoto}/>
               {game.currentTurn.playerName}
@@ -255,13 +268,27 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
           </section>);
 
         sections.push(
-            <section class="main-layout">
+            <section key="m" class="main-layout">
               {this.buildMyView()}
               {this.buildOtherViews()}
               {this.buildLog()}
             </section>
         );
+      } else if (game.status == "Trading") {
+        var tradeCards = this.buildCards(game.tradeCards);
+        var buttons = [];
+        buttons.push(<button onClick={this.doneTrading}>Done Trading</button>);
+        if (this.state.readyToListOffer) {
+          buttons.push(<button onClick={this.listOffer}>List Trade Offer</button>); 
+          buttons.push(<button onClick={this.cancelOffer}>Cancel Trade Offer</button>); 
+        }
 
+        sections.push(<section class="trading">
+          <h2>Trading Phase</h2>
+          {buttons}
+          <h3>Your Trade Cards</h3>
+          {tradeCards}
+        </section>);
       }
 
       return <div>{sections}</div>;

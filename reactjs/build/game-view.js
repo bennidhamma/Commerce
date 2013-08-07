@@ -13,6 +13,10 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
         this.state.cards = cardsArg;
         this.setState(this.state);
       }.bind(this));
+      Events.subscribe('/game/update', function (game) {
+        this.state.game = game;
+        this.setState(this.state);
+      }.bind(this));
 
       return {
         notification: null,
@@ -147,29 +151,33 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       $('.card.Trade.selected').removeClass('selected secret');
     },
 
-    skip: function (phase) {
-      gameServer.skip(phase);
+    skipActions: function () {
+      gameServer.skip('action');
+    },
+
+    skipBuys: function () {
+      gameServer.skip('buy');
     },
 
     // Render functions.
     
     buildCards: function (cards, source) {
-      return cards.map(function(card) {
-        return Card( {name:card, cardSource:source});
+      return cards.map(function(card, i) {
+        return Card( {name:card, key:"card-" + i, cardSource:source});
       });
     },
 
     buildStack: function (card, count, source) {
       var cards = [];
       for (var i = 0; i < count; i++) {
-        cards.push (Card( {name:card, cardSource:source}));
+        cards.push (Card( {key:"c-" + i, name:card, cardSource:source}));
       }
-      return React.DOM.section( {className:"stack"}, cards);
+      return React.DOM.section( {key:card, className:"stack"}, cards);
     },
 
     buildHexes: function (hexes) {
-      return hexes.map(function(hex) {
-        return Hex( {data:hex});
+      return hexes.map(function(hex, i) {
+        return Hex( {key:'h-' + i, data:hex});
       });
     },
 
@@ -189,8 +197,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
         }
       }
     
-      return (React.DOM.section( {className:"buy-phase"}, 
-" Click a card to buy it or ", React.DOM.button( {onClick:"this.skip"}, "Skip Buys"),
+      return (React.DOM.section( {key:"buy", className:"buy-phase"}, 
+" Click a card to buy it or ", React.DOM.button( {onClick:this.skipBuys}, "Skip Buys"),
         React.DOM.h2(null, "Bank"),
         React.DOM.h3(null, "Nation Cards"),
         React.DOM.section( {className:"bank"}, 
@@ -211,13 +219,17 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       var tradeCards = this.buildCards(game.tradeCards, "tradeCards");
       var hexes = this.buildHexes(game.hexes);
 
-      var store = null;
-      if (this.isBuyPhase()) {
-        store = this.buildStore (); 
+      var action = null;
+      if (this.isActionPhase()) {
+        action = React.DOM.div(null, 
+" It is your turn. Click a card to play it, or " ,          React.DOM.button( {onClick:this.skipActions}, "Skip Actions")
+        ); 
+      } else if (this.isBuyPhase()) {
+        action = this.buildStore (); 
       }
 
       return React.DOM.section( {className:"me " + game.color}, 
-          store,
+          action,
           React.DOM.section( {className:"hexes"}, hexes),
           React.DOM.section( {className:"hand"}, hand),
           React.DOM.section( {className:"discards"}, discards),
@@ -236,7 +248,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     
     render: function () {
       var sections = [
-        React.DOM.section( {className:"notification-bar", style:this.state.notification ? {} : {display:'none'}}, 
+        React.DOM.section( {key:"n", className:"notification-bar", style:this.state.notification ? {} : {display:'none'}}, 
           this.state.notification
         )
       ];
@@ -245,7 +257,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       if (game.status == "Running") {
         // Add the current turn section.
         sections.push(
-          React.DOM.section( {className:"currentTurn " + game.currentTurn.playerColor}, 
+          React.DOM.section( {key:"t", className:"currentTurn " + game.currentTurn.playerColor}, 
             React.DOM.h2(null, 
               React.DOM.img( {src:game.currentTurn.playerPhoto}),
               game.currentTurn.playerName,
@@ -255,13 +267,27 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
           ));
 
         sections.push(
-            React.DOM.section( {className:"main-layout"}, 
+            React.DOM.section( {key:"m", className:"main-layout"}, 
               this.buildMyView(),
               this.buildOtherViews(),
               this.buildLog()
             )
         );
+      } else if (game.status == "Trading") {
+        var tradeCards = this.buildCards(game.tradeCards);
+        var buttons = [];
+        buttons.push(React.DOM.button( {onClick:this.doneTrading}, "Done Trading"));
+        if (this.state.readyToListOffer) {
+          buttons.push(React.DOM.button( {onClick:this.listOffer}, "List Trade Offer")); 
+          buttons.push(React.DOM.button( {onClick:this.cancelOffer}, "Cancel Trade Offer")); 
+        }
 
+        sections.push(React.DOM.section( {className:"trading"}, 
+          React.DOM.h2(null, "Trading Phase"),
+          buttons,
+          React.DOM.h3(null, "Your Trade Cards"),
+          tradeCards
+        ));
       }
 
       return React.DOM.div(null, sections);

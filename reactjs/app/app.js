@@ -38,7 +38,6 @@ require(['main', 'react', 'jsx/game', 'game', 'jquery', 'socket', 'pubsub'],
 
   $(window).on('hashchange', update);
   Plus.ready(update);
-  Events.subscribe('gameUpdate', render);
-  Events.subscribe('tradeUpdate', render);
+  //Events.subscribe('/game/update', render);
   Events.subscribe('render', render);
 });

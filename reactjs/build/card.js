@@ -41,11 +41,11 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
 
     render: function () {
       var elems = [];
-      elems.push(React.DOM.header(null, this.state.name));
+      elems.push(React.DOM.header( {key:"header"}, this.state.name));
       if (this.state.imageUrl)
-        elems.push(React.DOM.img( {src:this.state.imageUrl}))
+        elems.push(React.DOM.img( {key:"img", src:this.state.imageUrl}))
       if (this.state.description) 
-        elems.push(React.DOM.p(null, this.state.description))
+        elems.push(React.DOM.p( {key:"description"}, this.state.description))
       return React.DOM.div( {className:"card", onClick:this.click}, elems);
     },
   });
