@@ -8,6 +8,7 @@ define(['react', 'game', 'jsx/card', 'pubsub'],
 
     click: function(evt) {
       console.log('click', this, evt);
+      Events.publish ('/hex/selected', [this.state.id], this);
     },
 
     render: function() {

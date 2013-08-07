@@ -15,7 +15,11 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       }.bind(this));
       Events.subscribe('/game/update', function (game) {
         this.state.game = game;
-        this.setState(this.state);
+        this.setState (this.state);
+        gameServer.getLog (function(log) {
+          this.state.log = log;
+          this.setState (this.state);
+        }.bind(this));
       }.bind(this));
 
       return {
@@ -55,7 +59,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     selectCard: function(card, cardSource, cardObject, source) {
       console.log('card selected: ', card, cardSource, cardObject, source);
       var self = this;
-      var game = this.state.game;
+      var game = this.state.gamekey="others" ;
       switch (cardSource) {
       case 'hand':
         if (this.isActionPhase()) {
@@ -163,7 +167,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     
     buildCards: function (cards, source) {
       return cards.map(function(card, i) {
-        return <Card name={card} key={"card-" + i} cardSource={source}/>;
+        return <Card name={card} key={"card-" + i + "-" + card} cardSource={source}/>;
       });
     },
 
@@ -230,6 +234,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       }
 
       return <section class={"me " + game.color}>
+          <h2><img src={game.photo}/> {game.name}</h2>
+          <strong>{game.gold} Gold</strong>
           {action}
           <section class="hexes">{hexes}</section>
           <section class="hand">{hand}</section>
@@ -239,12 +245,35 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
         </section>;
     },
 
-    buildOtherViews: function() {
-      return <section class="others"></section>;
+    buildOther: function (other) {
+      var discards = this.buildCards (other.discards, "other-discards");
+      var techCards = this.buildCards (other.technologyCards, "other-technologyCards");
+      var hexes = this.buildHexes (other.hexes);
+      return <section key={"other-" + other.color} class={"other " + other.color}>
+        <h2><img src={other.photo}/>{other.name}</h2>
+        <section class="hexes">{hexes}</section>
+        Hand Size: {other.handSize}
+        Deck Size: {other.deckSize}
+        <section class="discards">{discards}</section>
+        <section class="technology-cards">{techCards}</section>
+      </section>;
+    },
+
+    buildOtherViews: function () {
+      var others = this.state.game.otherPlayers.map (this.buildOther);
+      return <section key="others" class="others">
+          {others} 
+        </section>;
     },
 
     buildLog: function() {
-      return <section class="log"></section>;
+      var entries = [];
+      if (this.state.log) {
+        var entries = this.state.log.map (function(e) {
+          return <div class="log-entry" key={e.timestamp}>{e.message}</div>
+        });
+      }
+      return <section class="log">{entries}</section>;
     },
     
     render: function () {

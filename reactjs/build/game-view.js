@@ -15,7 +15,11 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       }.bind(this));
       Events.subscribe('/game/update', function (game) {
         this.state.game = game;
-        this.setState(this.state);
+        this.setState (this.state);
+        gameServer.getLog (function(log) {
+          this.state.log = log;
+          this.setState (this.state);
+        }.bind(this));
       }.bind(this));
 
       return {
@@ -55,7 +59,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     selectCard: function(card, cardSource, cardObject, source) {
       console.log('card selected: ', card, cardSource, cardObject, source);
       var self = this;
-      var game = this.state.game;
+      var game = this.state.gamekey="others" ;
       switch (cardSource) {
       case 'hand':
         if (this.isActionPhase()) {
@@ -163,7 +167,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     
     buildCards: function (cards, source) {
       return cards.map(function(card, i) {
-        return Card( {name:card, key:"card-" + i, cardSource:source});
+        return Card( {name:card, key:"card-" + i + "-" + card, cardSource:source});
       });
     },
 
@@ -229,6 +233,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       }
 
       return React.DOM.section( {className:"me " + game.color}, 
+          React.DOM.h2(null, React.DOM.img( {src:game.photo}), game.name),
+          React.DOM.strong(null, game.gold, " Gold"),
           action,
           React.DOM.section( {className:"hexes"}, hexes),
           React.DOM.section( {className:"hand"}, hand),
@@ -238,12 +244,35 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
         );
     },
 
-    buildOtherViews: function() {
-      return React.DOM.section( {className:"others"});
+    buildOther: function (other) {
+      var discards = this.buildCards (other.discards, "other-discards");
+      var techCards = this.buildCards (other.technologyCards, "other-technologyCards");
+      var hexes = this.buildHexes (other.hexes);
+      return React.DOM.section( {key:"other-" + other.color, className:"other " + other.color}, 
+        React.DOM.h2(null, React.DOM.img( {src:other.photo}),other.name),
+        React.DOM.section( {className:"hexes"}, hexes),
+" Hand Size: ", other.handSize,
+" Deck Size: ", other.deckSize,
+        React.DOM.section( {className:"discards"}, discards),
+        React.DOM.section( {className:"technology-cards"}, techCards)
+      );
+    },
+
+    buildOtherViews: function () {
+      var others = this.state.game.otherPlayers.map (this.buildOther);
+      return React.DOM.section( {key:"others", className:"others"}, 
+          others 
+        );
     },
 
     buildLog: function() {
-      return React.DOM.section( {className:"log"});
+      var entries = [];
+      if (this.state.log) {
+        var entries = this.state.log.map (function(e) {
+          return React.DOM.div( {className:"log-entry", key:e.timestamp}, e.message)
+        });
+      }
+      return React.DOM.section( {className:"log"}, entries);
     },
     
     render: function () {
