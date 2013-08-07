@@ -18,10 +18,11 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
       for (var i = 0; i < waitingCards.length; i++) {
         var card = waitingCards[i];
         try {
-          card.setState(_.clone(cards[card.props.name]));
+          card.state.info = cards[card.props.name];
+          card.setState(card.state);
         }
         catch (e) {
-          console.error(e);
+          console.error(e.message);
         }
       }
       waitingCards = [];
@@ -35,43 +36,46 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         waitingCards.push(this);
         return {};
       }
-      return _.clone(cards[this.props.name]) || {};
+      return {info: cards[this.props.name]};
     },
 
     click: function(evt) {
       console.log('card clicked', this.props.name, this.props.cardSource);
-      Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state, this]);
+      Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state.info, this]);
     },
 
     renderSetValues: function (start, end) {
-      var values = this.state.tradeValues;
+      var values = this.state.info.tradeValues;
       var set = [];
       for (var i = start; i < end && i < values.length; i++) {
-        values.push(<span class="set-value">{values[i]}</span>);
+        set.push(<span key={'sv-' + i} class="set-value">{values[i]}</span>);
       }
-      return values;
+      return set;
     },
 
     render: function () {
-      var s = this.state;
+      var s = this.state.info;
+      if (!s) {
+        return <div onClick={this.click} class="card"></div>;
+      }
       var elems = [];
       
       // Setup trade set values.
       if (s.tradeValues)
-        elems.push(<section class="set set1">{this.renderSetValues(0, 3)}</section>);
+        elems.push(<section key='s1' class="set set1">{this.renderSetValues(0, 4)}</section>);
       elems.push(<header key="h">{s.name}</header>);
-      if (this.state.imageUrl)
+      if (s.imageUrl)
         elems.push(<img key="i" src={s.imageUrl}/>)
-      if (this.state.description) 
+      if (s.description) 
         elems.push(<p key="d">{s.description}</p>)
-      if (this.state.cost)
+      if (s.cost)
         elems.push(<p key="c">{s.cost} gold</p>);
-      if (this.state.requires)
+      if (s.requires)
         elems.push(<p key="r">{s.requires}</p>);
       if (s.tradeValues && s.tradeValues.length > 8)
-        elems.push(<section class="set set3">{this.renderSetValues(8, 12)}</section>);
+        elems.push(<section key='s2' class="set set3">{this.renderSetValues(8, 12)}</section>);
       if (s.tradeValues && s.tradeValues.length > 3)
-        elems.push(<section class="set set2">{this.renderSetValues(4, 8)}</section>);
+        elems.push(<section key='s3' class="set set2">{this.renderSetValues(4, 8)}</section>);
       return <div onClick={this.click}
           class={["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)].join(' ')}>
         {elems}

@@ -18,10 +18,11 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
       for (var i = 0; i < waitingCards.length; i++) {
         var card = waitingCards[i];
         try {
-          card.setState(_.clone(cards[card.props.name]));
+          card.state.info = cards[card.props.name];
+          card.setState(card.state);
         }
         catch (e) {
-          console.error(e);
+          console.error(e.message);
         }
       }
       waitingCards = [];
@@ -35,43 +36,46 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         waitingCards.push(this);
         return {};
       }
-      return _.clone(cards[this.props.name]) || {};
+      return {info: cards[this.props.name]};
     },
 
     click: function(evt) {
       console.log('card clicked', this.props.name, this.props.cardSource);
-      Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state, this]);
+      Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state.info, this]);
     },
 
     renderSetValues: function (start, end) {
-      var values = this.state.tradeValues;
+      var values = this.state.info.tradeValues;
       var set = [];
       for (var i = start; i < end && i < values.length; i++) {
-        values.push(React.DOM.span( {className:"set-value"}, values[i]));
+        set.push(React.DOM.span( {key:'sv-' + i, className:"set-value"}, values[i]));
       }
-      return values;
+      return set;
     },
 
     render: function () {
-      var s = this.state;
+      var s = this.state.info;
+      if (!s) {
+        return React.DOM.div( {onClick:this.click, className:"card"});
+      }
       var elems = [];
       
       // Setup trade set values.
       if (s.tradeValues)
-        elems.push(React.DOM.section( {className:"set set1"}, this.renderSetValues(0, 3)));
+        elems.push(React.DOM.section( {key:"s1", className:"set set1"}, this.renderSetValues(0, 4)));
       elems.push(React.DOM.header( {key:"h"}, s.name));
-      if (this.state.imageUrl)
+      if (s.imageUrl)
         elems.push(React.DOM.img( {key:"i", src:s.imageUrl}))
-      if (this.state.description) 
+      if (s.description) 
         elems.push(React.DOM.p( {key:"d"}, s.description))
-      if (this.state.cost)
+      if (s.cost)
         elems.push(React.DOM.p( {key:"c"}, s.cost, " gold"));
-      if (this.state.requires)
+      if (s.requires)
         elems.push(React.DOM.p( {key:"r"}, s.requires));
       if (s.tradeValues && s.tradeValues.length > 8)
-        elems.push(React.DOM.section( {className:"set set3"}, this.renderSetValues(8, 12)));
+        elems.push(React.DOM.section( {key:"s2", className:"set set3"}, this.renderSetValues(8, 12)));
       if (s.tradeValues && s.tradeValues.length > 3)
-        elems.push(React.DOM.section( {className:"set set2"}, this.renderSetValues(4, 8)));
+        elems.push(React.DOM.section( {key:"s3", className:"set set2"}, this.renderSetValues(4, 8)));
       return React.DOM.div( {onClick:this.click,
           className:["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)].join(' ')}, 
         elems
