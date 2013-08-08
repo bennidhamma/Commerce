@@ -11,6 +11,13 @@ html, body {
   cursor: default;
 }
 
+button {
+  margin: 0.5em;
+  padding: 0.5em;
+  font-size: 1.5em;
+  font-family: 'Lora', serif;
+}
+
 h2 {
   font-size: 1.2em;
   margin: 0;
@@ -270,3 +277,4 @@ section.me,section.other {
 .philosophy {
   background: rgb(184, 105, 5);
 } 
+

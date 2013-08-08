@@ -39,7 +39,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Bank = game.Bank;
 			this.Hexes = from h in player.Hexes select new HexView (h);
 			this.Gold = player.Gold;
-			this.TradeCards = from c in player.TradeCards where cards[c.Card] != null select c.Card;
+			this.TradeCards = from c in player.TradeCards where cards[c.Card] != null orderby cards[c.Card].TradeLevel, c.Card select c.Card;
 			this.OtherPlayers = from p in game.Players where p != player select new OtherPlayerView (p);
 		}
 	}

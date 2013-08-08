@@ -59,6 +59,9 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         return <div onClick={this.click} class="card"></div>;
       }
       var elems = [];
+      var classes = ["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)];
+      if (this.props.selected)
+        classes.push("selected");
       
       // Setup trade set values.
       if (s.tradeValues)
@@ -76,8 +79,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         elems.push(<section key='s2' class="set set3">{this.renderSetValues(8, 12)}</section>);
       if (s.tradeValues && s.tradeValues.length > 3)
         elems.push(<section key='s3' class="set set2">{this.renderSetValues(4, 8)}</section>);
-      return <div onClick={this.click}
-          class={["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)].join(' ')}>
+      return <div onClick={this.click} class={classes.join(' ')}>
         {elems}
       </div>;
     },

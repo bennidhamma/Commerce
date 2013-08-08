@@ -133,7 +133,7 @@ var GameController = Ember.Controller.extend({
             $(cardClass).removeClass('selected');
             var idx;
             while((idx = this.cardsToRedeem.indexOf(card)) > -1) {
-              this.cardsToRedeem.removeAt(idx);
+              this.cardsToRedeem.splice(idx, 1);
             }
           }
         } else {
@@ -146,7 +146,7 @@ var GameController = Ember.Controller.extend({
           $('.selected.secret').removeClass('secret');
           var idx = this.newOffer.indexOf(card);
           if (idx > -1) {
-            this.newOffer.removeAt(idx);
+            this.newOffer.splice(idx, 1);
           }
         } else {
           if (this.newOffer.length > 2) {

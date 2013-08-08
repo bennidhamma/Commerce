@@ -3,9 +3,6 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     function(React, gameServer, Plus, Events, Card, Hex) {
 
   var GameView = React.createClass({displayName: 'GameView',
-    cardsToRedeem: [],
-    newOffer: [],
-
     getInitialState: function() {
       Events.subscribe('/card/selected', this.selectCard);
       Events.subscribe('error', this.notify);
@@ -15,18 +12,27 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       }.bind(this));
       Events.subscribe('/game/update', function (game) {
         this.state.game = game;
-        this.setState (this.state);
-        gameServer.getLog (function(log) {
-          this.state.log = log;
-          this.setState (this.state);
-        }.bind(this));
+        this.setupGame(game);
       }.bind(this));
 
+      this.setupGame(this.props.game);
       return {
         notification: null,
         game: this.props.game,
-        cards: null
+        cards: null,
+        cardsToRedeem: {},
+        newOffer: []
       };
+    },
+
+    setupGame: function(game) {
+      if (game.tradeCards)
+        game.tradeCards = game.tradeCards.map(function(c) {return {name: c, selected: false}});
+      gameServer.getLog (function(log) {
+        this.state.log = log;
+        this.setState (this.state);
+      }.bind(this));
+      this.setState (this.state);
     },
 
     isTrading: function () {
@@ -59,7 +65,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     selectCard: function(card, cardSource, cardObject, source) {
       console.log('card selected: ', card, cardSource, cardObject, source);
       var self = this;
-      var game = this.state.gamekey="others" ;
+      var game = this.state.game;
       switch (cardSource) {
       case 'hand':
         if (this.isActionPhase()) {
@@ -82,45 +88,53 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
         break;
       case 'tradeCards':
         if (this.isMyTurn()) {
-          if (source.state.selected) {
+          if (game.tradeCards[source.props.index].selected) {
             // If this is the only selected card in a set, add a third select mode 
             // which is to select all cards in the set.
-            //TODO: 
-            var cardClass = '.trade-cards .' + Em.String.dasherize(card);
-            var cardCount = $(cardClass).length;
-            if ($(cardClass + '.selected').length == 1 && cardCount > 1) {
-              $(cardClass).addClass('selected');
-              // Add one less than total card count to account for the additioal cards we are selecting.
-              for (var i = 0; i < cardCount - 1; i++) {
-                this.cardsToRedeem.push (card);
+
+            var cardCount = game.tradeCards.reduce(function(a,b) { 
+              return a + (b.name == card ? 1 : 0);
+            }, 0);
+            if (this.state.cardsToRedeem[card] == 1 && cardCount > 1) {
+              for (var i = 0; i < game.tradeCards.length; i++) {
+                var tradeCard = game.tradeCards[i];
+                if (tradeCard.name == card) {
+                  game.tradeCards[i].selected = true;
+                }
+                this.state.cardsToRedeem[card] = cardCount;
               }
             } else {
-              $(cardClass).removeClass('selected');
-              var idx;
-              while((idx = this.cardsToRedeem.indexOf(card)) > -1) {
-                this.cardsToRedeem.removeAt(idx);
-              }
+              // We have already selected the cards, so de-select all of this type.
+              game.tradeCards.map(function(c) {
+                if (c.name == card) {
+                  c.selected = false;
+                }
+              });
+              delete this.state.cardsToRedeem[card];
             }
-          } else {
-            this.cardsToRedeem.pushObject(card);
-            elem.addClass('selected');
+          } else { // This card is not currently selected.
+            game.tradeCards[source.props.index].selected = true;
+            this.state.cardsToRedeem[card] = 1;
           }
-        } else if (this.get('isTrading')) {
+          this.setState(this.state);
+        } else if (this.isTrading()) {
           if (elem.hasClass('selected')) {
             elem.removeClass('selected secret');
             $('.selected.secret').removeClass('secret');
-            var idx = this.newOffer.indexOf(card);
+            var idx = this.state.newOffer.indexOf(card);
             if (idx > -1) {
-              this.newOffer.removeAt(idx);
+              this.state.newOffer.splice(idx, 1);
+              this.setState({newOffer: this.state.newOffer});
             }
           } else {
-            if (this.newOffer.length > 2) {
+            if (this.state.newOffer.length > 2) {
               this.notify('Cannot have more than 3 cards in an offer.', 5000);
               return;
             }
-            this.newOffer.pushObject(card);
-            elem.addClass('selected');
-            if (this.newOffer.length == 3) {
+            this.state.newOffer.push(card);
+            this.setState({newOffer: this.state.newOffer});
+            // TODO: set secret state.
+            if (this.state.newOffer.length == 3) {
               elem.addClass('secret');
             }
           }
@@ -132,18 +146,16 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       if (!this.isMyTurn()) {
         return;
       }
-      gameServer.redeem(this.cardsToRedeem);
-      this.cardsToRedeem = [];
-      $('.card.Trade.selected').removeClass('selected');
+      gameServer.redeem(this.state.cardsToRedeem);
+      this.setState({cardsToRedeem: {}});
     },
 
     listOffer: function() {
-      if (!this.isTrading() || this.newOffer.length != 3) {
+      if (!this.isTrading() || this.state.newOffer.length != 3) {
         return;
       }
-      gameServer.listOffer(this.newOffer);
-      this.newOffer = [];
-      $('.card.Trade.selected').removeClass('selected secret');
+      gameServer.listOffer(this.state.newOffer);
+      this.setState({newOffer: []});
     },
 
     doneTrading : function () {
@@ -151,7 +163,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     },
 
     cancelOffer: function () {
-      this.newOffer = [];
+      this.setState({newOffer: []});
       $('.card.Trade.selected').removeClass('selected secret');
     },
 
@@ -167,7 +179,17 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     
     buildCards: function (cards, source) {
       return cards.map(function(card, i) {
-        return Card( {name:card, key:"card-" + i + "-" + card, cardSource:source});
+        var name = card;
+        var selected = false;
+        if (typeof(card) != "string") {
+          name = card.name;
+          selected = card.selected;
+        }
+        return Card( {name:name, 
+          key:"card-" + i + "-" + name, 
+          selected:selected, 
+          index:i, 
+          cardSource:source});
       });
     },
 
@@ -232,6 +254,16 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
         action = this.buildStore (); 
       }
 
+      var redeem = '';
+      for (var k in this.state.cardsToRedeem) {
+        if (this.state.cardsToRedeem[k]) {
+          redeem = React.DOM.div( {className:"trade-buttons"}, 
+            React.DOM.button( {className:"redeem", onClick:this.redeem}, "Redeem Cards")
+          );
+          break;
+        }
+      }
+
       return React.DOM.section( {className:"me " + game.color}, 
           React.DOM.h2(null, React.DOM.img( {src:game.photo}), game.name),
           React.DOM.strong(null, game.gold, " Gold"),
@@ -240,6 +272,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
           React.DOM.section( {className:"hand"}, hand),
           React.DOM.section( {className:"discards"}, discards),
           React.DOM.section( {className:"technology-cards"}, techCards),
+          redeem,
           React.DOM.section( {className:"trade-cards"}, tradeCards)
         );
     },

@@ -5,7 +5,7 @@ namespace ForgottenArts.Commerce.Server
 {
 	public class RedeemRequest
 	{
-		public List<string> Cards {get; set;}
+		public Dictionary<string, int> Cards {get; set;}
 	}
 }
 

@@ -220,6 +220,16 @@ namespace ForgottenArts.Commerce
 			return true;
 		}
 
+		public bool HasTradeCards (Dictionary<string, int> cards)
+		{
+			foreach (var kvp in cards) {
+				var count = (from c in TradeCards where c.Card == kvp.Key select c).Count ();
+				if (count < kvp.Value)
+					return false;
+			}
+			return true;
+		}
+
 		public bool RemoveTradeCard (string card, bool returnToStore)
 		{
 			var index = TradeCards.FindIndex (t => t.Card == card);

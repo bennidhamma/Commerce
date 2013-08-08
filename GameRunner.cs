@@ -624,7 +624,7 @@ namespace ForgottenArts.Commerce
 			return false;
 		}
 
-		public bool RedeemTradeCards (Game game, PlayerGame player, List<string> cards)
+		public bool RedeemTradeCards (Game game, PlayerGame player, Dictionary<string, int> cards)
 		{
 			// TODO: ensure it is the current player's turn (or not?)
 
@@ -633,35 +633,20 @@ namespace ForgottenArts.Commerce
 				throw new InvalidOperationException ("Invalid list of cards to redeem.");
 			}
 
-			// Sort the cards.
-			cards.Sort ();
-
 			string currentCard = null;
 			int count = 0;
 
-			foreach (string card in cards) {
-				if (card != currentCard) {
-					if (currentCard != null) {
-						RedeemSet (game, player, currentCard, count);
-					}
-					count = 1;
-					currentCard = card;
-				} else {
-					count++;
-				}
-				player.RemoveTradeCard (card, true);
+			foreach (var kvp in cards) {
+				RedeemSet (game, player, kvp.Key, kvp.Value);
 			}
-
-			// Flush the last set.
-			if (count > 0) {
-				RedeemSet (game, player, currentCard, count);
-			}
-
 			return true;
 		}
 
 		void RedeemSet (Game game, PlayerGame player, string currentCard, int count)
 		{
+			for (int i = 0; i < count; i++) {
+				player.RemoveTradeCard(currentCard, true);
+			}
 			var cardObject = this.cards [currentCard];
 			var modifyTradeSet = new ModifyTradeSetEvent () {
 				Size = count,
