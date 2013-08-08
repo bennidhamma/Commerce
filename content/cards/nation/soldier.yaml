@@ -4,5 +4,5 @@ Description: Select an enemy hex. Roll on the attack table.
 Cost: 30
 NeedsHex: true
 Action: |
-  roll = 1 + rand(100)
+  roll = 40 + rand(100)
   attack_roll roll, args, game, hex, player

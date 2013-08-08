@@ -92,8 +92,12 @@ class Object
       else
         if player.add_hex hex
           hex.player.hexes.remove hex
+          log = "Victory! Enemy colony is captured!"
+        else
+          hex.has_colony = false
+          hex.current_population = 0
+          log = "Victory! Enemry colony is destroyed."
         end
-        log = "Victory! Enemy colony is captured!"
         if hex.player.trade_cards.count 
           card = hex.player.trade_cards.sample.card
           hex.player.give_trade_card player, card

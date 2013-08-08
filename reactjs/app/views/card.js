@@ -64,7 +64,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         classes.push("selected");
       if (s.description && s.description.length > 100)
         classes.push("dense");
-      else if (s.description && s.description.length < 50)
+      else if (s.description && s.description.length < 40)
         classes.push("sparse");
 
       var requires = [];

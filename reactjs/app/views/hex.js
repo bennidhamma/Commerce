@@ -12,6 +12,7 @@ define(['react', 'game', 'jsx/card', 'pubsub'],
     },
 
     render: function() {
+      this.state = this.props.data;
       return (
         <div class={"hex " + (this.state.hasColony ? "has-colony" : "")} onClick={this.click}>
           {this.state.currentPopulation} / {this.state.populationLimit}

@@ -201,9 +201,11 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       return React.DOM.section( {key:card, className:"stack"}, cards);
     },
 
+    hexId: 0,
+
     buildHexes: function (hexes) {
       return hexes.map(function(hex, i) {
-        return Hex( {key:'h-' + i, data:hex});
+        return Hex( {key:'h-' + hex.id + '-' + this.hexId++, data:hex});
       });
     },
 
@@ -243,7 +245,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       var discards = this.buildCards(game.discards, "discards");
       var techCards = this.buildCards(game.technologyCards, "technologyCards");
       var tradeCards = this.buildCards(game.tradeCards, "tradeCards");
-      var hexes = this.buildHexes(game.hexes);
+      var hexes = this.buildHexes(_.clone(game.hexes));
 
       var action = null;
       if (this.isActionPhase()) {
@@ -272,8 +274,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
           React.DOM.section( {className:"hand"}, hand),
           React.DOM.section( {className:"discards"}, discards),
           React.DOM.section( {className:"technology-cards"}, techCards),
-          redeem,
-          React.DOM.section( {className:"trade-cards"}, tradeCards)
+          React.DOM.section( {className:"trade-cards"}, tradeCards),
+          redeem
         );
     },
 
@@ -301,8 +303,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     buildLog: function() {
       var entries = [];
       if (this.state.log) {
-        var entries = this.state.log.map (function(e) {
-          return React.DOM.div( {className:"log-entry", key:e.timestamp}, e.message)
+        var entries = this.state.log.map (function(e, i) {
+          return React.DOM.div( {className:"log-entry", key:e.timestamp + i}, e.message)
         });
       }
       return React.DOM.section( {className:"log"}, entries);

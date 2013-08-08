@@ -12,7 +12,7 @@ namespace ForgottenArts.Commerce.Server
 		public long Id { get; set; }
 		public GameState Status { get; set; }
 		public IEnumerable<HexView> Hexes { get; set; }
-		public List<string> Hand { get;	set; }
+		public IEnumerable<string> Hand { get;	set; }
 		public Stack<string> Discards {	get; set; }
 		public int DeckCount { get;	set; }
 		public List<string> TechnologyCards { get;	set; }
@@ -31,7 +31,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Photo = player.Player.Photo;
 			this.Color = player.Color;
 			this.Status = game.Status;
-			this.Hand = player.Hand;
+			this.Hand = from c in player.Hand orderby c select c;
 			this.Discards = player.Discards;
 			this.DeckCount = player.Deck.Count;
 			this.TechnologyCards = player.TechnologyCards;
