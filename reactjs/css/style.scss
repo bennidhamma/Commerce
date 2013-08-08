@@ -95,7 +95,7 @@ h3 {
   background:url(/images/hex/empty.png) no-repeat;
   width: 80px;
   height: 65px;
-  margin:0;
+  margin: 5px;
   display: inline-block;
   line-height: 65px;
   text-align: center;
@@ -218,10 +218,10 @@ h3 {
 }
 
 .discards {
-  margin-left: 76px;
-  height: 180px;
+  margin-left: 85px;
+  height: 220px;
   .card {
-    margin-left: -145px;
+    margin-left: -155px;
   }
 }
 

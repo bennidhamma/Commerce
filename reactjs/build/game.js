@@ -11,10 +11,7 @@ define(['react', 'jsx/card', 'jsx/game-list', 'main', 'jquery', 'game', 'jsx/gam
         if (currentGame) {
           renderOutput = (GameView( {game:currentGame} ));
         } else {
-          renderOutput = (React.DOM.div(null, 
-              GameList(null ),
-              Card( {name:"One Colonist"})
-            ));
+          renderOutput = (GameList(null ));
         }
         React.renderComponent(renderOutput, document.getElementById("output"));
       });
