@@ -62,19 +62,31 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
       var classes = ["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)];
       if (this.props.selected)
         classes.push("selected");
+      if (s.description && s.description.length > 100)
+        classes.push("dense");
+      else if (s.description && s.description.length < 50)
+        classes.push("sparse");
+
+      var requires = [];
+      if (s.cost) {
+        requires.push(s.cost + " gold");
+        if (s.requires) {
+          requires = requires.concat(s.requires);
+        }
+      }
       
-      // Setup trade set values.
       if (s.tradeValues)
         elems.push(<section key='s1' class="set set1">{this.renderSetValues(0, 4)}</section>);
       elems.push(<header key="h">{s.name}</header>);
       if (s.imageUrl)
         elems.push(<img key="i" src={s.imageUrl}/>)
       if (s.description) 
-        elems.push(<p key="d">{s.description}</p>)
-      if (s.cost)
-        elems.push(<p key="c">{s.cost} gold</p>);
-      if (s.requires)
-        elems.push(<p key="r">{s.requires}</p>);
+        elems.push(<section key="d" class="info">
+            <p class="description">{s.description}</p>
+            <div class="purchase-info">
+              {requires && requires.join(', ')}
+            </div>
+          </section>);
       if (s.tradeValues && s.tradeValues.length > 8)
         elems.push(<section key='s2' class="set set3">{this.renderSetValues(8, 12)}</section>);
       if (s.tradeValues && s.tradeValues.length > 3)

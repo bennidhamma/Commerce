@@ -62,19 +62,31 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
       var classes = ["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)];
       if (this.props.selected)
         classes.push("selected");
+      if (s.description && s.description.length > 100)
+        classes.push("dense");
+      else if (s.description && s.description.length < 50)
+        classes.push("sparse");
+
+      var requires = [];
+      if (s.cost) {
+        requires.push(s.cost + " gold");
+        if (s.requires) {
+          requires = requires.concat(s.requires);
+        }
+      }
       
-      // Setup trade set values.
       if (s.tradeValues)
         elems.push(React.DOM.section( {key:"s1", className:"set set1"}, this.renderSetValues(0, 4)));
       elems.push(React.DOM.header( {key:"h"}, s.name));
       if (s.imageUrl)
         elems.push(React.DOM.img( {key:"i", src:s.imageUrl}))
       if (s.description) 
-        elems.push(React.DOM.p( {key:"d"}, s.description))
-      if (s.cost)
-        elems.push(React.DOM.p( {key:"c"}, s.cost, " gold"));
-      if (s.requires)
-        elems.push(React.DOM.p( {key:"r"}, s.requires));
+        elems.push(React.DOM.section( {key:"d", className:"info"}, 
+            React.DOM.p( {className:"description"}, s.description),
+            React.DOM.div( {className:"purchase-info"}, 
+              requires && requires.join(', ')
+            )
+          ));
       if (s.tradeValues && s.tradeValues.length > 8)
         elems.push(React.DOM.section( {key:"s2", className:"set set3"}, this.renderSetValues(8, 12)));
       if (s.tradeValues && s.tradeValues.length > 3)

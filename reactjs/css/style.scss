@@ -113,40 +113,56 @@ h3 {
   box-shadow:2px 2px 10px rgba(0,0,0,0.4);
   padding: 2px;
   background: #889;
-  width: 120px;
-  height: 180px;
-  border-radius:4px;
+  width: 240px;
+  height: 360px;
+  border-radius:8px;
   display:inline-block;
   vertical-align: top;
-  -webkit-transform: scale(0.8, 0.8);
-  margin: -18px -18px -18px -30px;
+  -webkit-transform: scale(0.4, 0.4);
+  margin: -100px;
+  margin-right: -80px;
   transition: -webkit-transform 300ms;
   &:hover {
-    -webkit-transform: scale(1.4, 1.4);
+    -webkit-transform: scale(1, 1);
     position: relative;
     z-index: 1;
   }
   header {
     background: rgba(0, 0, 0, 0.5);
     font-weight:bold;
-    padding: 3px;
-    font-size: 1em;
-    text-align:center;
-    margin-bottom:2px;
+    padding: 8px;
+    font-size: 1.7em;
+    text-align: center;
+    margin-bottom: 4px;
   }
   img {
-    width: 120px;
-    height: 80px;
+    width: 240px;
+    height: 145px;
     background:white;
   }
-  p {
-    font-size: 0.7em;
-    line-height: 15px;
-    padding: 3px;
+  section.info {
+    font-size: 1em;
+    line-height: 20px;
+    padding: 10px;
     background: rgba(255,255,255,0.6);
     color: black;
     margin: 3px 0;
-    border-radius: 3px;
+    border-radius: 6px;
+    border:2px inset;
+    height: 131px;
+    position: relative;
+    text-align: center;
+
+    div.purchase-info {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+    }
+
+    p { 
+      margin: 0;
+      padding: 0;
+    }
   }
 
   section.set {
@@ -167,6 +183,17 @@ h3 {
   }
 }
 
+.dense section.info {
+  font-size:0.9em;
+  line-height:17px;
+  padding:8px;
+}
+
+.sparse section.info {
+  font-size:1.5em;
+  line-height:32px;
+}
+
 .selected {
   box-shadow:0px 0px 20px rgba(0,0,255,1);
   &.secret {
@@ -174,20 +201,16 @@ h3 {
   }
 }
 
-.hand {
-  margin-left: 20px;
+.hand, .bank, .trade-cards, .technology-cards {
+  margin-left: 30px;
 }
 
 .discards {
-  margin-left: 100px;
+  margin-left: 76px;
   height: 180px;
   .card {
-    margin-left: -100px;
+    margin-left: -145px;
   }
-}
-
-.technology-cards, .trade-cards {
-  margin-left: 20px;
 }
 
 .buy-phase {
@@ -196,16 +219,16 @@ h3 {
 }
 
 .bank {
-  margin-left: 20px;
   .stack {
     display:inline-block;
     margin-right:10px;
     vertical-align: top;
     height: 160px;
+    width: 95px;
     .card {
       position: relative;
       display:block;
-      margin-bottom: -181px;
+      margin-bottom: -360px;
     }
   }
 }
