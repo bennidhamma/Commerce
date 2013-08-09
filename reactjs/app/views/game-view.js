@@ -40,7 +40,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     },
 
     isMyTurn: function () {
-      return !this.isTrading () && this.state.game.currentTurn.playerKey == Plus.me().id;
+      return this.state.game.status == "Running" && this.state.game.currentTurn.playerKey == Plus.me().id;
     },
 
     isActionPhase: function () {
@@ -53,11 +53,14 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
     },
 
     notify: function (message, time) {
-      console.error ('TODO: notify', message, time);
+      this.setState({notification: message});
+      if (time) {
+        setInterval(this.unnotify, time);
+      }
     },
 
     unnotify: function () {
-      console.log ('TODO: unnotify');
+      this.setState({notification: null});
     },
 
     // Play Action functions.

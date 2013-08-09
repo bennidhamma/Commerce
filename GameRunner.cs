@@ -131,6 +131,10 @@ namespace ForgottenArts.Commerce
 			 * Change game state to running.
 			 */
 
+			for (var i = 0; i < game.Players.Count; i++) {
+				game.Players[i].Color = PlayerGame.Colors[i];
+			}
+
 			// Set up each player's deck by pushing the cards onto each player's
 			// discard pile. This will cause DrawHand to shuffle the deck.
 			foreach (var player in game.Players) {

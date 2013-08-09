@@ -16,6 +16,8 @@ var ready = {
 
 var me = null;
 var friends = {};
+var friendList = [];
+var loa
 
 var Plus = {
 	ready: function(fn) {
@@ -28,6 +30,25 @@ var Plus = {
 	},
 
 	me: function() { return me; },
+
+  getFriends: function (process) {
+		this.ready(function() {
+			gapi.client.plus.people.list({
+				userId: 'me',
+				orderBy: 'best',
+				collection: 'visible'
+			}).execute(function(resp) {
+				friendList = [];
+				for (var i = 0; i < resp.items.length; i++) {
+					var friend = resp.items[i];
+					friends[friend.id] = friend;
+					friendList.push(friend);
+				}
+				process(friendList);
+				loadedAll = true;
+			});
+		});
+  },
 
 	authenticate:  function (plus) {
 		/* REST url: PUT /api/player/auth
