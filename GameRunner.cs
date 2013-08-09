@@ -183,8 +183,6 @@ namespace ForgottenArts.Commerce
 			game.CurrentTurn.TradeSetsRedeemed = 0;
 
 			game.CurrentPlayer.HandleCardEvents (new TurnEvent ());
-
-			CheckForGameEnd (game);
 			//TODO: notify new current player it is their turn.
 		}
 
@@ -307,10 +305,18 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
-		public bool CheckForGameEnd (Game game)
+		public void EndGame (Game game)
 		{
-			// TODO: check for signal that a player has advanced to a new age.
-			return false;
+			game.Status = ForgottenArts.Commerce.GameState.Finished;
+			// Score.
+			foreach (var p in game.Players) {
+				foreach (var c in p.TechnologyCards) {
+					if (cards[c] != null)
+						p.Score += cards[c].Cost;
+				}
+				p.Score += p.NumberOfColonies * Config.PointsPerColony;
+				p.Score += p.Gold;
+			}
 		}
 
 		public bool Skip (Game game, PlayerGame player, GamePhase phase) {
@@ -437,6 +443,9 @@ namespace ForgottenArts.Commerce
 
 			// Remove from bank.
 			game.Bank[cardKey]--;
+
+			var gainEvent = new GainEvent ();
+			player.HandleCardEvents (gainEvent);
 
 			game.Log ("{0} bought {1}.", player.Name, cardKey);
 

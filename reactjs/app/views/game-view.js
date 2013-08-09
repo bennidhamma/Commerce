@@ -319,17 +319,38 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       ];
 
       var game = this.state.game;
-      if (game.status == "Running") {
+      if (game.status == "Running" || game.status == "Finished") {
         // Add the current turn section.
-        sections.push(
-          <section key="t" class={"currentTurn " + game.currentTurn.playerColor}>
-            <h2>
-              <img src={game.currentTurn.playerPhoto}/>
-              {game.currentTurn.playerName}
-              Actions: {game.currentTurn.actions}
-              Buys: {game.currentTurn.buys}
-            </h2>
-          </section>);
+        if (game.status == "Running") {
+          sections.push(
+            <section key="t" class={"currentTurn " + game.currentTurn.playerColor}>
+              <h2>
+                <img src={game.currentTurn.playerPhoto}/>
+                {game.currentTurn.playerName}
+                Actions: {game.currentTurn.actions}
+                Buys: {game.currentTurn.buys}
+              </h2>
+            </section>);
+        } else {
+          var result = game.result;
+          var others = game.result.others.map (function(other) {
+            return <span class={"other " + other.color}>
+                      <img src={other.photo}/>
+                      {other.name}: {other.score}
+                   </span>;
+          });
+
+          sections.push(
+              <section key="t" class={"currentTurn " + result.winner.color}>
+                <h2> Game is over.
+                  <span class="winner">
+                    <img src={result.winner.photo}/>
+                    {result.winner.name} : {result.winner.score}
+                  </span>
+                  {others}
+                </h2>
+              </section>);
+        }
 
         sections.push(
             <section key="m" class="main-layout">

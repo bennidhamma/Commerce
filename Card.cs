@@ -75,4 +75,8 @@ namespace ForgottenArts.Commerce
 		public string Key {get; set;}
 		public object Value {get; set;}
 	}
+
+	public class GainEvent {
+
+	}
 }

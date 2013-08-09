@@ -80,6 +80,12 @@ namespace ForgottenArts.Commerce
 				return GetInt("MaxNumberOfHexes", 9);
 			}
 		}
+
+		public static int PointsPerColony {
+			get {
+				return GetInt("PointsPerColony", 50);
+			}
+		}
         
         public static bool FileExists (string name)
         {

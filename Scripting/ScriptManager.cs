@@ -40,6 +40,7 @@ namespace ForgottenArts.Commerce
 			scope.SetVariable ("players", game.Players);
 			scope.SetVariable ("turn", game.CurrentTurn);
 			scope.SetVariable ("bank", game.Bank);
+			scope.SetVariable ("runner", GameRunner.Instance);
 			return scope;
 		}
 

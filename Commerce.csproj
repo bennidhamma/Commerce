@@ -73,6 +73,7 @@
     <Compile Include="TransferObjects\CardView.cs" />
     <Compile Include="TransferObjects\OtherPlayerView.cs" />
     <Compile Include="TransferObjects\HexView.cs" />
+    <Compile Include="TransferObjects\WinView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

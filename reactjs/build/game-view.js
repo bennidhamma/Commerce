@@ -318,17 +318,37 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex'],
       ];
 
       var game = this.state.game;
-      if (game.status == "Running") {
+      if (game.status == "Running" || game.status == "Finished") {
         // Add the current turn section.
-        sections.push(
-          React.DOM.section( {key:"t", className:"currentTurn " + game.currentTurn.playerColor}, 
-            React.DOM.h2(null, 
-              React.DOM.img( {src:game.currentTurn.playerPhoto}),
-              game.currentTurn.playerName,
+        if (game.status == "Running") {
+          sections.push(
+            React.DOM.section( {key:"t", className:"currentTurn " + game.currentTurn.playerColor}, 
+              React.DOM.h2(null, 
+                React.DOM.img( {src:game.currentTurn.playerPhoto}),
+                game.currentTurn.playerName,
 " Actions: ", game.currentTurn.actions,
 " Buys: ", game.currentTurn.buys
-            )
-          ));
+              )
+            ));
+        } else {
+          var result = game.result;
+          var others = game.result.others.map (function(other) {
+            return React.DOM.span( {className:"other " + other.color}, 
+                      React.DOM.img( {src:other.photo}),
+                      other.name,": ", other.score
+                   );
+          });
+
+          sections.push(
+              React.DOM.section( {key:"t", className:"currentTurn " + result.winner.color}, 
+                React.DOM.h2(null,  " Game is over. ",                  React.DOM.span( {className:"winner"}, 
+                    React.DOM.img( {src:result.winner.photo}),
+                    result.winner.name, " : ", result.winner.score
+                  ),
+                  others
+                )
+              ));
+        }
 
         sections.push(
             React.DOM.section( {key:"m", className:"main-layout"}, 

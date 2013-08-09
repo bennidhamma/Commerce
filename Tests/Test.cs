@@ -113,34 +113,6 @@ namespace Tests
 
 			Assert.That(p1.Hand.Sum(c=> c == "Wood" ? 1 : 0), Is.EqualTo (1));
 		}
-
-		[Test]
-		public void GameEndTest () {
-			Game g = new Game ();
-			PlayerGame p1 = new PlayerGame () {
-				Player = new Player() {DisplayName = "Player 1"}
-			};
-			PlayerGame p2 = new PlayerGame () {
-				Player = new Player() {DisplayName = "Player 2"}
-			};
-			p1.Game = g;
-			g.Players.Add (p1);
-			g.Players.Add (p2);
-			
-			GameRunner gr = new GameRunner ();
-			gr.Start (g);
-
-			for (int i = 0; i < 9; i++) {
-				p1.Deck.Push("Corn");
-			}
-
-			gr.CheckForGameEnd (g);
-
-			Assert.That (g.Status, Is.EqualTo (GameState.Finished));
-			Assert.That (g.Win, Is.Not.Null);
-			Assert.That (g.Win.Player, Is.EqualTo (p1));
-			Assert.That (g.Win.Suit, Is.EqualTo("Corn"));
-		}
 	}
 }
 
