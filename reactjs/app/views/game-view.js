@@ -34,6 +34,15 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
         }
         this.setState(this.state);
       }.bind(this));
+      Events.subscribe ('/match/new', function(match) {
+        this.state.game.matches.push(match);
+        this.drawMatches ();
+      }.bind(this));
+      Events.subscribe ('/match/delete', function(matchId) {
+        this.state.game.matches = _.filter(
+          this.state.game.matches, function (m) { return m.id != matchId; });
+        this.drawMatches ();
+      }.bind(this));
     },
 
     setupGame: function (game) {
@@ -65,6 +74,9 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
 
     notify: function (message, time) {
       this.setState({notification: message});
+      if (time === undefined) {
+        time = 5000;
+      } 
       if (time) {
         setInterval(this.unnotify, time);
       }
@@ -182,10 +194,6 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
 
     doneTrading : function () {
       gameServer.doneTrading();
-    },
-
-    selectOffer: function (offerId, source) {
-
     },
 
     skipActions: function () {
@@ -336,6 +344,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     },
 
     drawMatches: function () {
+      var game = this.state.game;
       var canvas = $('#offerCanvas');
       var parent = canvas.parent();
       if (canvas.length == 0 || parent.length == 0)
@@ -355,6 +364,59 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       }
     },
 
+    drawMatchLine: function (game, ctx, match) {
+      var p1 = this.getOfferPoint(match.offer1Id);
+      var p2 = this.getOfferPoint(match.offer2Id);
+
+      if (!p1 || !p2)
+        return;
+      
+      ctx.strokeStyle = 'white';
+      ctx.beginPath();
+      ctx.moveTo (p1.x, p1.y);
+      ctx.lineTo (p2.x, p2.y);
+      ctx.closePath();
+      ctx.stroke();
+
+      var buttons = $('<div class=match-buttons>');
+      if (match.canAccept) {
+        var button = $('<button class=can-accept>Accept</button>');
+        button.click(function () {
+          gameServer.acceptMatch(match.id);
+        });
+        buttons.append(button);
+      }
+      if (match.canCancel) {
+        var button = $('<button class=can-canel>X</button>');
+        button.click(function () {
+          gameServer.cancelMatch(match.id);
+        });
+        buttons.append(button);
+        var center = {
+          left: (p1.x + p2.x) / 2,
+          top: (p1.y + p2.y) / 2
+        };
+        center.left -= buttons.width() / 2;
+        center.top -= buttons.height() / 2;
+        buttons.css({
+          top: center.top,
+          left: center.left,
+          position: 'absolute'
+        });
+        $('section.offers').append(buttons);
+      }
+    },
+
+    getOfferPoint: function (offerId) {
+      var po = $('#offerCanvas').offset();
+      var e = $('.offer-' + offerId);
+      var o = e.offset();
+      return o && {
+        x: (o.left - po.left) + e.width() / 2,
+        y: (o.top - po.top) + e.height() / 2
+      };
+    },
+
     buildTradeView: function() {
       var game = this.state.game;
       var tradeCards = this.buildCards(game.tradeCards, "tradeCards");
@@ -366,7 +428,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
         buttons.push(<button onClick={this.cancelOffer}>Cancel Trade Offer</button>); 
       }
 
-      setTimeout(this.drawMatches);
+      setTimeout(this.drawMatches, 0);
 
       return <section class="trading">
         <h2>Trading Phase</h2>
@@ -378,23 +440,55 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       </section>;
     },
 
+    offerClick: function (offer, source) {
+      var myOffer = null;
+      var otherOffer = null;
+      if (source == "my") {
+        if (this.state.myOffer == offer) {
+          this.setState({myOffer: null});
+          return;
+        }
+        otherOffer = this.state.otherOffer;
+        if (otherOffer) {
+          myOffer = offer;
+        } else {
+          this.setState({myOffer: offer});
+        }
+      } else { // Clicked offer is in the other offers column.
+        if (this.state.otherOffer == offer) {
+          this.setState({otherOffer: null});
+          return;
+        }
+        myOffer = this.state.myOffer;
+        if (myOffer) {
+          otherOffer = offer;
+        } else {
+          this.state.otherOffer = offer;
+          this.setState({otherOffer: offer});
+        }
+      }
+
+      if (myOffer && otherOffer) {
+        gameServer.suggestMatch (myOffer.id, otherOffer.id);
+        this.setState({myOffer: null, otherOffer: null});
+      }
+    },
+
+    buildOffer: function(source, o) {
+      var cards = this.buildCards(o.cards);
+      var selected = o == this.state.myOffer || o == this.state.otherOffer ? 'selected' : '';
+      return <li
+          onClick={this.offerClick.bind(this, o, source)} 
+          class={selected + ' offer-' + o.id}>
+        <img class="photo" src={o.playerPhoto} title={o.playerName}/>
+        {cards}
+      </li>;  
+    },
+
     buildOffers: function () {
       var game = this.state.game;
-      var myOffers = game.myOffers.map(function(o) {
-        var cards = this.buildCards(o.cards);
-        return <li>
-          <img class="photo" src={o.playerPhoto} title={o.playerName}/>
-          {cards}
-        </li>;  
-      }.bind(this));
-
-      var otherOffers = game.otherOffers.map(function(o) {
-        var cards = this.buildCards(o.cards);
-        return <li>
-          <img class="photo" src={o.playerPhoto} title={o.playerName}/>
-          {cards}
-        </li>;  
-      }.bind(this));
+      var myOffers = game.myOffers.map(this.buildOffer.bind(this, "my"));
+      var otherOffers = game.otherOffers.map(this.buildOffer.bind(this, "other"));
       
       return <section class="offers">
         <canvas id="offerCanvas"></canvas>
