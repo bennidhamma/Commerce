@@ -5,6 +5,9 @@ Cost: 50
 Action: |
   num_cities = game.players.reduce {|p| p.hexes.length}
   roll = 1 + rand(100) - num_cities
+  if num_cities < 2
+    roll += 30
+  end
   discovery_roll roll, args, game, player
   if player.technology_cards.include? "Steam Ships"
     roll = 1 + rand(100) - num_cities

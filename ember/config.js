@@ -1,6 +1,6 @@
 var config = {
-	serverUrlBase: 'http://localhost:8080',
-	socketBase: 'ws://localhost:8082'
+	serverUrlBase: 'http://192.168.1.108:8080',
+	socketBase: 'ws://192.168.1.108:8082'
 };
 
 module.exports = config;

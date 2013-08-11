@@ -132,11 +132,11 @@ namespace ForgottenArts.Commerce.Server
 			switch (game.Status) {
 			case GameState.Trading:
 				message = new TradeView (game, player);
-				channel = "tradeUpdate";
+					channel = "tradeUpdate";
 				break;
 			default:
 				message = new PlayerGameView (game, player);
-				channel = "gameUpdate";
+					channel = "gameUpdate";
 				break;
 			}
 			return message;
