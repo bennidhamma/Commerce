@@ -228,7 +228,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     buildStack: function (card, count, source) {
       var cards = [];
       for (var i = 0; i < count; i++) {
-        cards.push (<Card key={"c-" + i} name={card} cardSource={source}/>);
+        cards.push (<Card key={"c-" + i} name={card} cardSource={source} faux={i < count -1}/>);
       }
       return <section key={card} class="stack">{cards}</section>;
     },

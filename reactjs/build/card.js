@@ -59,6 +59,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         return React.DOM.div( {onClick:this.click, className:"card"});
       }
       var elems = [];
+      var style = {};
       var classes = ["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)];
       if (this.props.selected)
         classes.push("selected");
@@ -68,32 +69,42 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         classes.push("dense");
       else if (s.description && s.description.length < 40)
         classes.push("sparse");
-
-      var requires = [];
-      if (s.cost) {
-        requires.push(s.cost + " gold");
-        if (s.requires) {
-          requires = requires.concat(s.requires);
-        }
-      }
+      if (!this.props.faux) {
+        classes.push('expandable');
       
-      if (s.tradeValues)
-        elems.push(React.DOM.section( {key:"s1", className:"set set1"}, this.renderSetValues(0, 4)));
-      elems.push(React.DOM.header( {key:"h"}, s.name));
-      if (s.imageUrl)
-        elems.push(React.DOM.img( {key:"i", src:s.imageUrl}))
-      if (s.description) 
-        elems.push(React.DOM.section( {key:"d", className:"info"}, 
-            React.DOM.p( {className:"description"}, s.description),
-            React.DOM.div( {className:"purchase-info"}, 
-              requires && requires.join(', ')
-            )
-          ));
-      if (s.tradeValues && s.tradeValues.length > 8)
-        elems.push(React.DOM.section( {key:"s2", className:"set set3"}, this.renderSetValues(8, 12)));
-      if (s.tradeValues && s.tradeValues.length > 3)
-        elems.push(React.DOM.section( {key:"s3", className:"set set2"}, this.renderSetValues(4, 8)));
-      return React.DOM.div( {onClick:this.click, className:classes.join(' ')}, 
+        var requires = [];
+        if (s.cost) {
+          requires.push(s.cost + " gold");
+          if (s.requires) {
+            requires = requires.concat(s.requires);
+          }
+        }
+        
+        if (s.tradeValues)  {
+          elems.push(React.DOM.section( {key:"s1", className:"set set1"}, this.renderSetValues(0, 4)));
+          elems.push(React.DOM.h1(null, s.tradeValues[0]));
+        }
+        elems.push(React.DOM.header( {key:"h"}, s.name));
+        if (s.imageUrl) {
+          if (s.tradeValues) {
+            style = {"backgroundImage":"url(/images/trade/" + s.imageUrl + ")"};
+          } else {
+            elems.push(React.DOM.img( {key:"i", src:"/images/card/" + s.imageUrl}))
+          }
+        }
+        if (s.description) 
+          elems.push(React.DOM.section( {key:"d", className:"info"}, 
+              React.DOM.p( {className:"description"}, s.description),
+              React.DOM.div( {className:"purchase-info"}, 
+                requires && requires.join(', ')
+              )
+            ));
+        if (s.tradeValues && s.tradeValues.length > 8)
+          elems.push(React.DOM.section( {key:"s2", className:"set set3"}, this.renderSetValues(8, 12)));
+        if (s.tradeValues && s.tradeValues.length > 3)
+          elems.push(React.DOM.section( {key:"s3", className:"set set2"}, this.renderSetValues(4, 8)));
+      }
+      return React.DOM.div( {onClick:this.click, className:classes.join(' '), style:style}, 
         elems
       );
     },

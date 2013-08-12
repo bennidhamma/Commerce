@@ -59,6 +59,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         return <div onClick={this.click} class="card"></div>;
       }
       var elems = [];
+      var style = {};
       var classes = ["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)];
       if (this.props.selected)
         classes.push("selected");
@@ -68,32 +69,42 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         classes.push("dense");
       else if (s.description && s.description.length < 40)
         classes.push("sparse");
-
-      var requires = [];
-      if (s.cost) {
-        requires.push(s.cost + " gold");
-        if (s.requires) {
-          requires = requires.concat(s.requires);
-        }
-      }
+      if (!this.props.faux) {
+        classes.push('expandable');
       
-      if (s.tradeValues)
-        elems.push(<section key='s1' class="set set1">{this.renderSetValues(0, 4)}</section>);
-      elems.push(<header key="h">{s.name}</header>);
-      if (s.imageUrl)
-        elems.push(<img key="i" src={s.imageUrl}/>)
-      if (s.description) 
-        elems.push(<section key="d" class="info">
-            <p class="description">{s.description}</p>
-            <div class="purchase-info">
-              {requires && requires.join(', ')}
-            </div>
-          </section>);
-      if (s.tradeValues && s.tradeValues.length > 8)
-        elems.push(<section key='s2' class="set set3">{this.renderSetValues(8, 12)}</section>);
-      if (s.tradeValues && s.tradeValues.length > 3)
-        elems.push(<section key='s3' class="set set2">{this.renderSetValues(4, 8)}</section>);
-      return <div onClick={this.click} class={classes.join(' ')}>
+        var requires = [];
+        if (s.cost) {
+          requires.push(s.cost + " gold");
+          if (s.requires) {
+            requires = requires.concat(s.requires);
+          }
+        }
+        
+        if (s.tradeValues)  {
+          elems.push(<section key='s1' class="set set1">{this.renderSetValues(0, 4)}</section>);
+          elems.push(<h1>{s.tradeValues[0]}</h1>);
+        }
+        elems.push(<header key="h">{s.name}</header>);
+        if (s.imageUrl) {
+          if (s.tradeValues) {
+            style = {"backgroundImage":"url(/images/trade/" + s.imageUrl + ")"};
+          } else {
+            elems.push(<img key="i" src={"/images/card/" + s.imageUrl}/>)
+          }
+        }
+        if (s.description) 
+          elems.push(<section key="d" class="info">
+              <p class="description">{s.description}</p>
+              <div class="purchase-info">
+                {requires && requires.join(', ')}
+              </div>
+            </section>);
+        if (s.tradeValues && s.tradeValues.length > 8)
+          elems.push(<section key='s2' class="set set3">{this.renderSetValues(8, 12)}</section>);
+        if (s.tradeValues && s.tradeValues.length > 3)
+          elems.push(<section key='s3' class="set set2">{this.renderSetValues(4, 8)}</section>);
+      }
+      return <div onClick={this.click} class={classes.join(' ')} style={style}>
         {elems}
       </div>;
     },

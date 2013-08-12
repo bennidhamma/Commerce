@@ -127,7 +127,7 @@ h3 {
   margin: -100px;
   margin-right: -80px;
   transition: -webkit-transform 500ms, margin-right 500ms;
-  &:hover {
+  &.expandable:hover {
     -webkit-transform: scale(0.8, 0.8);
     position: relative;
     z-index: 1;
@@ -174,16 +174,29 @@ h3 {
     .set-value {
       width: 24%;
       border: 1px solid black;
-      background: #eee;
+      background: rgba(255, 255, 255, 0.4);
       color: black;
       display:inline-block;
       font-size: 2em;
       font-weight:bold;
       text-align:center;
+      margin-bottom:-4px;
     }
 
     &.set3 {
       text-align:right;
+      margin-top:-4px;
+      margin-bottom: 4px;
+    }
+  }
+
+  &.trade {
+    h1 {
+      margin:0;
+      font-size: 9em;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
   }
 }
