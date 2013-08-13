@@ -1,5 +1,5 @@
 Name: Two Colonists
-ImageUrl: two-colonist.png
+ImageUrl: two-colonists.png
 Description: Choose a hex to land two colonists. +1 Action.
 NeedsHex: true
 Action: |

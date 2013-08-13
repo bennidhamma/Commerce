@@ -68,7 +68,7 @@ h3 {
   display: -webkit-flex;
   flex-flow: row nowrap;
   align-content: center;
-  align-items: center;
+  align-items: flex-start
 }
 
 .me {
@@ -84,6 +84,7 @@ h3 {
 }
 
 .log {
+  order: 3;
   -webkit-flex: 1;
   .log-entry {
     padding:5px;
