@@ -115,7 +115,7 @@ h3 {
 }
 
 .card {
-  box-shadow:2px 2px 10px rgba(0,0,0,0.4);
+  box-shadow: 8px 8px 30px rgba(0,0,0,0.8);
   padding: 2px;
   background: #889;
   width: 240px;
@@ -200,6 +200,10 @@ h3 {
       text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
   }
+}
+
+.nation {
+  background-image: url('/images/nation-back.png');
 }
 
 .dense section.info {
