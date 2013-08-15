@@ -1,5 +1,5 @@
 Name: Gemstones
-ImageUrl: gems.png
+ImageUrl: gemstones.png
 Cost: 100
 Description: Gain 50 gold.
 Action: player.gold += 50
