@@ -45,14 +45,18 @@ class Object
         if player.hexes.count < 9
           player.add_hex pop
           log = "found a hex"
+        else
+          log = "found nothing"
         end
       else
         if player.hexes.count < 9
           player.add_hex pop, (1 + rand(6))
           log = "found a hex with friendly natives"
+        else
+          log = "found nothing"
         end
       end
-      game.log "#{player.name} rolled on the discovery table and " + log
+      game.log "#{player.name} rolled on the discovery table and #{log}."
     end
 
     def attack_roll(roll, args, game, hex, player)

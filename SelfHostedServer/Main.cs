@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Threading;
 
 namespace ForgottenArts.Commerce.Server
 {
@@ -33,7 +35,16 @@ namespace ForgottenArts.Commerce.Server
 			//PhaseTerminator.Instance.Start ();
 
 			// Wait for interrupt.
-			Console.ReadLine();
+			//Under mono if you deamonize a process a Console.ReadLine with cause an EOF 
+			//so we need to block another way
+			if(args.Any(s => s.Equals("-d", StringComparison.CurrentCultureIgnoreCase)))
+			{
+				while(true) Thread.Sleep(10000000);	
+			}
+			else
+			{
+				Console.ReadKey();    
+			}
 			host.Stop ();
 		}
 	}
