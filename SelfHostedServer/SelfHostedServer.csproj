@@ -41,6 +41,12 @@
     <Reference Include="Nancy.Serialization.ServiceStack">
       <HintPath>..\packages\Nancy.Serialization.ServiceStack.0.17.1\lib\net40\Nancy.Serialization.ServiceStack.dll</HintPath>
     </Reference>
+    <Reference Include="Nancy">
+      <HintPath>..\lib\Nancy\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self">
+      <HintPath>..\lib\Nancy\Nancy.Hosting.Self.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -53,14 +59,6 @@
     <ProjectReference Include="..\Commerce.csproj">
       <Project>{5EB968B6-E517-4459-9B7D-13C6610C51B6}</Project>
       <Name>Commerce</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Nancy\src\Nancy.Hosting.Self\Nancy.Hosting.Self.csproj">
-      <Project>{AA7F66EB-EC2C-47DE-855F-30B3E6EF2134}</Project>
-      <Name>Nancy.Hosting.Self</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Nancy\src\Nancy\Nancy.csproj">
-      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
-      <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
