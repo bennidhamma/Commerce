@@ -64,6 +64,7 @@ namespace ForgottenArts.Commerce
 
 		public CompiledCode CompileCardEvent (Card card)
 		{
+			Console.WriteLine("compiling card " + card.Name);
 			var script = Engine.CreateScriptSourceFromString (card.Event);
 			return script.Compile (new MyErrorListener(card.Name));
 		}
@@ -122,6 +123,7 @@ namespace ForgottenArts.Commerce
 			}
 			catch (Exception e)
 			{
+				Console.WriteLine("error setting up script engine: " + e.Message);
 				log.Error ("Error setting up script engine" + e);
 			}
 
