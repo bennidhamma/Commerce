@@ -120,6 +120,7 @@ namespace ForgottenArts.Commerce
 					Config.ReadAllText ("base.rb");
 				Console.WriteLine ("Executing base script: " + baseScript);
 				engine.Execute (baseScript);
+				Console.WriteLine ("executed base script");
 				started = true;
 			}
 			catch (Exception e)
