@@ -4,7 +4,7 @@ require.config({
       jquery: "../lib/jquery",
       react: "../lib/react",
       underscore: "../lib/underscore-min",
-      jsx: "../build/",
+      jsx: "../build",
   },
   shim: {
      underscore: {

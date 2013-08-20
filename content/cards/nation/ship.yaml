@@ -3,7 +3,8 @@ ImageUrl: ship.jpg
 Description: Roll on the Discovery Table.
 Cost: 50
 Action: |
-  num_cities = game.players.reduce {|p| p.hexes.length}
+  num_cities = game.players.reduce(0) {|sum, p| sum + p.hexes.length}
+  System::Console.write_line "abc -- num cities: #{num_cities}"
   roll = 1 + rand(100) - num_cities
   if num_cities < 2
     roll += 30

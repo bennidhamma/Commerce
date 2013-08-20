@@ -64,6 +64,7 @@ namespace ForgottenArts.Commerce
 
 		public CompiledCode CompileCardEvent (Card card)
 		{
+			Console.WriteLine("Compiling " + card.Name);
 			var script = Engine.CreateScriptSourceFromString (card.Event);
 			return script.Compile (new MyErrorListener(card.Name));
 		}
@@ -117,6 +118,7 @@ namespace ForgottenArts.Commerce
 				});
 				string baseScript = string.Format ("require '{0}'\n", dllPath ?? Config.DllPath) + 
 					Config.ReadAllText ("base.rb");
+				Console.WriteLine ("Executing base script: " + baseScript);
 				engine.Execute (baseScript);
 				started = true;
 			}
