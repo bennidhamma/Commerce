@@ -33,8 +33,6 @@ namespace ForgottenArts.Commerce
 		ScriptScope scope = null;
 		public ScriptScope SetupScope (Game game)
 		{
-			if (scope == null)
-				scope = engine.CreateScope ();
 			scope.SetVariable ("game", game);
 			scope.SetVariable ("player", game.CurrentPlayer);
 			scope.SetVariable ("players", game.Players);
@@ -116,10 +114,11 @@ namespace ForgottenArts.Commerce
 				engine = Ruby.CreateEngine ( x => {
 					x.ExceptionDetail = true;
 				});
+        scope = engine.CreateScope();
 				string baseScript = string.Format ("require '{0}'\n", dllPath ?? Config.DllPath) + 
 					Config.ReadAllText ("base.rb");
 				Console.WriteLine ("Executing base script: " + baseScript);
-				engine.Execute (baseScript);
+				engine.Execute(baseScript, scope);
 				started = true;
 			}
 			catch (Exception e)

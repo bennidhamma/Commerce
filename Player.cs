@@ -32,8 +32,11 @@ namespace ForgottenArts.Commerce
 			var rc = new RestClient("https://www.googleapis.com/plus/v1/");
 			var key = Config.GoogleApiKey;
 			try {
+        Console.WriteLine("fetching data 1");
 				dynamic person = rc.Get ("people/" + PlusId + "?key=" + key);
+        Console.WriteLine("fetching data 2");
 				this.Photo = person.image.url;
+        Console.WriteLine("fetching data 3");
 				this.FirstName = person.name.givenName;
 				this.LastName = person.name.familyName;
 				this.DisplayName = person.displayName;

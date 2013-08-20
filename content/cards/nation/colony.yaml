@@ -1,13 +1,15 @@
 Name: Colony
 ImageUrl: colony.png
 Description: | 
-  Builds a colony on a hex. Needs at least 6 colonists.
+  Choose a hex. Roll 1d6. If the number rolled is less than or equal
+  to the number of colonists on the hex, a colony is built. 
 NeedsHex: true
 Action: |
-  if hex.current_population >= 6 and not hex.has_colony
+  roll = 1 + rand(6)
+  if (roll <= hex.current_population) 
     hex.has_colony = true
     game.log("#{player.player.display_name} built a colony.")
   else
-    args.error = "You must have at least 6 colonists on a hex to build a colony there."
+    args.error = "Your attempt to build a colony did not succeed."
   end
 Cost: 50
