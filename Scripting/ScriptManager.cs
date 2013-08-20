@@ -118,6 +118,7 @@ namespace ForgottenArts.Commerce
 				});
 				string baseScript = string.Format ("require '{0}'\n", dllPath ?? Config.DllPath) + 
 					Config.ReadAllText ("base.rb");
+				Console.WriteLine ("Executing base script: " + baseScript);
 				engine.Execute (baseScript);
 				started = true;
 			}

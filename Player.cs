@@ -41,7 +41,7 @@ namespace ForgottenArts.Commerce
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.Message);
+				Console.WriteLine("Error fetching data: " + e.Message);
 			}
 		}
 
