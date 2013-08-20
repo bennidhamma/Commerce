@@ -227,6 +227,7 @@ h3 {
 }
 
 .hand, .bank, .trade-cards, .technology-cards {
+  -webkit-backface-visibility: hidden;
   padding: 1em;
   padding-left: 30px;
 }

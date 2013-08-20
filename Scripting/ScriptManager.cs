@@ -33,8 +33,6 @@ namespace ForgottenArts.Commerce
 		ScriptScope scope = null;
 		public ScriptScope SetupScope (Game game)
 		{
-			if (scope == null)
-				scope = engine.CreateScope ();
 			scope.SetVariable ("game", game);
 			scope.SetVariable ("player", game.CurrentPlayer);
 			scope.SetVariable ("players", game.Players);
@@ -64,7 +62,7 @@ namespace ForgottenArts.Commerce
 
 		public CompiledCode CompileCardEvent (Card card)
 		{
-			Console.WriteLine("Compiling " + card.Name);
+			Console.WriteLine("compiling card " + card.Name);
 			var script = Engine.CreateScriptSourceFromString (card.Event);
 			return script.Compile (new MyErrorListener(card.Name));
 		}
@@ -116,15 +114,17 @@ namespace ForgottenArts.Commerce
 				engine = Ruby.CreateEngine ( x => {
 					x.ExceptionDetail = true;
 				});
+        scope = engine.CreateScope();
 				string baseScript = string.Format ("require '{0}'\n", dllPath ?? Config.DllPath) + 
 					Config.ReadAllText ("base.rb");
 				Console.WriteLine ("Executing base script: " + baseScript);
-				engine.Execute (baseScript);
 				Console.WriteLine ("executed base script");
+				engine.Execute(baseScript, scope);
 				started = true;
 			}
 			catch (Exception e)
 			{
+				Console.WriteLine("error setting up script engine: " + e.Message);
 				log.Error ("Error setting up script engine" + e);
 			}
 

@@ -11,9 +11,14 @@ namespace ForgottenArts.Commerce
 		{
 		}
 
+    public RedisClient GetClient () {
+      var redisClient = new RedisClient("127.0.0.1", 6379);
+      return redisClient;
+    }
+
 		public long NewId ()
 		{
-			using (var redisClient = new RedisClient()) {
+			using (var redisClient = GetClient()) {
 				return redisClient.Incr ("uid");
 			}
 		}
@@ -21,7 +26,7 @@ namespace ForgottenArts.Commerce
 		public long MaxId
 		{
 			get {
-				using (var redisClient = new RedisClient()) {
+				using (var redisClient = GetClient()) {
 					return redisClient.Get<long> ("uid");
 				}
 			}
@@ -29,7 +34,7 @@ namespace ForgottenArts.Commerce
 
 		public void Put<T> (string key, T value)
 		{
-			using (var redisClient = new RedisClient()) {
+			using (var redisClient = GetClient()) {
 				var typed = redisClient.As<T> ();
 				typed.SetEntry (key, value);
 			}
@@ -37,7 +42,7 @@ namespace ForgottenArts.Commerce
 
 		public T Get<T> (string key)
 		{
-			using (var redisClient = new RedisClient()) {
+			using (var redisClient = GetClient()) {
 				var typed = redisClient.As<T> ();
 				return typed.GetValue(key);
 			}
@@ -50,7 +55,7 @@ namespace ForgottenArts.Commerce
 
 		public IList<T> GetList<T> (string key)
 		{
-			using (var redisClient = new RedisClient()) {
+			using (var redisClient = GetClient()) {
 				var typed = redisClient.As<T> ();
 				var list = typed.Lists[key];
 				return list;
@@ -59,7 +64,7 @@ namespace ForgottenArts.Commerce
 
 		public void Append<T> (string key, T message)
 		{
-			using (var redisClient = new RedisClient()) {
+			using (var redisClient = GetClient()) {
 				var typed = redisClient.As<T> ();
 				var list = typed.Lists[key];
 				list.Add (message);

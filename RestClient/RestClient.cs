@@ -34,16 +34,22 @@ namespace ForgottenArts.Commerce
 		private dynamic DoRequest(string verb, Func<string> func)
 		{
 			string resp = null;
+      Console.WriteLine("Doing request " + verb + " -- " + func);
 			try
 			{			
 				resp = func();
 			}
 			catch (WebException we)
 			{
-				StreamReader sr = new StreamReader (we.Response.GetResponseStream ());
-				Console.Error.WriteLine ( sr.ReadToEnd ());
+        if (we.Response != null) {
+          StreamReader sr = new StreamReader (we.Response.GetResponseStream ());
+          Console.Error.WriteLine ( sr.ReadToEnd ());
+        } else {
+          Console.Error.WriteLine(we.Message);
+        }
 				throw new Exception ("Error in " + verb, we);
 			}
+      Console.WriteLine("response: " + resp);
 			if (resp.StartsWith ("["))
 			    return JArray.Parse (resp);
 			else
@@ -52,8 +58,19 @@ namespace ForgottenArts.Commerce
 		
 		public dynamic Get (string endpoint)
 		{
+      var url = server + endpoint;
+      Console.WriteLine("getting " + url);
 			return DoRequest("GET", delegate {
-				return new StreamReader (wc.OpenRead(server + endpoint)).ReadToEnd ();
+        Console.WriteLine("Get callback - wc: " + wc);
+        Console.WriteLine("url: " + url);
+        var r = wc.OpenRead(url);
+        Console.WriteLine("reader: " + r);
+        var sr = new StreamReader(r);
+        Console.WriteLine("stream reader: " + sr);
+        var str = sr.ReadToEnd();
+        Console.WriteLine("str: " + str);
+        return str;
+				//return new StreamReader (wc.OpenRead(server + endpoint)).ReadToEnd ();
 			});
 		}
 		
@@ -91,7 +108,7 @@ namespace ForgottenArts.Commerce
         public WebClientEx()
         {
             CookieContainer = new CookieContainer();
-			this.UseDefaultCredentials = true;
+            this.UseDefaultCredentials = true;
         }
 
         protected override WebRequest GetWebRequest(Uri address)

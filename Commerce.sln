@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commerce", "Commerce.csproj", "{5EB968B6-E517-4459-9B7D-13C6610C51B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfHostedServer", "SelfHostedServer\SelfHostedServer.csproj", "{5E0DB31C-D697-4DA5-87B6-6C690EA39484}"
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{EF797E5E-B23C-4C58-B7AA-F0CD08523462}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfHostedServer", "SelfHostedServer\SelfHostedServer.csproj", "{5E0DB31C-D697-4DA5-87B6-6C690EA39484}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

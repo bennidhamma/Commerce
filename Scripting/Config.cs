@@ -52,7 +52,7 @@ namespace ForgottenArts.Commerce
 
 		public static string Server {
 			get {
-				return GetSetting("Server", "localhost");
+				return GetSetting("Server", "127.0.0.1");
 			}
 		}
 
