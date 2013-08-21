@@ -1,0 +1,38 @@
+Name: Revolution
+ImageUrl: revolution.png
+Description: |
+  5 hexes of the primary player are destroyed. If the primary player holds Radio,
+  this amount is reduced by one. If the primary player holds Democracy, this
+  amount is reduced by one. If the primary player holds Communism, this amount is
+  reduced by two. If the primary player holds Fascism this amount is increased by
+  one.
+Calamity: |
+  loss = 5
+
+  if p.technology_cards.include? "Radio"
+    loss -= 1
+  end
+
+  if p.technology_cards.include? "Democracy"
+    loss -= 1
+  end
+
+  if p.technology_cards.include? "Communism"
+     loss -= 2
+  end
+
+  if p.technology_cards.include? "Fascism"
+    loss += 1
+  end
+
+  loss_count = 0
+  p = primary_player
+  hexes = p.hexes.to_a.shuffle
+  until loss <= 0 or p.hexes.count <= 0
+    hex = hexes[0]
+    p.hexes.remove hex
+    hexes.delete hex
+    loss_count += 1
+  end
+
+  game.log "#{p.name} lost #{loss_count} hexes due to a terrible revoluion!"

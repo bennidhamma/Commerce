@@ -1,5 +1,6 @@
 Name: Lawsuit
 ImageUrl: lawsuit.png
+Description: Primary player gives a colony to secondary player.
 Calamity: |
   hexes = primary_player.hexes.to_a.shuffle
   hex = hexes.find {|h| h.has_colony} 

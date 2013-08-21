@@ -35,6 +35,9 @@ namespace ForgottenArts.Commerce
 
 		// These apply to Trade cards.
 		public string Calamity {get; set;}
+		// Compiled version.
+		public CompiledCode CompiledCalamity {get; set;}
+
 		public List<int> TradeValues {get; set;}
 		public int TradeLevel {get; set;}
 	}

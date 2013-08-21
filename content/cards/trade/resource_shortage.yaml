@@ -1,5 +1,7 @@
 Name: Native Raid
 ImageUrl: native_raid.png
+Description: Primary player loses half trade cards. Other players, except for
+  secondary player, lose 1d4 trade cards.
 Calamity: |
   players.each { |p|
     p.trade_cards.shuffle

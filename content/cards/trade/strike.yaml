@@ -1,0 +1,49 @@
+Name: Strike
+ImageUrl: strike.png
+Description: |
+  Primary player loses 2 colonies. Other players have a 50% chance
+  of losing a colony. Players who hold Radio reduce this amount by 1.
+  Players who hold Democracy increase this amount by 1. Players who
+  hold Communism or Facism do not lose colonies.
+Calamity: |
+  players.each { |p|
+    loss = 0
+    case p
+    when primary_player
+      loss = 2
+    else
+      if rand() <= 0.5
+        loss = 0
+      else
+        loss = 1
+      end
+    end
+
+    if p.technology_cards.include? "Radio"
+      loss -= 1
+    end
+
+    if p.technology_cards.include? "Democracy"
+      loss += 1
+    end
+
+    if p.technology_cards.include? "Fascism" or
+       p.technology_cards.include? "Communism"
+      loss = 0
+    end
+
+    loss_count = 0
+    if loss > 0
+      hexes = p.hexes.to_a.shuffle
+      loss.times { 
+        hex = hexes.find {|h| h.has_colony}
+        if hex
+          hex.has_colony = false
+          hex.current_population = 0
+          loss_count += 1
+        end
+      }
+
+      game.log "#{p.name} lost #{loss_count} colonies due to a terrible strike!" if loss_count
+    end
+  }

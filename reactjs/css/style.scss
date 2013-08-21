@@ -127,7 +127,10 @@ h3 {
   -webkit-transform: scale(0.4, 0.4);
   margin: -100px;
   margin-right: -80px;
-  transition: -webkit-transform 500ms, margin-right 500ms;
+  transition: -webkit-transform 300ms, margin-right 300ms;
+  transition-delay: 100ms;
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
   &.expandable:hover {
     -webkit-transform: scale(0.8, 0.8);
     position: relative;

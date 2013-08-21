@@ -1,5 +1,8 @@
 Name: Famine
 ImageUrl: famine.png
+Description: |
+  Primary player loses 12 population. Other players lose 2d4 population.
+  Each Corn reduces this number by 4. Reduced by Fertilizers and Whaling.
 Calamity: |
   players.each { |p|
     starve_count = 0

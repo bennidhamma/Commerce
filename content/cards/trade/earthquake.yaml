@@ -1,4 +1,5 @@
 Name: Earthquake
 ImageUrl: earthquake.png
+Description: Primary player reduces 2 colonies.
 Calamity: |
   primary_player.reduce_colonies 2, "a terrible earthquake."  
