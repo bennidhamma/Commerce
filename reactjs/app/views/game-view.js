@@ -302,8 +302,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       return <section class={"me " + game.color}>
           <h2><img src={game.photo}/> {game.name}</h2>
           <strong>{game.gold} Gold</strong>
-          {action}
           <section class="hexes">{hexes}</section>
+          {action}
           <section class="hand">{hand}</section>
           <section class="discards">{discards}</section>
           <section class="technology-cards">{techCards}</section>

@@ -15,7 +15,7 @@ Calamity: |
     end
     if num
       p.trade_cards.remove_range 0, num
-      game.log "#{player.player.display_name} lost #{num} trade cards due to " +
+      game.log "#{p.name} lost #{num} trade cards due to " +
                "a terrible native raid!"
     end
   }

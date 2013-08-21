@@ -9,6 +9,7 @@ Description: |
 Calamity: |
   loss = 5
 
+  p = primary_player
   if p.technology_cards.include? "Radio"
     loss -= 1
   end

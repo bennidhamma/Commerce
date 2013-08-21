@@ -428,7 +428,13 @@ namespace ForgottenArts.Commerce
 
 			if (card.Requires != null && card.Requires.Except(player.AllCards).Take (1).Count () > 0)
 			{
-				throw new InvalidOperationException ("Purchasing card requires " + string.Join (", ", card.Requires));
+				foreach (string require in card.Requires)
+				{
+					// each require can be a list of OR'd requirements separated by a '|'.
+					if (require.Split('|').Union(player.AllCards).Take(1).Count() == 0) {
+						throw new InvalidOperationException ("Purchasing card requires " + string.Join (", ", card.Requires));
+					}
+				}
 			}
 
 			if (card.Excludes != null && card.Excludes.Intersect(player.AllCards).Take (1).Count () > 0)

@@ -61,22 +61,21 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
       var elems = [];
       var style = {};
       var classes = ["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)];
+      var length = 0;
       if (this.props.selected)
         classes.push("selected");
       if (this.props.secret)
         classes.push("secret");
-      if (s.description && s.description.length > 100)
-        classes.push("dense");
-      else if (s.description && s.description.length < 40)
-        classes.push("sparse");
       if (!this.props.faux) {
         classes.push('expandable');
-      
+
         var requires = [];
         if (s.cost) {
           requires.push(s.cost + " gold");
           if (s.requires) {
             requires = requires.concat(s.requires);
+            requires = requires.join(', ').replace(/\|/g, ' or ');
+            length += requires.length;
           }
         }
         
@@ -92,17 +91,23 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
             elems.push(<img key="i" src={"/images/card/" + s.imageUrl}/>)
           }
         }
-        if (s.description) 
+        if (s.description)  {
+          length += s.description.length;
           elems.push(<section key="d" class="info">
               <p class="description">{s.description}</p>
               <div class="purchase-info">
-                {requires && requires.join(', ')}
+                {requires}
               </div>
             </section>);
+        }
         if (s.tradeValues && s.tradeValues.length > 8)
           elems.push(<section key='s2' class="set set3">{this.renderSetValues(8, 12)}</section>);
         if (s.tradeValues && s.tradeValues.length > 3)
           elems.push(<section key='s3' class="set set2">{this.renderSetValues(4, 8)}</section>);
+        if (length > 100)
+          classes.push("dense");
+        else if (length < 40)
+          classes.push("sparse");
       }
       return <div onClick={this.click} class={classes.join(' ')} style={style}>
         {elems}
