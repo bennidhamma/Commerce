@@ -86,7 +86,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         elems.push(React.DOM.header( {key:"h"}, s.name));
         if (s.imageUrl) {
           if (s.tradeValues) {
-            style = {"backgroundImage":"url(/images/trade/" + s.imageUrl + ")"};
+            style = {"backgroundImage":"url(/images/trade/" + s.imageUrl.replace(/ /g, '-') + ")"};
           } else {
             elems.push(React.DOM.img( {key:"i", src:"/images/card/" + s.imageUrl}))
           }
