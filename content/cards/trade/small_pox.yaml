@@ -1,5 +1,8 @@
 Name: Small Pox
 ImageUrl: smallpox.png
+Description: |
+  Primary player loses 14 population. Other players lose 8. Effects reduced by
+  Antibiotics.
 Calamity: |
   # Primary player loses 14. All other players lose 8.
   # This number is reduced by 6 if a given player owns Antibiotics.

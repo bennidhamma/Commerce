@@ -92,6 +92,10 @@ namespace ForgottenArts.Commerce
 				{
 					card.CompiledCardEvent = ScriptManager.Manager.CompileCardEvent (card);
 				}
+				if (card.Calamity != null)
+				{
+					card.CompiledCalamity = ScriptManager.Manager.CompileCalamity (card);
+				}
 				cards[card.Name] = card;
 			});
 		}

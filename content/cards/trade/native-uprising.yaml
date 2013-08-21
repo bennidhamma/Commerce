@@ -1,0 +1,43 @@
+Name: Native Uprising
+ImageUrl: native-uprising.yaml
+Description: |
+  Primary player destroys 6 colonies. All other players except the trading player
+  have 3 colonies reduced. Players who hold Evangelism reduce or destroy 3 fewer
+  colonies.
+Calamity: |
+  players.each { |p|
+    is_primary = false
+    loss = 0
+    case p
+    when primary_player
+      is_primary = true
+      loss = 2
+    when secondary_player
+      loss = 0
+    else
+      loss = 3
+    end
+
+    if p.technology_cards.include? "Evangelism"
+      loss -= 3
+    end
+
+    loss_count = 0
+    if loss > 0
+      hexes = p.hexes.to_a.shuffle
+      loss.times { 
+        hex = hexes.find {|h| h.has_colony}
+        if hex
+          if is_primary
+            p.hexes.remove hex
+          else
+            hex.has_colony = false
+            hex.current_population = 0
+          end
+          loss_count += 1
+        end
+      }
+
+      game.log "#{p.name} lost #{loss_count} colonies due to a terrible native uprising!" if loss_count
+    end
+  }

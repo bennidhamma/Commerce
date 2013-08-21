@@ -67,6 +67,13 @@ namespace ForgottenArts.Commerce
 			return script.Compile (new MyErrorListener(card.Name));
 		}
 
+    public CompiledCode CompileCalamity (Card card)
+    {
+      Console.WriteLine("compiling calamity " + card.Name);
+			var script = Engine.CreateScriptSourceFromString (card.Calamity);
+			return script.Compile (new MyErrorListener(card.Name));
+    }
+
 		public void ExecuteCardEvent (Game game, Card card, PlayerGame player, string type, object cardEvent)
 		{
 			try

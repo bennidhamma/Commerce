@@ -10,6 +10,7 @@ Action: |
     hex.has_colony = true
     game.log("#{player.player.display_name} built a colony.")
   else
-    args.error = "Your attempt to build a colony did not succeed."
+    game.log("#{player.player.display_name} failed to build a colony.")
+    hex.current_population = 0
   end
 Cost: 50
