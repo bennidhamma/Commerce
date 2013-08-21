@@ -127,11 +127,14 @@ h3 {
   -webkit-transform: scale(0.4, 0.4);
   margin: -100px;
   margin-right: -80px;
-  transition: -webkit-transform 300ms, margin-right 300ms;
-  transition-delay: 100ms;
-  -webkit-backface-visibility: hidden;
-  -webkit-perspective: 1000;
+  &.expandable {
+    transition: -webkit-transform 300ms;
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+  }
   &.expandable:hover {
+    -webkit-animation-name: inspect-card;
+    -webkit-animation-duration: 1.5s;
     -webkit-transform: scale(0.8, 0.8);
     position: relative;
     z-index: 1;
@@ -205,8 +208,32 @@ h3 {
   }
 }
 
+@-webkit-keyframes inspect-card {
+  0% {
+    -webkit-transform: scale(0.4, 0.4);
+    position: relative;
+    z-index: 1;
+  }
+
+  25% {
+    -webkit-transform: scale(0.5, 0.5);
+  }
+
+  75% {
+    -webkit-transform: scale(0.5, 0.5);
+  }
+
+  100% {
+    -webkit-transform: scale(0.8, 0.8);
+  }
+}
+
 .nation {
   background-image: url('/images/nation-back.png');
+}
+
+.unknown {
+  background-image: url('/images/unknown-back.png');
 }
 
 .dense section.info {
@@ -259,18 +286,16 @@ h3 {
   padding: 5px;
 }
 
-.bank {
-  .stack {
-    display:inline-block;
-    margin-right:10px;
-    vertical-align: top;
-    height: 188px;
-    width: 95px;
-    .card {
-      position: relative;
-      display:block;
-      margin-bottom: -374px;
-    }
+.stack {
+  display:inline-block;
+  margin-right:10px;
+  vertical-align: top;
+  height: 188px;
+  width: 95px;
+  .card {
+    position: relative;
+    display:block;
+    margin-bottom: -374px;
   }
 }
 
@@ -348,6 +373,12 @@ h2 img, img.photo {
 
 section.me,section.other {
   padding: 5px;
+}
+
+.other {
+  .other-hand {
+    margin-left:30px;
+  }
 }
 
 .Blue {

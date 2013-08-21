@@ -275,6 +275,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       var game = this.state.game;
       var hand = this.buildCards(game.hand, "hand");
       var discards = this.buildCards(game.discards, "discards");
+      var deck = this.buildStack("unknown", game.deckSize, 'deck');
       var techCards = this.buildCards(game.technologyCards, "technologyCards");
       var tradeCards = this.buildCards(game.tradeCards, "tradeCards");
       var hexes = this.buildHexes(_.clone(game.hexes));
@@ -305,7 +306,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
           <section class="hexes">{hexes}</section>
           {action}
           <section class="hand">{hand}</section>
-          <section class="discards">{discards}</section>
+          <section class="discards">{deck} {discards}</section>
           <section class="technology-cards">{techCards}</section>
           <section class="trade-cards">{tradeCards}</section>
           {redeem}
@@ -313,14 +314,18 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     },
 
     buildOther: function (other) {
+      var hand = [];
+      for (var i = 0; i < other.handSize; i++)
+        hand.push ('unknown');
+      var hand = this.buildCards(hand, "other-hand");
       var discards = this.buildCards (other.discards, "other-discards");
+      var deck = this.buildStack("unknown", other.deckSize, 'deck');
       var techCards = this.buildCards (other.technologyCards, "other-technologyCards");
       var hexes = this.buildHexes (other.hexes);
       return <section key={"other-" + other.color} class={"other " + other.color}>
         <h2><img src={other.photo}/>{other.name}</h2>
         <section class="hexes">{hexes}</section>
-        Hand Size: {other.handSize}
-        Deck Size: {other.deckSize}
+        <section class="other-hand">{hand} {deck}</section>
         <section class="discards">{discards}</section>
         <section class="technology-cards">{techCards}</section>
       </section>;
