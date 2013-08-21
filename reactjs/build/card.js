@@ -61,22 +61,21 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
       var elems = [];
       var style = {};
       var classes = ["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)];
+      var length = 0;
       if (this.props.selected)
         classes.push("selected");
       if (this.props.secret)
         classes.push("secret");
-      if (s.description && s.description.length > 100)
-        classes.push("dense");
-      else if (s.description && s.description.length < 40)
-        classes.push("sparse");
       if (!this.props.faux) {
         classes.push('expandable');
-      
+
         var requires = [];
         if (s.cost) {
           requires.push(s.cost + " gold");
           if (s.requires) {
             requires = requires.concat(s.requires);
+            requires = requires.join(', ').replace(/\|/g, ' or ');
+            length += requires.length;
           }
         }
         
@@ -92,17 +91,23 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
             elems.push(React.DOM.img( {key:"i", src:"/images/card/" + s.imageUrl}))
           }
         }
-        if (s.description) 
+        if (s.description)  {
+          length += s.description.length;
           elems.push(React.DOM.section( {key:"d", className:"info"}, 
               React.DOM.p( {className:"description"}, s.description),
               React.DOM.div( {className:"purchase-info"}, 
-                requires && requires.join(', ')
+                requires
               )
             ));
+        }
         if (s.tradeValues && s.tradeValues.length > 8)
           elems.push(React.DOM.section( {key:"s2", className:"set set3"}, this.renderSetValues(8, 12)));
         if (s.tradeValues && s.tradeValues.length > 3)
           elems.push(React.DOM.section( {key:"s3", className:"set set2"}, this.renderSetValues(4, 8)));
+        if (length > 100)
+          classes.push("dense");
+        else if (length < 40)
+          classes.push("sparse");
       }
       return React.DOM.div( {onClick:this.click, className:classes.join(' '), style:style}, 
         elems

@@ -2,6 +2,10 @@ Name: New Age
 Category: New Age
 ImageUrl: new-age.png
 Cost: 1000
+Requires:
+  - Communism|Democracy|Fascism
+  - Radio
+  - Chemistry
 Description: Ends the game. +100 to score.
 Event: |
   if event_type == "GainEvent" || event_type == "TurnEvent"

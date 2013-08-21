@@ -1,7 +1,7 @@
 Name: Farm Equipment
 ImageUrl: farm-equipment.png
-Description: Select a hex. That hex's population limit is increased by one.
+Description: Select a hex. That hex's population limit is increased by two.
 NeedsHex: true
 Cost: 30
 Action: |
-  hex.population_limit += 1
+  hex.population_limit += 2

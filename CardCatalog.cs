@@ -121,6 +121,8 @@ namespace ForgottenArts.Commerce
 					if (!cards.ContainsKey(key)) {
 						// Note: trading levels are of the range [1-9] (one-based).
 						CreateTradeCard(key, newTradingCardLevels.Count, q);
+					} else {
+						cards[key].TradeLevel = newTradingCardLevels.Count;
 					}
 				}
 			}
