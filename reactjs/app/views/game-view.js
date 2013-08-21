@@ -96,7 +96,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       case 'hand':
         if (this.isActionPhase()) {
           if (cardObject.needsHex) {
-            this.notify('Select a hex', 0);
+            this.notify('Select a hex', 1000);
             var handle = Events.subscribe('/hex/selected', function(hexId) {
               gameServer.playCard(card, hexId);
               Events.unsubscribe(handle);

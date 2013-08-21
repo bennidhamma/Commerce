@@ -158,15 +158,15 @@ namespace ForgottenArts.Commerce
 		}
 
 		public void DrawHand () {
-			Draw (GetHandSize() - Hand.Count);
+			Draw (GetHandSize() - Hand.Count, true);
 		}
 
-		public void Draw (int number)
+		public void Draw (int number, bool okayToShuffle = false)
 		{
 			for (int i = 0; i < number; i++) {
 				if (Deck.Count == 0) {
-					if (Discards.Count == 0) {
-						//no more cards to draw.
+					if (Discards.Count == 0 || !okayToShuffle) {
+						//no more cards to draw or we can't shuffle because we are in play.
 						return;
 					}
 					// Shuffle discard.

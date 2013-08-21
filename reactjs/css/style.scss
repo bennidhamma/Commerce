@@ -134,7 +134,7 @@ h3 {
   }
   &.expandable:hover {
     -webkit-animation-name: inspect-card;
-    -webkit-animation-duration: 1.5s;
+    -webkit-animation-duration: 0.9s;
     -webkit-transform: scale(0.8, 0.8);
     position: relative;
     z-index: 1;
@@ -216,11 +216,11 @@ h3 {
   }
 
   25% {
-    -webkit-transform: scale(0.5, 0.5);
+    -webkit-transform: scale(0.6, 0.6);
   }
 
   75% {
-    -webkit-transform: scale(0.5, 0.5);
+    -webkit-transform: scale(0.6, 0.6);
   }
 
   100% {
