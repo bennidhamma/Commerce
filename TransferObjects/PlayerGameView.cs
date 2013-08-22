@@ -15,7 +15,7 @@ namespace ForgottenArts.Commerce.Server
 		public IEnumerable<HexView> Hexes { get; set; }
 		public IEnumerable<string> Hand { get;	set; }
 		public Stack<string> Discards {	get; set; }
-		public int DeckCount { get;	set; }
+		public int DeckSize { get;	set; }
 		public List<string> TechnologyCards { get;	set; }
 		public TurnView CurrentTurn { get; set; }
 		public Dictionary<string, int> Bank { get; set; }
@@ -35,7 +35,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Status = game.Status;
 			this.Hand = from c in player.Hand orderby c select c;
 			this.Discards = player.Discards;
-			this.DeckCount = player.Deck.Count;
+			this.DeckSize = player.Deck.Count;
 			this.TechnologyCards = player.TechnologyCards;
 			this.CurrentTurn = new TurnView(game, game.CurrentTurn);
 			this.Bank = game.Bank;

@@ -137,6 +137,7 @@
     <Folder Include="content\cards\technology\" />
     <Folder Include="content\cards\trade\" />
     <Folder Include="Socket\" />
+    <Folder Include="reactjs\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="content\card-distribution.yaml" />
@@ -150,5 +151,28 @@
     <None Include="content\cards\trade\stone.yaml" />
     <None Include="content\cards\trade\wheat.yaml" />
     <None Include="content\cards\trade\wood.yaml" />
+    <None Include="reactjs\game.html" />
+    <None Include="reactjs\app\app.js" />
+    <None Include="reactjs\app\config.js" />
+    <None Include="reactjs\app\config.js.sample" />
+    <None Include="reactjs\app\game.js" />
+    <None Include="reactjs\app\main.js" />
+    <None Include="reactjs\app\pubsub.js" />
+    <None Include="reactjs\app\socket.js" />
+    <None Include="reactjs\app\views\card.js" />
+    <None Include="reactjs\app\views\game-list.js" />
+    <None Include="reactjs\app\views\game-view.js" />
+    <None Include="reactjs\app\views\game.js" />
+    <None Include="reactjs\app\views\hex.js" />
+    <None Include="reactjs\app\views\new-game.js" />
+    <None Include="reactjs\css\style.scss" />
+    <None Include="reactjs\lib\JSXTransformer.js" />
+    <None Include="reactjs\lib\jquery-2.0.3.min.js" />
+    <None Include="reactjs\lib\jquery.js" />
+    <None Include="reactjs\lib\jsx.js" />
+    <None Include="reactjs\lib\react.js" />
+    <None Include="reactjs\lib\react.min.js" />
+    <None Include="reactjs\lib\require.js" />
+    <None Include="reactjs\lib\underscore-min.js" />
   </ItemGroup>
 </Project>

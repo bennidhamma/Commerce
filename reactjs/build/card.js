@@ -10,7 +10,9 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
 
   Events.subscribe('game', function(game) {
     gameServer.getCards(function(resp) {
-      cards = {};
+      cards = {
+        "unknown": {type: 'unknown'}
+      };
       for (var i = 0; i < resp.length; i++) {
         var card = resp[i];
         cards[card.name] = card;

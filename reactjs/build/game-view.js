@@ -96,7 +96,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       case 'hand':
         if (this.isActionPhase()) {
           if (cardObject.needsHex) {
-            this.notify('Select a hex', 0);
+            this.notify('Select a hex', 1000);
             var handle = Events.subscribe('/hex/selected', function(hexId) {
               gameServer.playCard(card, hexId);
               Events.unsubscribe(handle);
@@ -275,6 +275,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       var game = this.state.game;
       var hand = this.buildCards(game.hand, "hand");
       var discards = this.buildCards(game.discards, "discards");
+      var deck = this.buildStack("unknown", game.deckSize, 'deck');
       var techCards = this.buildCards(game.technologyCards, "technologyCards");
       var tradeCards = this.buildCards(game.tradeCards, "tradeCards");
       var hexes = this.buildHexes(_.clone(game.hexes));
@@ -304,7 +305,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
           React.DOM.section( {className:"hexes"}, hexes),
           action,
           React.DOM.section( {className:"hand"}, hand),
-          React.DOM.section( {className:"discards"}, discards),
+          React.DOM.section( {className:"discards"}, deck, discards),
           React.DOM.section( {className:"technology-cards"}, techCards),
           React.DOM.section( {className:"trade-cards"}, tradeCards),
           redeem
@@ -312,14 +313,18 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     },
 
     buildOther: function (other) {
+      var hand = [];
+      for (var i = 0; i < other.handSize; i++)
+        hand.push ('unknown');
+      var hand = this.buildCards(hand, "other-hand");
       var discards = this.buildCards (other.discards, "other-discards");
+      var deck = this.buildStack("unknown", other.deckSize, 'deck');
       var techCards = this.buildCards (other.technologyCards, "other-technologyCards");
       var hexes = this.buildHexes (other.hexes);
       return React.DOM.section( {key:"other-" + other.color, className:"other " + other.color}, 
         React.DOM.h2(null, React.DOM.img( {src:other.photo}),other.name),
         React.DOM.section( {className:"hexes"}, hexes),
-" Hand Size: ", other.handSize,
-" Deck Size: ", other.deckSize,
+        React.DOM.section( {className:"other-hand"}, hand, deck),
         React.DOM.section( {className:"discards"}, discards),
         React.DOM.section( {className:"technology-cards"}, techCards)
       );
