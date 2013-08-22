@@ -30,8 +30,15 @@ require(['main', 'react', 'jsx/game', 'game', 'jquery', 'socket', 'pubsub'],
           socket.connect(resp.id, Plus.me().id);
         });
         break;
+      case "list":
+        GameView.render(null, GameView.MenuMode.LIST);
+        break;
+      case "new":
+        GameView.render(null, GameView.MenuMode.NEW);
+        break;
       default:
         GameView.render(null);
+        break;
       }
     }
   };
