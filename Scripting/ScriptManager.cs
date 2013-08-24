@@ -42,6 +42,20 @@ namespace ForgottenArts.Commerce
 			return scope;
 		}
 
+		public void ExecuteGameEvent (Game game, string source) 
+		{
+			try
+			{
+				var script = Engine.CreateScriptSourceFromString (source);
+				var scope = SetupScope(game);
+				script.Execute (scope);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine (e);
+			}
+		}
+
 		public string ExecuteCardAction (Game game, Card card, CardArgs args) 
 		{
 			try
@@ -121,7 +135,7 @@ namespace ForgottenArts.Commerce
 				engine = Ruby.CreateEngine ( x => {
 					x.ExceptionDetail = true;
 				});
-        scope = engine.CreateScope();
+				scope = engine.CreateScope();
 				string baseScript = string.Format ("require '{0}'\n", dllPath ?? Config.DllPath) + 
 					Config.ReadAllText ("base.rb");
 				Console.WriteLine ("Executing base script: " + baseScript);

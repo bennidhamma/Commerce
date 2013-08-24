@@ -74,6 +74,7 @@
     <Compile Include="TransferObjects\OtherPlayerView.cs" />
     <Compile Include="TransferObjects\HexView.cs" />
     <Compile Include="TransferObjects\WinView.cs" />
+    <Compile Include="Scripting\EventManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

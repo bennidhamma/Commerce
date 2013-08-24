@@ -3,15 +3,18 @@ ImageUrl: ship.jpg
 Description: Roll on the Discovery Table.
 Cost: 50
 Action: |
-  System::Console.write_line "to_arr: #{game.players.to_arr.size}"
-  num_cities = game.players.reduce(0) {|sum, p| sum + p.hexes.length}
-  System::Console.write_line "abc -- num cities: #{num_cities}"
-  roll = 1 + rand(100) - num_cities
-  if num_cities < 2
+  num_hexes = game.players.reduce(0) {|sum, p| sum + p.hexes.length}
+  roll = 1 + rand(100) - num_hexes
+  if num_hexes == 0
+    # First hex is always discovered with friendly natives.
+    roll = 91
+    turn.actions += 1
+    game.log "Friendly natives gave #{player.name} an extra action!"
+  elsif num_hexes <= 2
     roll += 30
   end
   discovery_roll roll, args, game, player
   if player.technology_cards.include? "Steam Ships"
-    roll = 1 + rand(100) - num_cities
+    roll = 1 + rand(100) - num_hexes
     discovery_roll roll, args, game, player
   end
