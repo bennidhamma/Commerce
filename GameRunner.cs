@@ -49,6 +49,17 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		private EventManager events;
+
+		public EventManager Events {
+			get {
+				return events;
+			}
+			set {
+				events = value;
+			}
+		}
+
 		public GameRunner ()
 		{
 		}
@@ -150,6 +161,8 @@ namespace ForgottenArts.Commerce
 			foreach (var pg in game.Players) {
 				pg.DrawHand ();
 			}
+
+			Events.StartGame (game);
 
 			game.Status = GameState.Running;
 
@@ -651,10 +664,6 @@ namespace ForgottenArts.Commerce
 			if (!player.HasTradeCards(cards)) {
 				throw new InvalidOperationException ("Invalid list of cards to redeem.");
 			}
-
-			string currentCard = null;
-			int count = 0;
-
 			foreach (var kvp in cards) {
 				RedeemSet (game, player, kvp.Key, kvp.Value);
 			}

@@ -25,7 +25,10 @@ namespace ForgottenArts.Commerce.Server
 			// Setup cards.
 			var cards = new CardCatalog ();
 			cards.Load ();
+			var events = new EventManager ();
+			events.Setup ();
 			GameRunner.Instance.Cards = cards;
+			GameRunner.Instance.Events = events;
 
 			// Sanitize games.
 			GameRunner.Instance.Sanitize();

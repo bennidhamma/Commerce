@@ -29,7 +29,7 @@ class Object
     end
 
     def discovery_roll(roll, args, game, player)
-      pop = ((2 + rand(6) + rand(6)) / 2).round
+      pop = ((5 + rand(3) + rand(3)) / 2).round
       # Allow other cards to modify discovery roll.
       event = DiscoveryEvent.new
       event.roll = roll

@@ -141,6 +141,8 @@ namespace ForgottenArts.Commerce
 
 		public static void LoadYamlFile (string file, Action<dynamic> fn)
 		{
+			if (!file.StartsWith(ContentDirectory))
+				file = Path.Combine (ContentDirectory, file);
 			fn (YamlDoc.Load (file));
 			AddFileChangeNotification (file, delegate {
 				fn(YamlDoc.Load (file));
@@ -149,7 +151,8 @@ namespace ForgottenArts.Commerce
 
 		public static void LoadYamlDocuments (string file, Action<dynamic> fn, Action documentChangedAction = null)
 		{
-			file = Path.Combine (ContentDirectory, file);
+			if (!file.StartsWith(ContentDirectory))
+				file = Path.Combine (ContentDirectory, file);
 			foreach (var dynamic in YamlDoc.LoadAll (file))
 				fn (dynamic);
 			AddFileChangeNotification (file, delegate {
@@ -161,7 +164,8 @@ namespace ForgottenArts.Commerce
 		}
 
 		public static void AddFileChangeNotification (string path, Action callback) {
-            path = Path.Combine (ContentDirectory, path);
+			if (!path.StartsWith(ContentDirectory))
+				path = Path.Combine (ContentDirectory, path);
             if (watchMap.ContainsKey (path))
                 watchMap[path] += callback;
             else
@@ -170,7 +174,8 @@ namespace ForgottenArts.Commerce
 
 		public static void AddDirectoryChangeNotification (string path, Action<string, WatcherChangeTypes> callback)
 		{
-			path = Path.Combine (ContentDirectory, path);
+			if (!path.StartsWith(ContentDirectory))
+				path = Path.Combine (ContentDirectory, path);
 			if (directoryWatchMap.ContainsKey(path))
 			{
 				directoryWatchMap[path] += callback;

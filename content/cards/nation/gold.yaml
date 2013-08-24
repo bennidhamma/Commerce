@@ -1,7 +1,7 @@
 Name: Gold
 ImageUrl: gold.png
-Description: Gain 10 gold, +1 Action.
+Description: Gain 20 gold, +1 Action.
 Action: |
-  player.gold += 10
+  player.gold += 20
   turn.actions += 1
 Cost: 50
