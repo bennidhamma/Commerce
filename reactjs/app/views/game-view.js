@@ -97,7 +97,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
         if (this.isActionPhase()) {
           if (cardObject.needsHex) {
             if (game.hexes.length > 0)
-              this.notify('Select a hex', 1000);
+              this.notify('Select a hex', 10000);
             else
               this.notify("You can't play this card until you have a hex. Try playing a ship first :)");
             var handle = Events.subscribe('/hex/selected', function(hexId) {
@@ -251,12 +251,14 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       var game = this.state.game;
       var nationCards = [];
       var techCards = [];
-      for (var k in game.bank) {
+      for (var i = 0; i < game.bank.length; i++) {
+        var k = game.bank[i].key;
+        var val = game.bank[i].value;
         var card = this.state.cards[k];
         if (card.type == 'Nation') {
-          nationCards.push (this.buildStack(k, game.bank[k], 'bank'));
+          nationCards.push (this.buildStack(k, val, 'bank'));
         } else { 
-          techCards.push (this.buildStack(k, game.bank[k], 'bank'));
+          techCards.push (this.buildStack(k, val, 'bank'));
         }
       }
     
@@ -307,8 +309,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
           <h2><img src={game.photo}/> {game.name}</h2>
           <strong>{game.gold} Gold</strong>
           <section class="hexes">{hexes}</section>
-          {action}
           <section class="hand">{hand}</section>
+          {action}
           <section class="discards">{deck} {discards}</section>
           <section class="technology-cards">{techCards}</section>
           <section class="trade-cards">{tradeCards}</section>
