@@ -4,8 +4,4 @@ ImageUrl: navigation.png
 Cost: 100
 Requires:
   - Whaling
-Description: Add 15 to rolls on the discovery table.
-Event: |
-  if event_type == "DiscoveryEvent"
-    event.roll += 15
-  end
+Description: +1 Action when playing a Ship card.

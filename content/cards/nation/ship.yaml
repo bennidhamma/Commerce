@@ -18,3 +18,6 @@ Action: |
     roll = 1 + rand(100) - num_hexes
     discovery_roll roll, args, game, player
   end
+  if player.technology_cards.include? "Navigation"
+    turn.actions += 1
+  end

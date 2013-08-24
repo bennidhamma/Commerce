@@ -18,7 +18,7 @@ namespace ForgottenArts.Commerce.Server
 		public int DeckSize { get;	set; }
 		public List<string> TechnologyCards { get;	set; }
 		public TurnView CurrentTurn { get; set; }
-		public Dictionary<string, int> Bank { get; set; }
+		public IEnumerable<KeyValuePair<string, int>> Bank { get; set; }
 		public IEnumerable<LogEntry> Log { get; set; }
 		public int Gold { get; set; }
 		public IEnumerable<string> TradeCards { get; set; }
@@ -38,7 +38,7 @@ namespace ForgottenArts.Commerce.Server
 			this.DeckSize = player.Deck.Count;
 			this.TechnologyCards = player.TechnologyCards;
 			this.CurrentTurn = new TurnView(game, game.CurrentTurn);
-			this.Bank = game.Bank;
+			this.Bank = from kvp in game.Bank orderby cards[kvp.Key].Category, cards[kvp.Key].Cost select kvp;
 			this.Hexes = from h in player.Hexes select new HexView (h);
 			this.Gold = player.Gold;
 			this.TradeCards = from c in player.TradeCards where cards[c.Card] != null orderby cards[c.Card].TradeLevel, c.Card select c.Card;

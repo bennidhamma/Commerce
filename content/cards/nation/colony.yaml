@@ -11,6 +11,5 @@ Action: |
     game.log("#{player.player.display_name} built a colony.")
   else
     game.log("#{player.player.display_name} failed to build a colony.")
-    hex.current_population = 0
   end
 Cost: 50
