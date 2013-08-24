@@ -1,0 +1,10 @@
+Start: |
+  # Give each Player 50 gold.
+  # Ensure that the ship is one of the first cards deal.
+  players.each {|p|
+    p.gold += 50 
+    while not p.hand.include? "Ship"
+      p.discard p.hand_size
+      p.draw_hand
+    end
+  }
