@@ -108,6 +108,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
           } else {
             gameServer.playCard(card);
           }
+        } else if (!this.isMyTurn()) {
+          this.notify ("It is not your turn.", 1000);
         }
         break;
       case 'bank':
