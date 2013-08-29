@@ -64,6 +64,9 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
       var style = {};
       var classes = ["card", dasherize(s.type), dasherize(s.category), dasherize(s.name)];
       var length = 0;
+      if (this.props.cssClass) {
+        classes.push(this.props.cssClass);
+      }
       if (this.props.selected)
         classes.push("selected");
       if (this.props.secret)

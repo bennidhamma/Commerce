@@ -11,7 +11,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
         game: this.props.game,
         cards: null,
         cardsToRedeem: {},
-        newOffer: []
+        newOffer: [],
+        isMyTurn: false
       };
     },
 
@@ -52,15 +53,22 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
         this.state.log = log;
         this.setState (this.state);
       }.bind(this));
-      this.setState (this.state);
+      if (this.state) {
+        this.setState (this.state);
+        if (this.isMyTurn(game) && !(this.state && this.state.isMyTurn)) {
+          this.notify('It is your turn.', 2000);
+        }
+        this.setState({isMyTurn: this.isMyTurn(game)})
+      }
     },
 
     isTrading: function () {
       return this.state.game.status == 'Trading';
     },
 
-    isMyTurn: function () {
-      return this.state.game.status == "Running" && this.state.game.currentTurn.playerKey == Plus.me().id;
+    isMyTurn: function (game) {
+      game = game || this.state.game;
+      return game.status == "Running" && game.currentTurn.playerKey == Plus.me().id;
     },
 
     isActionPhase: function () {
@@ -230,10 +238,10 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       });
     },
 
-    buildStack: function (card, count, source) {
+    buildStack: function (card, count, source, cssClass) {
       var cards = [];
       for (var i = 0; i < count; i++) {
-        cards.push (<Card key={"c-" + i} name={card} cardSource={source} faux={i < count -1}/>);
+        cards.push (<Card key={"c-" + i} name={card} cardSource={source} faux={i < count -1} cssClass={cssClass}/>);
       }
       return <section key={card} class="stack">{cards}</section>;
     },
@@ -254,13 +262,15 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       var nationCards = [];
       var techCards = [];
       for (var i = 0; i < game.bank.length; i++) {
-        var k = game.bank[i].key;
-        var val = game.bank[i].value;
+        var storeCard = game.bank[i];
+        var k = storeCard.card;
+        var val = storeCard.quantity;
         var card = this.state.cards[k];
+        var canBuyClass = storeCard.canBuy ? 'can-buy' : 'cannot-buy';
         if (card.type == 'Nation') {
-          nationCards.push (this.buildStack(k, val, 'bank'));
+          nationCards.push (this.buildStack(k, val, 'bank', canBuyClass));
         } else { 
-          techCards.push (this.buildStack(k, val, 'bank'));
+          techCards.push (this.buildStack(k, val, 'bank', canBuyClass));
         }
       }
     

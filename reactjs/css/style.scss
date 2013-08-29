@@ -134,6 +134,14 @@ h3 {
   }
 }
 
+.can-buy .purchase-info {
+  color: darkgreen;
+}
+
+.cannot-buy .purchase-info {
+  color: darkred;
+}
+
 .card {
   box-shadow: 8px 8px 30px rgba(0,0,0,0.8);
   padding: 2px;
