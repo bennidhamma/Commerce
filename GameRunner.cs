@@ -407,17 +407,19 @@ namespace ForgottenArts.Commerce
 			return true;
 		}
 
-		public bool Buy (Game game, PlayerGame player, string cardKey)
+		public string CanBuy (Game game, PlayerGame player, string cardKey, out int cost)
 		{
+			cost = 0;
+
 			var card = Cards[cardKey];
 
 			// Is it the current player's turn?
 			if (Config.EnforcePlayer && game.CurrentPlayer != player) {
-				throw new InvalidOperationException ("It is not your turn");
+				return "It is not your turn";
 			}
 
 			if (game.CurrentTurn.Buys <= 0) {
-				throw new InvalidOperationException ("You don't have any buys remaining");
+				return "You don't have any buys remaining";
 			}
 
 			var purchaseEvent = new PurchaseEvent () {
@@ -425,35 +427,43 @@ namespace ForgottenArts.Commerce
 				Cost = card.Cost
 			};
 			player.HandleCardEvents (purchaseEvent);
-			var cost = purchaseEvent.Cost;
+			cost = purchaseEvent.Cost;
 
 			if (cost > game.CurrentPlayer.Gold) {
-				throw new InvalidOperationException ("Not enough gold to purchase card");
+				return "Not enough gold to purchase card";
 			}
 
 			if (game.Bank[cardKey] <= 0) {
-				throw new InvalidOperationException ("The bank does not have this card.");
+				return "The bank does not have this card.";
 			}
 
 			if (card.Type == CardType.Technology && player.TechnologyCards.Contains(cardKey)) {
-				throw new InvalidOperationException ("You already have this technology card.");
+				return "You already have this technology card.";
 			}
 
-			if (card.Requires != null && card.Requires.Except(player.AllCards).Take (1).Count () > 0)
-			{
-				foreach (string require in card.Requires)
-				{
+			if (card.Requires != null && card.Requires.Except(player.AllCards).Take (1).Count () > 0) {
+				foreach (string require in card.Requires) {
 					// each require can be a list of OR'd requirements separated by a '|'.
 					if (require.Split('|').Union(player.AllCards).Take(1).Count() == 0) {
-						throw new InvalidOperationException ("Purchasing card requires " + string.Join (", ", card.Requires));
+						return "Purchasing card requires " + string.Join (", ", card.Requires);
 					}
 				}
 			}
 
-			if (card.Excludes != null && card.Excludes.Intersect(player.AllCards).Take (1).Count () > 0)
-			{
-				throw new InvalidOperationException ("Cannot purchase card due to exclusions:" + string.Join (", ", card.Excludes));
+			if (card.Excludes != null && card.Excludes.Intersect(player.AllCards).Take (1).Count () > 0) {
+				return "Cannot purchase card due to exclusions:" + string.Join (", ", card.Excludes);
 			}
+
+			return null;
+		}
+
+		public bool Buy (Game game, PlayerGame player, string cardKey)
+		{
+			int cost;
+
+			string error = CanBuy (game, player, cardKey, out cost);
+
+			var card = Cards[cardKey];
 
 			game.CurrentPlayer.Gold -= cost;
 
