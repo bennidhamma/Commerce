@@ -1,0 +1,350 @@
+@import url(http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic);
+/* Put your CSS here */
+html, body {
+  margin: 5px 30px 30px 30px;
+  font-family: 'Lora', serif;
+  color: white;
+  background: black;
+  padding: 0;
+  -webkit-user-select: none;
+  cursor: default; }
+
+button {
+  margin: 0.5em;
+  padding: 0.5em;
+  font-size: 1.5em;
+  font-family: 'Lora', serif; }
+
+h2 {
+  font-size: 1.2em;
+  margin: 0; }
+
+h3 {
+  font-size: 1.1em; }
+
+.main-menu {
+  text-align: center;
+  font-size: 4vw; }
+  .main-menu ul {
+    list-style: none; }
+    .main-menu ul li {
+      background: black;
+      border: 4px solid black;
+      border-radius: 10px;
+      transition: all 500ms;
+      line-height: 20vh; }
+    .main-menu ul li:hover {
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.4);
+      border: 4px solid rgba(255, 255, 255, 0.8); }
+
+.notification-bar {
+  z-index: 100;
+  background: yellow;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+  position: fixed;
+  top: 10px;
+  left: 10%;
+  width: 80%;
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px; }
+
+.game-list {
+  margin: 0;
+  list-style-type: none; }
+  .game-list li {
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid gray; }
+    .game-list li .friend-thumb {
+      display: inline-block; }
+      .game-list li .friend-thumb img {
+        height: 54px;
+        width: 54px;
+        border: 2px solid white; }
+      .game-list li .friend-thumb img.is-current {
+        border: 2px solid lightgreen; }
+
+.main-layout {
+  display: -webkit-flex;
+  flex-flow: row nowrap;
+  align-content: center;
+  align-items: flex-start; }
+
+.me {
+  order: 1;
+  flex: 3;
+  -webkit-flex: 3; }
+
+.others {
+  order: 2;
+  flex: 2;
+  -webkit-flex: 2; }
+
+.log {
+  order: 3;
+  -webkit-flex: 1; }
+  .log .log-entry {
+    padding: 5px;
+    border-bottom: 1px dotted gray; }
+
+.hexes {
+  clear: both; }
+
+.hex {
+  background: url(/images/hex/empty.png) no-repeat;
+  width: 80px;
+  height: 65px;
+  margin: 5px;
+  display: inline-block;
+  line-height: 65px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.8em;
+  color: white;
+  text-shadow: 0 0 8px black; }
+  .hex.has-colony {
+    background: url(/images/hex/colony.png) no-repeat;
+    text-indent: -9999px; }
+
+.can-buy .purchase-info {
+  color: darkgreen; }
+
+.cannot-buy .purchase-info {
+  color: darkred; }
+
+.card {
+  box-shadow: 8px 8px 30px rgba(0, 0, 0, 0.8);
+  padding: 2px;
+  background: no-repeat 0 0 100% 100%;
+  width: 240px;
+  height: 360px;
+  border-radius: 8px;
+  border: 3px solid #1e1e1e;
+  display: inline-block;
+  vertical-align: top;
+  -webkit-transform: scale(0.4, 0.4);
+  margin: -100px;
+  margin-right: -80px; }
+  .card.expandable {
+    transition: -webkit-transform 300ms;
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000; }
+  .card.expandable:hover {
+    -webkit-animation-name: inspect-card;
+    -webkit-animation-duration: 0.9s;
+    -webkit-transform: scale(0.8, 0.8);
+    position: relative;
+    z-index: 1; }
+  .card header {
+    background: rgba(0, 0, 0, 0.5);
+    font-weight: bold;
+    padding: 8px;
+    font-size: 1.7em;
+    text-align: center;
+    margin-bottom: 4px; }
+  .card img {
+    width: 240px;
+    height: 145px;
+    background: white; }
+  .card section.info {
+    font-size: 1em;
+    line-height: 20px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.6);
+    color: black;
+    margin: 3px 0;
+    border-radius: 6px;
+    border: 2px inset;
+    height: 131px;
+    position: relative;
+    text-align: center; }
+    .card section.info div.purchase-info {
+      position: absolute;
+      bottom: 10px;
+      width: 100%; }
+    .card section.info p {
+      margin: 0;
+      padding: 0; }
+  .card section.set .set-value {
+    width: 24%;
+    border: 1px solid black;
+    background: rgba(255, 255, 255, 0.4);
+    color: black;
+    display: inline-block;
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: -4px; }
+  .card section.set.set3 {
+    text-align: right;
+    margin-top: -4px;
+    margin-bottom: 4px; }
+  .card.trade h1 {
+    margin: 0;
+    font-size: 9em;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); }
+
+@-webkit-keyframes inspect-card {
+  0% {
+    -webkit-transform: scale(0.4, 0.4);
+    position: relative;
+    z-index: 1; }
+
+  25% {
+    -webkit-transform: scale(0.6, 0.6); }
+
+  75% {
+    -webkit-transform: scale(0.6, 0.6); }
+
+  100% {
+    -webkit-transform: scale(0.8, 0.8); } }
+
+.nation {
+  background-image: url("/images/nation-back.png"); }
+
+.unknown {
+  background-image: url("/images/unknown-back.png"); }
+
+.dense section.info {
+  font-size: 0.9em;
+  line-height: 17px;
+  padding: 8px; }
+
+.sparse section.info {
+  font-size: 1.5em;
+  line-height: 32px; }
+
+.selected {
+  box-shadow: 0px 0px 20px yellow;
+  border: 3px solid green; }
+  .selected.secret {
+    box-shadow: 0 0 20px red;
+    border: 3px solid red; }
+
+.hand, .bank, .trade-cards, .technology-cards {
+  -webkit-backface-visibility: hidden;
+  padding: 1em;
+  padding-left: 30px; }
+
+.hand, .bank, .technology-cards {
+  transition: padding-left 500ms, background 300ms; }
+  .hand.focus, .bank.focus, .technology-cards.focus {
+    background: rgba(0, 0, 0, 0.6);
+    padding-left: 20px; }
+    .hand.focus .card, .bank.focus .card, .technology-cards.focus .card {
+      margin-right: -40px; }
+
+.discards {
+  margin-left: 85px;
+  height: 220px; }
+  .discards .card {
+    margin-left: -155px; }
+
+.buy-phase {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px; }
+
+.stack {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: top;
+  height: 188px;
+  width: 95px; }
+  .stack .card {
+    position: relative;
+    display: block;
+    margin-bottom: -374px; }
+
+.offers {
+  position: relative; }
+  .offers canvas {
+    position: absolute; }
+  .offers ul {
+    display: inline-block;
+    position: relative;
+    list-style: none;
+    margin: 0; }
+    .offers ul.my {
+      margin-right: 20em; }
+    .offers ul li {
+      position: relative;
+      border: 1px solid black;
+      border-radius: 5px;
+      background: white;
+      padding-left: 72px;
+      margin: 10px 0; }
+      .offers ul li .card {
+        -webkit-transform: scale(0.4, 0.4);
+        margin: -104px -73px; }
+      .offers ul li img.photo {
+        position: absolute;
+        left: 5px;
+        top: calc(50% - 25px); }
+
+.currentTurn {
+  margin-top: 13px;
+  position: relative;
+  padding: 10px; }
+  .currentTurn div {
+    float: right;
+    margin-right: 20px; }
+  .currentTurn .winner, .currentTurn .other {
+    margin-right: 30px;
+    padding: 5px 20px;
+    display: inline-block;
+    line-height: 55px; }
+  .currentTurn .winner {
+    box-shadow: 0 0 20px yellow; }
+  .currentTurn h2 {
+    padding-left: 55px; }
+    .currentTurn h2 img {
+      float: none;
+      position: absolute;
+      top: -17px;
+      left: 0; }
+
+h2 img, img.photo {
+  margin: 5px;
+  float: left;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+  border-radius: 8px; }
+
+section.me, section.other {
+  padding: 5px; }
+
+.other .other-hand {
+  margin-left: 30px; }
+
+.Blue {
+  background: linear-gradient(to bottom, rgba(122, 188, 255, 0.5) 0%, rgba(96, 171, 248, 0.5) 44%, rgba(64, 150, 238, 0.5) 100%); }
+
+.Red {
+  background: linear-gradient(to bottom, rgba(169, 3, 41, 0.5) 0%, rgba(143, 2, 34, 0.5) 44%, rgba(109, 0, 25, 0.5) 100%); }
+
+.Green {
+  background: linear-gradient(to bottom, rgba(14, 112, 35, 0.5) 0%, rgba(59, 119, 51, 0.5) 36%, rgba(100, 178, 76, 0.5) 100%); }
+
+.Yellow {
+  background: linear-gradient(to bottom, rgba(241, 231, 103, 0.5) 0%, rgba(254, 182, 69, 0.5) 100%); }
+
+.science {
+  background: #28289c; }
+
+.governance {
+  background: #366d2e; }
+
+.arts---culture {
+  background: #8d1515; }
+
+.philosophy {
+  background: #b86905; }
+
+.new-age {
+  background: linear-gradient(45deg, #fceabb 0%, #fccd4d 50%, #f8b500 51%, #fbdf93 100%); }
