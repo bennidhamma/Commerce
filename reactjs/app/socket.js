@@ -18,7 +18,11 @@ function setPlayer () {
 function send (channel, message) {
   message = channel + '\n' + message;
   console.log('sending ', channel, message, performance.now());
-  socket.send(message);
+  if (AndroidSocket) {
+    AndroidSocket.send(message);
+  } else  {
+    socket.send(message);
+  }
 }
 
 function receiveMessage (event) {
@@ -53,15 +57,25 @@ function connect (gameId, playerKey) {
   gameId_ = gameId;
   playerKey_ = playerKey;
   if (!socket) {
-    socket = new WebSocket(config.socketBase);
-    socket.onopen = setPlayer;
-    socket.onmessage = receiveMessage;
-    socket.onclose = function () {
-      setTimeout(function() {connect(gameId, playerKey);}, 1000);
+    if (AndroidSocket) {
+      AndroidSocket.open(config.socketBase); 
+      socket = true;
+    } else {
+      socket = new WebSocket(config.socketBase);
+      socket.onopen = setPlayer;
+      socket.onmessage = receiveMessage;
+      socket.onclose = function () {
+        setTimeout(function() {connect(gameId, playerKey);}, 1000);
+      }
     }
   } else {
     setPlayer();
   }
+}
+
+window.receiveMessage = function(msg)
+{
+  receiveMessage(msg);
 }
 
 module.exports = {

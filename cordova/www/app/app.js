@@ -83,7 +83,6 @@ require(['main', 'react', 'jsx/game', 'game', 'jquery', 'socket', 'pubsub'],
 
               if (qs.code) {
                   //Exchange the authorization code for an access token
-                  alert('qs.code: ' +  qs.code)
                   $.post('https://accounts.google.com/o/oauth2/token', {
                       code: qs.code,
                       client_id: options.client_id,
@@ -91,10 +90,8 @@ require(['main', 'react', 'jsx/game', 'game', 'jquery', 'socket', 'pubsub'],
                       redirect_uri: options.redirect_uri,
                       grant_type: 'authorization_code'
                   }).done(function(data) {
-                      alert('access token? ' + data);
                       deferred.resolve(data);
                   }).fail(function(response) {
-                      alert('error request token: ' + JSON.stringify(response));
                       deferred.reject(response.responseJSON);
                   });
               } else if (qs.error) {
@@ -121,9 +118,8 @@ require(['main', 'react', 'jsx/game', 'game', 'jquery', 'socket', 'pubsub'],
           client_secret: 'zAKZZZfxrDLBhUOcPm_c9d_5',
           redirect_uri: 'http://localhost',
           scope: 'https://www.googleapis.com/auth/plus.login'
-        }).done(function(data) {
-          alert('got code: ' + data.access_token);
-          $loginStatus.html('Access Token: ' + data.access_token);
+        }).done(function(token) {
+          Plus.setAccessToken(token);
         }).fail(function(data) {
           $loginStatus.html(data.error);
         });

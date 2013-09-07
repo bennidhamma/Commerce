@@ -71,6 +71,9 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         classes.push("selected");
       if (this.props.secret)
         classes.push("secret");
+      if (this.props.height) {
+        style.borderBottom = 4 * this.props.height + 'px solid #333';
+      }
       if (!this.props.faux) {
         classes.push('expandable');
 

@@ -60,6 +60,7 @@ var Plus = {
 		 * }
 		 * returns list of games
 		 */
+    console.log ('authenticating user: ' + JSON.stringify(plus));
 		me = plus;
 		var payload = JSON.stringify({
 			plusId: plus.id,
@@ -83,6 +84,21 @@ var Plus = {
 			}
 		});
 	},
+
+  setAccessToken: function(token) {
+    console.log('setting api key');
+    gapi.client.setApiKey('AIzaSyBksGpLdpf-JCumLsSW8WsLUyGNO6WfBnI');
+    console.log('app/main setting token');
+    gapi.auth.setToken(token); 
+    console.log('app/main loading plus api');
+    gapi.client.load('plus','v1', function(){
+      console.log('getting me');
+       var request = gapi.client.plus.people.get({
+        'userId': 'me',
+         });
+       request.execute(authenticate);
+      })
+  },
 
 	signinCallback: function (authResult) {
 		if (!authResult['access_token']) {
