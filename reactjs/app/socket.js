@@ -7,6 +7,8 @@ var gameId_ = null;
 var playerKey_ = null;
 var socket = null;
 
+isAndroid = typeof(AndroidSocket) != 'undefined'
+
 function setPlayer () {
   var message = {
     gameId: gameId_,
@@ -17,8 +19,8 @@ function setPlayer () {
 
 function send (channel, message) {
   message = channel + '\n' + message;
-  console.log('sending ', channel, message, performance.now());
-  if (AndroidSocket) {
+  console.log('sending ', channel, message, new Date());
+  if (isAndroid) {
     AndroidSocket.send(message);
   } else  {
     socket.send(message);
@@ -26,8 +28,12 @@ function send (channel, message) {
 }
 
 function receiveMessage (event) {
-  console.log ('receiving ', performance.now());
-  var message = JSON.parse(event.data);
+  console.log ('receiving ', new Date());
+  if (isAndroid) {
+    var message = event;
+  } else {
+    message = JSON.parse(event.data);
+  }
   
   switch(message.channel) {
   case "gameUpdate":
@@ -57,10 +63,13 @@ function connect (gameId, playerKey) {
   gameId_ = gameId;
   playerKey_ = playerKey;
   if (!socket) {
-    if (AndroidSocket) {
+    console.log('connecting socket, do we have an android socket?');
+    if (isAndroid) {
+      console.log('yes');
       AndroidSocket.open(config.socketBase); 
       socket = true;
     } else {
+      console.log('no');
       socket = new WebSocket(config.socketBase);
       socket.onopen = setPlayer;
       socket.onmessage = receiveMessage;
@@ -73,9 +82,16 @@ function connect (gameId, playerKey) {
   }
 }
 
-window.receiveMessage = function(msg)
+window.socketReceive = function(msg)
 {
+  console.log('received on socket: ', msg);
   receiveMessage(msg);
+}
+
+window.socketConnected = function()
+{
+  console.log('socket connected, setting player');
+  setPlayer();
 }
 
 module.exports = {
