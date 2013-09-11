@@ -296,6 +296,23 @@ namespace ForgottenArts.Commerce
 			PlayerSocketServer.Instance.Send (message, channel, this);
 		}
 
+		public void Notify (string message)
+		{
+			if (this.Player.RegistrationId != null)
+			{
+				var rc = new RestClient("https://android.googleapis.com/");
+				var key = Config.GoogleApiKey;
+				rc.AddHeader ("Authorization", "key=" + key);
+				rc.AddHeader ("Content-Type", "application/json");
+				rc.Post ("gcm/send", new {
+					registration_ids = new string[] { this.Player.RegistrationId },
+					data = new {
+						message = message
+					}
+				});
+			}
+		}
+
 		public override string ToString ()
 		{
 			if (Player != null) {

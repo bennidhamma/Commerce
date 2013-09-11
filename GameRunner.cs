@@ -200,7 +200,8 @@ namespace ForgottenArts.Commerce
 			game.CurrentTurn.TradeSetsRedeemed = 0;
 
 			game.CurrentPlayer.HandleCardEvents (new TurnEvent ());
-			//TODO: notify new current player it is their turn.
+
+			game.CurrentPlayer.Notify ("It is your turn.");
 		}
 
 		public void HandleStarvation (Game game)
