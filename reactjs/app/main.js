@@ -98,6 +98,7 @@ var Plus = {
 	},
 
   setRegistrationId: function (regId) {
+    console.log ('setting registration id to :' + regId);
     this.ready(function() {
       $.ajax({
         url: config.serverUrlBase + '/api/player/' + me.id + '/androidRegistrationId',
@@ -126,5 +127,9 @@ window.authenticate = Plus.authenticate;
 window.setRegistrationId = function (regId) {
   Plus.setRegistrationId(regId);
 };
+
+if (typeof(AndroidSocket) != 'undefined') {
+  AndroidSocket.ready();
+}
 
 });
