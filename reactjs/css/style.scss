@@ -160,12 +160,13 @@ h3 {
     -webkit-backface-visibility: hidden;
     -webkit-perspective: 1000;
   }
-  &.expandable:hover {
-    -webkit-animation-name: inspect-card;
-    -webkit-animation-duration: 0.9s;
+  &.expandable.focused {
     -webkit-transform: scale(0.8, 0.8);
     position: relative;
     z-index: 1;
+  }
+  &.trade.focused {
+    -webkit-transform: scale(0.6, 0.6);
   }
   header {
     background: rgba(0, 0, 0, 0.5);
@@ -241,14 +242,6 @@ h3 {
     -webkit-transform: scale(0.4, 0.4);
     position: relative;
     z-index: 1;
-  }
-
-  25% {
-    -webkit-transform: scale(0.6, 0.6);
-  }
-
-  75% {
-    -webkit-transform: scale(0.6, 0.6);
   }
 
   100% {
@@ -410,18 +403,22 @@ section.me,section.other {
 }
 
 .Blue {
+  background: rgba(122,188,255,0.5);
   background: linear-gradient(to bottom, rgba(122,188,255,0.5) 0%,rgba(96,171,248,0.5) 44%,rgba(64,150,238,0.5) 100%);
 }
 
 .Red {
+  background: rgba(169, 3, 41, 0.5);
   background: linear-gradient(to bottom, rgba(169,3,41,0.5) 0%,rgba(143,2,34,0.5) 44%,rgba(109,0,25,0.5) 100%);
 }
 
 .Green {
+  background: rgba(14, 112, 35, 0.5);
   background: linear-gradient(to bottom, rgba(14,112,35,0.5) 0%,rgba(59,119,51,0.5) 36%,rgba(100,178,76,0.5) 100%);
 }
 
 .Yellow {
+  background: rgba(241, 231, 103);
   background: linear-gradient(to bottom, rgba(241,231,103,0.5) 0%,rgba(254,182,69,0.5) 100%); 
 }
 
@@ -442,6 +439,7 @@ section.me,section.other {
 } 
 
 .new-age {
+  background: rgb(252, 234, 187, 1);
   background: linear-gradient(45deg, rgba(252,234,187,1) 0%,rgba(252,205,77,1) 50%,rgba(248,181,0,1) 51%,rgba(251,223,147,1) 100%);
 }
 

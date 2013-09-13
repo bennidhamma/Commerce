@@ -41,9 +41,24 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
       return {info: cards[this.props.name]};
     },
 
-    click: function(evt) {
-      console.log('card clicked', this.props.name, this.props.cardSource);
-      Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state.info, this]);
+    unfocus: function () {
+      if (this.isMounted())
+        this.setState({focused: false});
+    },
+
+    click: function(evt, el) {
+      var publish = false;
+      if (this.state.focused) {
+        publish = true;
+        this.setState({focused: false});
+      } else {
+        this.setState({focused: true}); 
+        setTimeout(this.unfocus, 3000);
+        // Publish click if this is a trade card, because that's probably the user's intent.
+        publish = this.state.info.tradeValues;
+      }
+      if (publish)
+        Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state.info, this]);
     },
 
     renderSetValues: function (start, end) {
@@ -71,6 +86,8 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         classes.push("selected");
       if (this.props.secret)
         classes.push("secret");
+      if (this.state.focused)
+        classes.push("focused");
       if (this.props.height) {
         style.borderBottom = 4 * this.props.height + 'px solid #333';
       }
