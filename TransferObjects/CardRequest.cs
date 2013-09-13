@@ -7,5 +7,10 @@ namespace ForgottenArts.Commerce.Server
 		public string Card {get; set;}
 		public int HexId {get; set;}
 	}
+
+	public class RegistrationIdRequest 
+	{
+		public string RegistrationId {get; set;}
+	}
 }
 

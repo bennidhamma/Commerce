@@ -11,6 +11,7 @@ namespace ForgottenArts.Commerce
 		public string FirstName {get; set;}
 		public string LastName {get; set;}
 		public string DisplayName {get; set;}
+		public string RegistrationId {get; set;}
 
 		public IList<long> GetPlayerGames ()
 		{
@@ -32,11 +33,8 @@ namespace ForgottenArts.Commerce
 			var rc = new RestClient("https://www.googleapis.com/plus/v1/");
 			var key = Config.GoogleApiKey;
 			try {
-        Console.WriteLine("fetching data 1");
 				dynamic person = rc.Get ("people/" + PlusId + "?key=" + key);
-        Console.WriteLine("fetching data 2");
 				this.Photo = person.image.url;
-        Console.WriteLine("fetching data 3");
 				this.FirstName = person.name.givenName;
 				this.LastName = person.name.familyName;
 				this.DisplayName = person.displayName;
@@ -66,6 +64,18 @@ namespace ForgottenArts.Commerce
 				player.FetchData ();
 			}
 			return player;
+		}
+
+		public static Player MergeOrCreate (string playerId, Player update)
+		{
+			var originalPlayer = GetOrCreate (playerId);
+			originalPlayer.Photo = update.Photo;
+			originalPlayer.Gender = update.Gender;
+			originalPlayer.FirstName = update.FirstName;
+			originalPlayer.LastName = update.LastName;
+			originalPlayer.DisplayName = update.DisplayName;
+
+			return originalPlayer;
 		}
 	}
 }

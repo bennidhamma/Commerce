@@ -25,6 +25,7 @@ namespace ForgottenArts.Commerce.Server
 			After += ctx => ctx.Response.WithHeader("Access-Control-Allow-Origin", "*");
 			Options["/{path*}"] = CrossOriginSetup;
 			Put["/player/auth"] = AuthenticatePlayer;
+			Put ["/player/{id}/androidRegistrationId"] = AssociateRegistrationId;
 			Post["/game"] = CreateGame;
 			Get["/player/{id}/games"] = GetGames;
 			Get["/game/{game}"] = GetGame;
@@ -85,9 +86,20 @@ namespace ForgottenArts.Commerce.Server
 		public dynamic AuthenticatePlayer (dynamic parameters)
 		{
 			var p2 = this.Bind<Player> ();
-			repository.Put (p2.GetKey(), p2);
+			var player = Player.MergeOrCreate (p2.PlusId, p2);
+			repository.Put (player.GetKey(), player);
 			//TODO: return games.
 			return p2;
+		}
+
+		dynamic AssociateRegistrationId (dynamic parameters)
+		{
+			var playerId = parameters.id;
+			var player = Player.GetOrCreate (playerId);
+			var reg = this.Bind<RegistrationIdRequest> ();
+			player.RegistrationId = reg.RegistrationId;
+			repository.Put (player.GetKey (), player);
+			return "OK";
 		}
 
 		public dynamic CreateGame (dynamic parameters)

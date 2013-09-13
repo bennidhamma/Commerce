@@ -1,0 +1,6 @@
+Name: Train
+ImageUrl: train.png
+Description: +3 Actions.
+Cost: 60
+Action: |
+  turn.actions += 3

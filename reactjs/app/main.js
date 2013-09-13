@@ -95,7 +95,23 @@ var Plus = {
 				 });
 			 request.execute(authenticate);
 			})
-	}
+	},
+
+  setRegistrationId: function (regId) {
+    console.log ('setting registration id to :' + regId);
+    this.ready(function() {
+      $.ajax({
+        url: config.serverUrlBase + '/api/player/' + me.id + '/androidRegistrationId',
+        type: 'PUT',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify({registrationId: regId}),
+        success: function (resp) {
+          console.log ('associated registration id: ', resp);
+        }
+      })
+    });
+  }
 };
 
 (function() {
@@ -108,5 +124,12 @@ var Plus = {
 module.exports = Plus;
 window.signinCallback = Plus.signinCallback;
 window.authenticate = Plus.authenticate;
+window.setRegistrationId = function (regId) {
+  Plus.setRegistrationId(regId);
+};
+
+if (typeof(AndroidSocket) != 'undefined') {
+  AndroidSocket.ready();
+}
 
 });

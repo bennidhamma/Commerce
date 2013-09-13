@@ -239,11 +239,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     },
 
     buildStack: function (card, count, source, cssClass) {
-      var cards = [];
-      for (var i = 0; i < count; i++) {
-        cards.push (<Card key={"c-" + i} name={card} cardSource={source} faux={i < count -1} cssClass={cssClass}/>);
-      }
-      return <section key={card} class="stack">{cards}</section>;
+      var cardStack = (<Card key={"c"} name={card} cardSource={source} height={count} cssClass={cssClass}/>);
+      return <section key={card} class="stack">{cardStack}</section>;
     },
 
     hexId: 0,
