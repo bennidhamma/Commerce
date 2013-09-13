@@ -307,7 +307,8 @@ namespace ForgottenArts.Commerce
 				rc.Post ("gcm/send", new {
 					registration_ids = new string[] { this.Player.RegistrationId },
 					data = new {
-						message = message
+						message = message,
+						game_id = this.game.Id
 					}
 				});
 			}

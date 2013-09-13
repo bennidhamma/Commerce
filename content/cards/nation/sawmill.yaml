@@ -1,6 +1,6 @@
 Name: Sawmill
 ImageUrl: sawmill.png
-Description: +2 Actions
+Description: +2 Actions.
 Action: |
   turn.actions += 2
 Cost: 20
