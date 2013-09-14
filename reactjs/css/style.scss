@@ -2,7 +2,8 @@
 
 /* Put your CSS here */
 html, body {
-  margin:5px 30px 30px 30px;
+  margin: 0;
+  padding: 0;
   font-family: 'Lora', serif;
   color: white;
   background: black;
@@ -117,19 +118,20 @@ h3 {
 }
 
 .hex {
-  background:url(/images/hex/empty.png) no-repeat;
-  width: 80px;
-  height: 65px;
-  margin: 5px;
+  background-image:url(/images/hex/empty.png);
+  background-size:100% 100%;
+  width: 50px;
+  height: 50px;
+  margin: 2px;
   display: inline-block;
-  line-height: 65px;
+  line-height: 30px;
   text-align: center;
   font-weight: bold;
-  font-size: 1.8em;
+  font-size: 1.2em;
   color: white;
   text-shadow: 0 0 8px black;
   &.has-colony {
-    background:url(/images/hex/colony.png) no-repeat;
+    background-image:url(/images/hex/colony.png);
     text-indent:-9999px;
   }
 }
@@ -152,11 +154,11 @@ h3 {
   border: 3px solid rgba(30, 30, 30, 1);
   display:inline-block;
   vertical-align: top;
-  -webkit-transform: scale(0.4, 0.4);
+  -webkit-transform: scale(0.3, 0.3);
   margin: -100px;
   margin-right: -80px;
   &.expandable {
-    transition: -webkit-transform 300ms;
+    transition: -webkit-transform 200ms;
     -webkit-backface-visibility: hidden;
     -webkit-perspective: 1000;
   }
@@ -166,7 +168,7 @@ h3 {
     z-index: 1;
   }
   &.trade.focused {
-    -webkit-transform: scale(0.6, 0.6);
+    -webkit-transform: scale(0.5, 0.5);
   }
   header {
     background: rgba(0, 0, 0, 0.5);
