@@ -20,6 +20,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       Events.subscribe ('/card/selected', this.selectCard);
       Events.subscribe ('error', this.notify);
       Events.subscribe ('/cards/loaded', function (cardsArg) {
+        if (!this.isMounted())
+          return;
         this.state.cards = cardsArg;
         this.setState(this.state);
       }.bind(this));
@@ -91,7 +93,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     },
 
     unnotify: function () {
-      this.setState({notification: null});
+      if (this.isMounted())
+        this.setState({notification: null});
     },
 
     // Play Action functions.

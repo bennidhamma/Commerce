@@ -203,7 +203,7 @@ namespace ForgottenArts.Commerce.Server
 		dynamic PlayCard (dynamic arg)
 		{
 			return GenericAction<CardRequest>((long)arg.game, (game, player, card) => 
-				GameRunner.Instance.PlayCard (game, player, card.Card, card.HexId));
+				GameRunner.Instance.PlayCard (game, player, card.Card, card));
 		}
 
 		dynamic BuyCard (dynamic arg)

@@ -26,6 +26,7 @@ h2 {
 
 h3 {
   font-size: 1.1em;
+  margin: 2px;
 }
 
 .main-menu {
@@ -122,9 +123,9 @@ h3 {
   background-size:100% 100%;
   width: 50px;
   height: 50px;
+  line-height: 50px;
   margin: 2px;
   display: inline-block;
-  line-height: 30px;
   text-align: center;
   font-weight: bold;
   font-size: 1.2em;
@@ -236,6 +237,7 @@ h3 {
       color: rgba(255, 255, 255, 0.8);
       text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
+    margin-bottom:-146px;
   }
 }
 
@@ -279,10 +281,14 @@ h3 {
   }
 }
 
+.bank, .trade-cards, .technology-cards {
+  margin-top: -40px;
+  margin-bottom: 20px;
+}
+
 .hand, .bank, .trade-cards, .technology-cards {
   -webkit-backface-visibility: hidden;
-  padding: 1em;
-  padding-left: 30px;
+  padding: 15px;
 }
 
 .hand, .bank, .technology-cards {
@@ -298,7 +304,6 @@ h3 {
 
 .discards {
   margin-left: 85px;
-  height: 220px;
   .card {
     margin-left: -155px;
   }
@@ -313,13 +318,8 @@ h3 {
   display:inline-block;
   margin-right:10px;
   vertical-align: top;
-  height: 188px;
-  width: 95px;
-  .card {
-    position: relative;
-    display:block;
-    margin-bottom: -374px;
-  }
+  height: 132px;
+  width: 70px;
 }
 
 .offers {
@@ -356,13 +356,11 @@ h3 {
 }
 
 .currentTurn {
+  text-align: center;
   div {
     float: right;
     margin-right:20px;
   }
-  margin-top: 13px;
-  position: relative;
-  padding: 10px;
 
   .winner, .other {
     margin-right: 30px;
@@ -375,23 +373,19 @@ h3 {
     box-shadow: 0 0 20px yellow;
   }
 
-  h2 {
-    padding-left: 55px;
-    img {
-    float: none;
-    position: absolute;
-    top: -17px;
-    left: 0;
-    }
-  }
 }
 
-h2 img, img.photo {
-  margin: 5px;
-  float: left;
-  border: 1px solid rgba(0,0,0,0.4);
-  box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
-  border-radius: 8px;
+h2 {
+  img {
+    float: none;
+    height: 40px;
+    width: 40px;
+    vertical-align: middle;
+    margin: 5px;
+    border: 1px solid rgba(0,0,0,0.4);
+    box-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+    border-radius: 8px;
+  }
 }
 
 section.me,section.other {

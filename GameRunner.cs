@@ -358,7 +358,7 @@ namespace ForgottenArts.Commerce
 			return false;
 		}
 
-		public bool PlayCard (Game game, PlayerGame player, string cardKey, int hexId)
+		public bool PlayCard (Game game, PlayerGame player, string cardKey, CardRequest req)
 		{
 			var card = Cards [cardKey];
 
@@ -382,7 +382,7 @@ namespace ForgottenArts.Commerce
 
 			CardArgs cardArgs =  new CardArgs ();
 			if (card.NeedsHex) {
-				cardArgs.Hex = game.GetHex(hexId);
+				cardArgs.Hex = game.GetHex(req.HexId);
 			}
 
 			game.CurrentTurn.CurrentCard = cardKey;
@@ -463,6 +463,9 @@ namespace ForgottenArts.Commerce
 			int cost;
 
 			string error = CanBuy (game, player, cardKey, out cost);
+			if (error != null) {
+				throw new InvalidOperationException (error);
+			}
 
 			var card = Cards[cardKey];
 
