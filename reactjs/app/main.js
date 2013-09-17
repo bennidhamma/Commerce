@@ -32,6 +32,10 @@ var Plus = {
 	me: function() { return me; },
 
   getFriends: function (process) {
+    if (!googleLoaded) {
+      loadGoogle();
+      ready.isReady = false;
+    }
 		this.ready(function() {
 			gapi.client.plus.people.list({
 				userId: 'me',
@@ -61,6 +65,7 @@ var Plus = {
 		 * returns list of games
 		 */
 		me = plus;
+    localStorage['me'] = JSON.stringify(me);
 		var payload = JSON.stringify({
 			plusId: plus.id,
 			photo: plus.image.url,
@@ -114,12 +119,25 @@ var Plus = {
   }
 };
 
-(function() {
- var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
- po.src = 'https://apis.google.com/js/client:plusone.js';
- var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
- console.log(s, s.parentNode);
-})();
+var googleLoaded = false;
+function loadGoogle () {
+  (function() {
+   var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+   po.src = 'https://apis.google.com/js/client:plusone.js';
+   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+   console.log(s, s.parentNode);
+  })();
+  googleLoaded = true;
+};
+
+if (localStorage['me'] != null) {
+  me = JSON.parse(localStorage['me']);
+  Plus.authenticate(me);
+} else  {
+  loadGoogle();
+}
+
+
 
 module.exports = Plus;
 window.signinCallback = Plus.signinCallback;
