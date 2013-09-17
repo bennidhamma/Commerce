@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using ForgottenArts.Commerce;
+using ForgottenArts.Commerce.Server;
 
 namespace Tests
 {
@@ -63,7 +64,7 @@ namespace Tests
 			Assert.That (g.CurrentTurn.Actions, Is.EqualTo(1));
 			p1.Hand.Add ("General");
 			p2.Hand = new List<string>(new string [] {"General", "Marketplace", "Sawmill", "Scout"});
-			gr.PlayCard (g, p1, "General", 0);
+			gr.PlayCard (g, p1, "General", new CardRequest ());
 			Assert.That(p1.Hand, Is.Not.Contains("General"));
 			Assert.That (g.CurrentTurn.Actions, Is.EqualTo(0));
 			Assert.That(p2.Hand.Count, Is.EqualTo(3));
