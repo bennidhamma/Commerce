@@ -131,14 +131,15 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       case 'tradeCards':
         var currentTradeCard = game.tradeCards[source.props.index];
         if (this.isMyTurn()) {
-          if (currentTradeCard.selected) {
+          if (!currentTradeCard.selected) {
             // If this is the only selected card in a set, add a third select mode 
             // which is to select all cards in the set.
-
+            
             var cardCount = game.tradeCards.reduce(function(a,b) { 
               return a + (b.name == card ? 1 : 0);
             }, 0);
             if (this.state.cardsToRedeem[card] == 1 && cardCount > 1) {
+              // Select all cards.
               for (var i = 0; i < game.tradeCards.length; i++) {
                 var tradeCard = game.tradeCards[i];
                 if (tradeCard.name == card) {
@@ -150,17 +151,18 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
               // We have already selected the cards, so de-select all of this type.
               game.tradeCards.map(function(c) {
                 if (c.name == card) {
-                  c.selected = false;
+                  c.selected = true;
                 }
               });
               delete this.state.cardsToRedeem[card];
             }
-          } else { // This card is not currently selected.
-            currentTradeCard.selected = true;
+          } else { // Toggle current selection.
+            currentTradeCard.selected = !currentTradeCard.selected;
             this.state.cardsToRedeem[card] = 1;
           }
           this.setState(this.state);
         } else if (this.isTrading()) {
+        // We are in trade mode, user intent is to create trade offers.
           if (currentTradeCard.selected) {
             currentTradeCard.selected = false;
             currentTradeCard.secret = false;
@@ -311,7 +313,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       for (var k in this.state.cardsToRedeem) {
         if (this.state.cardsToRedeem[k]) {
           redeem = <div class="trade-buttons">
-            <button class="redeem" onClick={this.redeem}>Redeem Cards</button>
+            <button class="redeem" onClick={this.redeem}>Sell Cards</button>
           </div>;
           break;
         }

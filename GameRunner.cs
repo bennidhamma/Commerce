@@ -700,7 +700,7 @@ namespace ForgottenArts.Commerce
 			var gold = cardObject.TradeLevel * count * count;
 			player.Gold += gold;
 			game.CurrentTurn.TradeSetsRedeemed++;
-			game.Log ("{0} redeemed {1} {2} for {3} gold.", player.Name, count, currentCard, gold);
+			game.Log ("{0} sold {1} {2} for {3} gold.", player.Name, count, currentCard, gold);
 		}
 	}
 
