@@ -20,6 +20,8 @@ require(['main', 'react', 'jsx/game', 'game', 'jquery', 'socket', 'pubsub'],
     GameView.render(game);
   };
 
+  React.initializeTouchEvents(true);
+
   var update = function () {
     var parts = document.location.hash.substr(1).split('/')
     if (parts.length > 0) {

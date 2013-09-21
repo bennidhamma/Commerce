@@ -87,27 +87,15 @@ h3 {
 }
 
 .main-layout {
-  display: -webkit-flex;
-  flex-flow: row nowrap;
-  align-content: center;
-  align-items: flex-start
 }
 
 .me {
-  order: 1;
-  flex: 3;
-  -webkit-flex: 3;
 }
 
 .others {
-  order: 2;
-  flex: 2;
-  -webkit-flex: 2;
 }
 
 .log {
-  order: 3;
-  -webkit-flex: 1;
   .log-entry {
     padding:5px;
     border-bottom: 1px dotted gray;
@@ -158,18 +146,27 @@ h3 {
   -webkit-transform: scale(0.3, 0.3);
   margin: -100px;
   margin-right: -80px;
+  position: relative;
   &.expandable {
-    transition: -webkit-transform 200ms;
+    transition: -webkit-transform 200ms, opacity 1s;
     -webkit-backface-visibility: hidden;
     -webkit-perspective: 1000;
   }
-  &.expandable.focused {
+  &.expandable:hover {
     -webkit-transform: scale(0.8, 0.8);
-    position: relative;
     z-index: 1;
   }
-  &.trade.focused {
-    -webkit-transform: scale(0.5, 0.5);
+  &.played {
+    top: -400px;
+    opacity: 0.2;
+    transition: top 1s, opacity 1s;
+  }
+  &.played:hover {
+    -webkit-transform: scale(0.3, 0.3);
+  }
+  &.expandable.trade:hover {
+    -webkit-transform: scale(0.4, 0.4);
+    z-index: 1;
   }
   header {
     background: rgba(0, 0, 0, 0.5);

@@ -17,7 +17,7 @@ define(['react', 'game'], function(React, game) {
          var id = g.id;
          return <li key={id}><a href={"#game/" + id}>{players}</a></li>;
        });
-       return <ul>{games}</ul>;
+       return <ul class="game-list">{games}</ul>;
      }
   });
 

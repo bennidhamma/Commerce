@@ -43,22 +43,44 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
 
     unfocus: function () {
       if (this.isMounted())
-        this.setState({focused: false});
+        this.setState({focused: false, dragY: undefined, startDragY: undefined});
     },
 
-    click: function(evt, el) {
+    focus: function(evt) {
       var publish = false;
       if (this.state.focused) {
-        publish = true;
-        this.setState({focused: false});
+        //this.setState({focused: false}); 
+        //publish = true;
       } else {
         this.setState({focused: true}); 
-        setTimeout(this.unfocus, 3000);
+        setTimeout(this.unfocus, 4000);
         // Publish click if this is a trade card, because that's probably the user's intent.
         publish = this.state.info.tradeValues;
       }
       if (publish)
-        Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state.info, this]);
+        this.select(evt);
+    },
+
+    select: function(evt) {
+      if (!this.props.selectable)
+        return;
+      var x = evt.touches[0].pageX;
+      var y = evt.touches[0].pageY;
+      if (this.state.startDragY) {
+        if (this.state.startDragY - y > 50) {
+          Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state.info, this]);
+          this.setState({focused: false, dragging: false});
+          return false;
+        }
+      } else {
+        this.setState({dragging: true, startDragY: y})
+      }
+      this.setState({draggin: true, dragY: y})
+      return false;
+    },
+
+    markAsPlayed: function() {
+      this.setState({played: true});
     },
 
     renderSetValues: function (start, end) {
@@ -86,8 +108,12 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         classes.push("selected");
       if (this.props.secret)
         classes.push("secret");
-      if (this.state.focused)
-        classes.push("focused");
+      if (this.state.startDragY) {
+        style.top = this.state.dragY - this.state.startDragY + 'px';
+      }
+      if (this.state.played) {
+        classes.push('played');
+      }
       if (this.props.height) {
         style.borderBottom = 4 * this.props.height + 'px solid #333';
       }
@@ -134,7 +160,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         else if (length < 40)
           classes.push("sparse");
       }
-      return <div onClick={this.click} class={classes.join(' ')} style={style}>
+      return <div onTouchStart={this.focus} onTouchEnd={this.unfocus} onClick={this.focus} onTouchMove={this.select} class={classes.join(' ')} style={style}>
         {elems}
       </div>;
     },
