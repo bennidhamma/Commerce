@@ -2,6 +2,16 @@
 define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'], 
     function(React, gameServer, Plus, Events, Card, Hex, $) {
 
+  var MenuItem = React.createClass ({displayName: 'MenuItem',
+    select: function () {
+      this.props.onSelect (this.props.key);
+    },
+
+    render: function () {
+      return React.DOM.span( {className:this.props.cssClass, onClick:this.select}, this.props.children); 
+    }
+  });
+
   var GameView = React.createClass({displayName: 'GameView',
     getInitialState: function () {
       this.setupListeners ();
@@ -134,13 +144,14 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
         var currentTradeCard = game.tradeCards[source.props.index];
         if (this.isMyTurn()) {
           if (!currentTradeCard.selected) {
-            // If this is the only selected card in a set, add a third select mode 
-            // which is to select all cards in the set.
+            // If no cards are selected, select all cards in set.
             
             var cardCount = game.tradeCards.reduce(function(a,b) { 
               return a + (b.name == card ? 1 : 0);
             }, 0);
-            if (this.state.cardsToRedeem[card] == 1 && cardCount > 1) {
+            if (!this.state.cardsToRedeem[card])
+              this.state.cardsToRedeem[card] = 0;
+            if (this.state.cardsToRedeem[card] == 0 && cardCount > 1) {
               // Select all cards.
               for (var i = 0; i < game.tradeCards.length; i++) {
                 var tradeCard = game.tradeCards[i];
@@ -150,6 +161,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
                 this.state.cardsToRedeem[card] = cardCount;
               }
             } else {
+              this.state.cardsToRedeem[card]++;
+              /*
               // We have already selected the cards, so de-select all of this type.
               game.tradeCards.map(function(c) {
                 if (c.name == card) {
@@ -157,10 +170,11 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
                 }
               });
               delete this.state.cardsToRedeem[card];
+              */
             }
-          } else { // Toggle current selection.
-            currentTradeCard.selected = !currentTradeCard.selected;
-            this.state.cardsToRedeem[card] = 1;
+          } else { // Deselect card.
+            currentTradeCard.selected = false;
+            this.state.cardsToRedeem[card]--;
           }
           this.setState(this.state);
         } else if (this.isTrading()) {
@@ -299,6 +313,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     },
 
     buildMyView: function() {
+      if (this.state.view && this.state.view != Plus.me().id)
+        return;
       var game = this.state.game;
       var hand = this.buildCards(game.hand, "hand", this.isActionPhase());
       var discards = this.buildCards(game.discards, "discards");
@@ -340,6 +356,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     },
 
     buildOther: function (other) {
+      if (!this.state.view || this.state.view != other.key)
+        return;
       var hand = [];
       for (var i = 0; i < other.handSize; i++)
         hand.push ('unknown');
@@ -365,6 +383,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     },
 
     buildLog: function () {
+      if (!this.state.view || this.state.view != 'log')
+        return;
       var entries = [];
       if (this.state.log) {
         var entries = this.state.log.map (function(e, i) {
@@ -531,6 +551,10 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
         )
       );
     },
+
+    changeView: function(key) {
+      this.setState({view: key});
+    },
     
     render: function () {
       var sections = [
@@ -543,13 +567,25 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       if (game.status == "Running" || game.status == "Finished") {
         // Add the current turn section.
         if (game.status == "Running") {
+          var players = game.players.map (function(player) {
+            if (player.key == game.currentTurn.playerKey)
+              return MenuItem( {key:player.key, onSelect:this.changeView}, 
+                  React.DOM.img( {src:game.currentTurn.playerPhoto}),
+                  React.DOM.span( {className:"actions turn-info " + (this.isActionPhase() ? "selected" : "")}, game.currentTurn.actions),
+                  React.DOM.span( {className:"buys turn-info " + (this.isBuyPhase() ? "selected" : "")}, game.currentTurn.buys)
+                );
+            else
+             return MenuItem( {key:player.key, onSelect:this.changeView, cssClass:"other " + player.color}, 
+                      React.DOM.img( {src:player.photo})
+                   );
+          }.bind(this));
           sections.push(
             React.DOM.section( {key:"t", className:"currentTurn " + game.currentTurn.playerColor}, 
               React.DOM.h2(null, 
-                React.DOM.img( {src:game.currentTurn.playerPhoto}),
-                game.currentTurn.playerName,
-" Actions: ", game.currentTurn.actions,
-" Buys: ", game.currentTurn.buys
+                players,
+                MenuItem( {key:"log", onSelect:this.changeView}, 
+                  React.DOM.img( {src:"/images/log-icon.png", width:"24", height:"24"})
+                )
               )
             ));
         } else {

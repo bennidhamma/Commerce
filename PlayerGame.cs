@@ -32,7 +32,7 @@ namespace ForgottenArts.Commerce
 
 		public string PlayerKey {get; set;}
 		public string Name {get {
-				return Player.DisplayName;
+				return Player.FirstName;
 			}
 		}
 		public string Color {get; set;}
@@ -348,7 +348,7 @@ namespace ForgottenArts.Commerce
 					}
 				}
 			}
-			this.Game.Log ("{0} lost {1} colonies due to {2}.", this.Player.DisplayName, number, reason);
+			this.Game.Log ("{0} lost {1} colonies due to {2}.", this.Name, number, reason);
 			return reduced;
 		}
 
@@ -382,7 +382,7 @@ namespace ForgottenArts.Commerce
 				}
 			}
 
-			this.Game.Log ("{0} of {1}'s colonists died due to {2}.", populationRemoved, this.Player.DisplayName, reason);
+			this.Game.Log ("{0} of {1}'s colonists died due to {2}.", populationRemoved, this.Name, reason);
 		}
 	}
 

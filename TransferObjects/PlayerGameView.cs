@@ -20,6 +20,7 @@ namespace ForgottenArts.Commerce.Server
 		public TurnView CurrentTurn { get; set; }
 		public IEnumerable<StoreCardView> Bank { get; set; }
 		public IEnumerable<LogEntry> Log { get; set; }
+		public IEnumerable<PlayerSummaryView> Players { get; set; }
 		public int Gold { get; set; }
 		public IEnumerable<string> TradeCards { get; set; }
 		public IEnumerable<OtherPlayerView> OtherPlayers {get; set;}
@@ -44,6 +45,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Gold = player.Gold;
 			this.TradeCards = from c in player.TradeCards where cards[c.Card] != null orderby cards[c.Card].TradeLevel, c.Card select c.Card;
 			this.OtherPlayers = from p in game.Players where p != player select new OtherPlayerView (p);
+			this.Players = from p in game.Players select new PlayerSummaryView (p);
 
 			if (game.Status == GameState.Finished) {
 				this.Result = new WinView (game);

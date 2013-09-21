@@ -36,7 +36,7 @@ namespace ForgottenArts.Commerce.Server
 
 			var player = game.GetPlayer (offer.PlayerKey);
 			this.PlayerPhoto = player.Player.Photo;
-			this.PlayerName = player.Player.DisplayName;
+			this.PlayerName = player.Name;
 
 			this.Id = offer.Id;
 			this.Cards = new List<string>(offer.Cards);

@@ -46,37 +46,23 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         this.setState({focused: false, dragY: undefined, startDragY: undefined});
     },
 
-    focus: function(evt) {
-      var publish = false;
-      if (this.state.focused) {
-        //this.setState({focused: false}); 
-        //publish = true;
-      } else {
-        this.setState({focused: true}); 
-        setTimeout(this.unfocus, 4000);
-        // Publish click if this is a trade card, because that's probably the user's intent.
-        publish = this.state.info.tradeValues;
-      }
-      if (publish)
-        this.select(evt);
+    focus: function() {
+      this.setState({focused: true}); 
     },
 
-    select: function(evt) {
+    select: function() {
       if (!this.props.selectable)
-        return;
-      var x = evt.touches[0].pageX;
-      var y = evt.touches[0].pageY;
-      if (this.state.startDragY) {
-        if (this.state.startDragY - y > 50) {
-          Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state.info, this]);
-          this.setState({focused: false, dragging: false});
-          return false;
-        }
-      } else {
-        this.setState({dragging: true, startDragY: y})
-      }
-      this.setState({draggin: true, dragY: y})
+        return false;
+      Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state.info, this]);
+      this.setState({focused: false});
       return false;
+    },
+
+    touch: function(evt) {
+      if (!this.state.focused)
+        this.focus();
+      else
+        this.select();
     },
 
     markAsPlayed: function() {
@@ -160,7 +146,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         else if (length < 40)
           classes.push("sparse");
       }
-      return <div onTouchStart={this.focus} onTouchEnd={this.unfocus} onClick={this.focus} onTouchMove={this.select} class={classes.join(' ')} style={style}>
+      return <div onTouchStart={this.touch} onTouchEnd={this.unfocus} onClick={this.select} class={classes.join(' ')} style={style}>
         {elems}
       </div>;
     },

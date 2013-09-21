@@ -243,7 +243,7 @@ h3 {
   display: inline-block;
   margin-right: 10px;
   vertical-align: top;
-  height: 132px;
+  height: 171px;
   width: 70px; }
 
 .offers {
@@ -284,6 +284,21 @@ h3 {
     line-height: 55px; }
   .currentTurn .winner {
     box-shadow: 0 0 20px yellow; }
+  .currentTurn .turn-info {
+    margin-left: 3px;
+    padding: 5px;
+    padding-left: 35px;
+    height: 30px;
+    opacity: 0.5; }
+  .currentTurn .selected {
+    border: 2px solid white;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.4);
+    opacity: 1; }
+  .currentTurn .actions {
+    background: url("../images/actions-icon.png") no-repeat 4px 5px; }
+  .currentTurn .buys {
+    background: url("../images/buys-icon.png") no-repeat 4px 5px; }
 
 h2 img {
   float: none;

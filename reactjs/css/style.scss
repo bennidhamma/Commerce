@@ -315,7 +315,7 @@ h3 {
   display:inline-block;
   margin-right:10px;
   vertical-align: top;
-  height: 132px;
+  height: 171px;
   width: 70px;
 }
 
@@ -370,6 +370,28 @@ h3 {
     box-shadow: 0 0 20px yellow;
   }
 
+  .turn-info {
+    margin-left: 3px;
+    padding: 5px;
+    padding-left: 35px;
+    height: 30px;
+    opacity: 0.5;
+  }
+
+  .selected {
+    border: 2px solid white;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.4);
+    opacity: 1;
+  }
+
+  .actions {
+    background: url('../images/actions-icon.png') no-repeat 4px 5px;
+  }
+
+  .buys {
+    background: url('../images/buys-icon.png') no-repeat 4px 5px;
+  }
 }
 
 h2 {

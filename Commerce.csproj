@@ -76,6 +76,7 @@
     <Compile Include="TransferObjects\WinView.cs" />
     <Compile Include="Scripting\EventManager.cs" />
     <Compile Include="TransferObjects\StoreCardView.cs" />
+    <Compile Include="TransferObjects\PlayerSummaryView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

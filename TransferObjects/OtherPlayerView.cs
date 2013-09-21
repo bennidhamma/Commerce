@@ -18,6 +18,7 @@ namespace ForgottenArts.Commerce
 		 */
 
 		public string Name {get; set;}
+		public string Key {get; set;}
 		public string Photo {get; set;}
 		public string Color {get; set;}
 		public int HandSize {get; set;}
@@ -29,6 +30,7 @@ namespace ForgottenArts.Commerce
 		public OtherPlayerView (PlayerGame other)
 		{
 			this.Name = other.Name;
+			this.Key = other.PlayerKey;
 			this.Photo = other.Player.Photo;
 			this.Color = other.Color;
 			this.HandSize = other.Hand.Count;

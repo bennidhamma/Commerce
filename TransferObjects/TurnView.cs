@@ -19,7 +19,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Count = turn.Count;
 			this.PlayerKey = game.CurrentPlayer.Player.PlusId;
 			this.PlayerPhoto = game.CurrentPlayer.Player.Photo;
-			this.PlayerName = game.CurrentPlayer.Player.DisplayName;
+			this.PlayerName = game.CurrentPlayer.Name;
 			this.PlayerColor = game.CurrentPlayer.Color;
 		}
 	}
