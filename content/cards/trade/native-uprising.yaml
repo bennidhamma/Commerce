@@ -32,7 +32,7 @@ Calamity: |
             p.hexes.remove hex
           else
             hex.has_colony = false
-            hex.current_population = 0
+            hex.current_population = hex.population_limit
           end
           loss_count += 1
         end

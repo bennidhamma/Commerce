@@ -83,9 +83,9 @@ namespace ForgottenArts.Commerce
 
     public CompiledCode CompileCalamity (Card card)
     {
-      Console.WriteLine("compiling calamity " + card.Name);
-			var script = Engine.CreateScriptSourceFromString (card.Calamity);
-			return script.Compile (new MyErrorListener(card.Name));
+		Console.WriteLine("compiling calamity " + card.Name);
+		var script = Engine.CreateScriptSourceFromString (card.Calamity);
+		return script.Compile (new MyErrorListener(card.Name));
     }
 
 		public void ExecuteCardEvent (Game game, Card card, PlayerGame player, string type, object cardEvent)
@@ -168,7 +168,7 @@ namespace ForgottenArts.Commerce
 
 		public override void ErrorReported(ScriptSource source, string message, Microsoft.Scripting.SourceSpan span, int errorCode, Microsoft.Scripting.Severity severity)
 		{
-			Console.WriteLine("{0} {1},{2}: {3}", context, span.Start.Line, span.Start.Column, message);
+			Console.WriteLine("ErrorReported {0} {1},{2}: {3}", context, span.Start.Line, span.Start.Column, message);
 		}
 	}
 }

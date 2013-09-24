@@ -31,6 +31,7 @@ namespace ForgottenArts.Commerce.Server
 			Get["/game/{game}"] = GetGame;
 			Get["/game/{id}/cards"] = GetGameCards;
 			Get["/game/{id}/log"] = GetGameLog;
+			Get ["/game/{id}/debug"] = GetGameDebug;
 
 			// Player phase endpoints.
 			Post["/game/{game}/playCard"] = PlayCard;
@@ -161,6 +162,11 @@ namespace ForgottenArts.Commerce.Server
 			var player = game.GetPlayer (playerKey);
 			string channel;
 			return BuildGameView (game, player, out channel);
+		}
+
+		dynamic GetGameDebug (dynamic arg)
+		{
+			return repository.Get<Game> (Game.GetKey (arg.id));
 		}
 
 		dynamic GenericAction<T>(long gameId, Func<Game, PlayerGame, T, bool> func)

@@ -89,13 +89,19 @@ namespace Tests
 			Game g = new Game();
 			var p1 = AddPlayer (g);
 			AddTradeCards (p1, "Corn", "Corn", "Coffee", "Coffee");
-			
+
 			CardCatalog catalog = new CardCatalog();
-			catalog.LoadCards("cards/trade", CardType.Trade);
-			
+			catalog.Load ();
+			GameRunner.Instance.Cards = catalog;
+
+			int firstTradeStoreCount = g.TradeCards.Sum (x => x.Count);
+
 			ScriptManager.Manager.ExecuteCalamity (g, catalog["Native Raid"], p1, null);
-			
 			Assert.That (p1.TradeCards.Count, Is.EqualTo(2));
+
+			int secondTradeStoreCount = g.TradeCards.Sum (x => x.Count);
+			Assert.That (secondTradeStoreCount, Is.EqualTo(firstTradeStoreCount + 2));
+
 		}
 		
 		[Test]

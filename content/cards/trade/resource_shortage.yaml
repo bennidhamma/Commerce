@@ -13,13 +13,14 @@ Calamity: |
     else
       num = (1 + rand(4)).round
     end
-    while num
-      p.remove_trade_card p.yrafecards.first, true
-      num--
-    End  
-    if num
-      p.trade_cards.remove_range 0, num
-      game.log "#{p.name} lost #{num} trade cards due to " +
-               "a terrible native raid!"
+    if num > p.trade_cards.count
+      num = p.trade_cards.count
     end
+    lost_num = num
+    while num > 0
+      p.remove_trade_card p.trade_cards[0].card, true
+      num -= 1
+    end  
+    game.log "#{p.name} lost #{lost_num} trade cards due to " +
+               "a terrible native raid!"
   }

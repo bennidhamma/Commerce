@@ -42,6 +42,12 @@
     <Reference Include="Microsoft.Scripting">
       <HintPath>..\lib\Microsoft.Scripting.dll</HintPath>
     </Reference>
+    <Reference Include="IronRuby">
+      <HintPath>..\lib\IronRuby.dll</HintPath>
+    </Reference>
+    <Reference Include="IronRuby.Libraries">
+      <HintPath>..\lib\IronRuby.Libraries.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Test.cs" />
