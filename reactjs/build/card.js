@@ -43,30 +43,32 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
 
     unfocus: function () {
       if (this.isMounted())
-        this.setState({focused: false, dragY: undefined, startDragY: undefined});
+        this.setState({focused: false});
+      return false;
     },
 
     focus: function() {
       this.setState({focused: true}); 
+      return false;
     },
 
     select: function() {
+      //alert('selecting ' + this.props.key)
       if (!this.props.selectable)
         return false;
-      Events.publish('/card/selected', [this.props.name, this.props.cardSource, this.state.info, this]);
+      Events.publish('/card/selected',
+                     [this.props.name, this.props.cardSource, this.state.info, this]);
       this.setState({focused: false});
       return false;
     },
 
     touch: function(evt) {
+      //alert('touching ' + this.props.key)
       if (!this.state.focused)
         this.focus();
       else
         this.select();
-    },
-
-    markAsPlayed: function() {
-      this.setState({played: true});
+      return false;
     },
 
     renderSetValues: function (start, end) {
@@ -97,8 +99,11 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
       if (this.state.startDragY) {
         style.top = this.state.dragY - this.state.startDragY + 'px';
       }
-      if (this.state.played) {
+      if (this.props.played) {
         classes.push('played');
+      }
+      if (this.state.focused) {
+        classes.push('focused');
       }
       if (this.props.height) {
         style.borderBottom = 4 * this.props.height + 'px solid #333';
@@ -146,7 +151,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         else if (length < 40)
           classes.push("sparse");
       }
-      return React.DOM.div( {onTouchStart:this.touch, onTouchEnd:this.unfocus, onClick:this.select, className:classes.join(' '), style:style}, 
+      return React.DOM.div( {onTouchStart:this.touch, onBlur:this.unfocus, onClick:this.select, className:classes.join(' '), style:style}, 
         elems
       );
     },

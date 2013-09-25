@@ -61,6 +61,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     setupGame: function (game) {
       if (game.tradeCards)
         game.tradeCards = game.tradeCards.map(function(c) {return {name: c, selected: false}});
+      if (game.hand)
+        game.plays = new Array(game.hand.length);
       gameServer.getLog (function(log) {
         this.state.log = log;
         this.setState (this.state);
@@ -116,7 +118,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       switch (cardSource) {
       case 'hand':
         if (this.isActionPhase()) {
-          source.markAsPlayed();
+          game.plays[source.props.index] = true;
           if (cardObject.needsHex) {
             if (game.hexes.length > 0)
               this.notify('Select a hex', 10000);
@@ -137,7 +139,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       case 'bank':
         if (this.isBuyPhase()) {
           gameServer.buyCard(card);
-          source.markAsPlayed();
+          game.plays[source.props.index] = true;
         }
         break;
       case 'tradeCards':
@@ -241,6 +243,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     // Render functions.
     
     buildCards: function (cards, source, selectable) {
+      var game = this.state.game;
       return cards.map(function(card, i) {
         var name = card;
         var selected = false;
@@ -250,12 +253,14 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
           selected = card.selected;
           secret = card.secret;
         }
+        var played = source == 'hand' && game.plays[i];
         return Card( {name:name, 
           key:"card-" + i + "-" + name, 
           selected:selected, 
           selectable:selectable,
           secret:secret,
           index:i, 
+          played:played,
           cardSource:source});
       });
     },

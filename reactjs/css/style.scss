@@ -152,8 +152,8 @@ h3 {
     -webkit-backface-visibility: hidden;
     -webkit-perspective: 1000;
   }
-  &.expandable:hover {
-    -webkit-transform: scale(0.8, 0.8);
+  &.expandable:hover, &.focused {
+    -webkit-transform: scale(0.7, 0.7);
     z-index: 1;
   }
   &.played {
@@ -164,7 +164,7 @@ h3 {
   &.played:hover {
     -webkit-transform: scale(0.3, 0.3);
   }
-  &.expandable.trade:hover {
+  &.expandable.trade:hover, &.trade.focused {
     -webkit-transform: scale(0.4, 0.4);
     z-index: 1;
   }
