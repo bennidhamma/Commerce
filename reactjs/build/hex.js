@@ -14,7 +14,10 @@ define(['react', 'game', 'jsx/card', 'pubsub'],
     render: function() {
       this.state = this.props.data;
       return (
-        React.DOM.div( {className:"hex " + (this.state.hasColony ? "has-colony" : ""), onClick:this.click}, 
+        React.DOM.div( 
+          {className:"hex " + (this.state.hasColony ? "has-colony" : ""),
+          onMouseUp:this.click,
+          onTouchStart:this.click}, 
           this.state.currentPopulation, " / ", this.state.populationLimit
         )
       );

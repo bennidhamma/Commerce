@@ -49,6 +49,9 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
 
     focus: function() {
       this.setState({focused: true}); 
+      if (this.props.onFocus) {
+        this.props.onFocus(this);
+      }
       return false;
     },
 

@@ -8,7 +8,12 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
     },
 
     render: function () {
-      return <span class={this.props.cssClass} onClick={this.select}>{this.props.children}</span>; 
+      return <span
+        class={this.props.cssClass}
+        onMouseUp={this.select}
+        onTouchEnd={this.select}>
+          {this.props.children}
+        </span>; 
     }
   });
 
@@ -240,6 +245,18 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       gameServer.skip('buy');
     },
 
+    // Touch events
+    touch: function (evt) {
+      if (this.currentCard) {
+        this.currentCard.unfocus();
+        this.currentCard = null;
+      }
+    },
+
+    setCurrentCard: function (card) {
+      this.currentCard = card;
+    },
+
     // Render functions.
     
     buildCards: function (cards, source, selectable) {
@@ -258,11 +275,12 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
           key={"card-" + i + "-" + name} 
           selected={selected} 
           selectable={selectable}
+          onFocus={this.setCurrentCard}
           secret={secret}
           index={i} 
           played={played}
           cardSource={source}/>;
-      });
+      }.bind(this));
     },
 
     buildStack: function (card, count, source, cssClass, selectable) {
@@ -626,7 +644,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
         sections.push(this.buildTradeView());
       }
 
-      return <div>{sections}</div>;
+      return <div onTouchStart={this.touch}>{sections}</div>;
     }
   });
 
