@@ -67,6 +67,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
 
     touch: function(evt) {
       //alert('touching ' + this.props.key)
+      this.touching = true;
       if (!this.state.focused)
         this.focus();
       else
@@ -86,7 +87,7 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
     render: function () {
       var s = this.state.info;
       if (!s) {
-        return <div onClick={this.click} class="card"></div>;
+        return <div onMouseUp={this.select} class="card"></div>;
       }
       var elems = [];
       var style = {};
@@ -154,7 +155,12 @@ define(['react', 'game', 'pubsub'], function (React, gameServer, Events) {
         else if (length < 40)
           classes.push("sparse");
       }
-      return <div onTouchStart={this.touch} onBlur={this.unfocus} onClick={this.select} class={classes.join(' ')} style={style}>
+      return <div 
+        onTouchStart={this.touch}
+        onTouchEnd={this.touchEnd}
+        onBlur={this.unfocus}
+        onMouseUp={this.select}
+        class={classes.join(' ')} style={style}>
         {elems}
       </div>;
     },

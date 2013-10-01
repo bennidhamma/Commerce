@@ -442,10 +442,10 @@ namespace ForgottenArts.Commerce
 				return "You already have this technology card.";
 			}
 
-			if (card.Requires != null && card.Requires.Except(player.AllCards).Take (1).Count () > 0) {
+			if (card.Requires != null) {
 				foreach (string require in card.Requires) {
 					// each require can be a list of OR'd requirements separated by a '|'.
-					if (require.Split('|').Union(player.AllCards).Take(1).Count() == 0) {
+					if (require.Split('|').Intersect(player.AllCards).Take(1).Count() == 0) {
 						return "Purchasing card requires " + string.Join (", ", card.Requires);
 					}
 				}

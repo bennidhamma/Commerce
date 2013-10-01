@@ -169,6 +169,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
               }
             } else {
               this.state.cardsToRedeem[card]++;
+              game.tradeCards[source.props.index].selected = true;
               /*
               // We have already selected the cards, so de-select all of this type.
               game.tradeCards.map(function(c) {
@@ -417,6 +418,16 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       return React.DOM.section( {className:"log"}, entries);
     },
 
+    buildNationCards: function () {
+      if (!this.state.view || this.state.view != 'nationCards')
+        return;
+      var cards = this.buildCards(this.state.game.nationCards, "nation-cards");
+      return React.DOM.section( {key:"nation-cards", className:"nation-cards"}, 
+        React.DOM.p(null, "Here are the nation cards you currently own."),
+        cards
+      ); 
+    },
+
     drawMatches: function () {
       var game = this.state.game;
       var canvas = $('#offerCanvas');
@@ -496,7 +507,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       var tradeCards = this.buildCards(game.tradeCards, "tradeCards", true);
       var technologyCards = this.buildCards(game.technologyCards, "technologyCards");
       var buttons = [];
-      buttons.push(React.DOM.button( {onClick:this.doneTrading}, "Done Trading"));
+      buttons.push(React.DOM.button( {onClick:this.doneTrading}, "Finish Trading"));
       if (this.state.readyToListOffer) {
         buttons.push(React.DOM.button( {onClick:this.listOffer}, "List Trade Offer")); 
         buttons.push(React.DOM.button( {onClick:this.cancelOffer}, "Cancel Trade Offer")); 
@@ -506,6 +517,15 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
 
       return React.DOM.section( {className:"trading"}, 
         React.DOM.h2(null, "Trading Phase"),
+        React.DOM.p(null, "Welcome to the trading phase. Trading consists of creating offers and listing them in a marketplace. "+
+          "To create an offfer, select THREE of your trade cards. The third card is outlined in red to indicate "+
+          "that it is a SECRET card. When you have selected three cards, you can choose to list the offer by "+
+          "clicking the button \"List Offer\". "         ),
+         React.DOM.p(null,  " To trade one of your offers with the offer of another player, click "+
+          "both your offer, and their offer, to create a proposed trade match. To accept or decline such a match, "+
+          "click on the accept or cancel buttons on the line between the two offers."),
+        React.DOM.p(null,  " When you are finished trading, click \"Finished Trading\". Trading ends when fewer than two people "+ 
+          "still desire to trade. "        ),
         buttons,
         React.DOM.h3(null, "Your Trade Cards"),
         tradeCards,
@@ -607,7 +627,10 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
               React.DOM.h2(null, 
                 players,
                 MenuItem( {key:"log", onSelect:this.changeView}, 
-                  React.DOM.img( {src:"/images/log-icon.png", width:"24", height:"24"})
+                  React.DOM.img( {src:"/images/log-icon.png"})
+                ),
+                MenuItem( {key:"nationCards", onSelect:this.changeView}, 
+                  React.DOM.img( {src:"/images/deck-icon.png"})
                 )
               )
             ));
@@ -635,7 +658,8 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
             React.DOM.section( {key:"m", className:"main-layout"}, 
               this.buildMyView(),
               this.buildOtherViews(),
-              this.buildLog()
+              this.buildLog(),
+              this.buildNationCards()
             )
         );
       } else if (game.status == "Trading") {

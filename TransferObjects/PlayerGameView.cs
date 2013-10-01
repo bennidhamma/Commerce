@@ -16,6 +16,7 @@ namespace ForgottenArts.Commerce.Server
 		public IEnumerable<string> Hand { get;	set; }
 		public Stack<string> Discards {	get; set; }
 		public int DeckSize { get;	set; }
+		public IEnumerable<string> NationCards { get; set; }
 		public List<string> TechnologyCards { get;	set; }
 		public TurnView CurrentTurn { get; set; }
 		public IEnumerable<StoreCardView> Bank { get; set; }
@@ -37,6 +38,7 @@ namespace ForgottenArts.Commerce.Server
 			this.Hand = from c in player.Hand orderby c select c;
 			this.Discards = player.Discards;
 			this.DeckSize = player.Deck.Count;
+			this.NationCards = from c in player.NationCards orderby c select c;
 			this.TechnologyCards = player.TechnologyCards;
 			this.CurrentTurn = new TurnView(game, game.CurrentTurn);
 			this.Bank = from kvp in game.Bank orderby cards[kvp.Key].Category, cards[kvp.Key].Cost select new StoreCardView(

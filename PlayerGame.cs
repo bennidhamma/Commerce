@@ -105,6 +105,21 @@ namespace ForgottenArts.Commerce
 			}
 		}
 
+		[IgnoreDataMember]
+		public IEnumerable<string> NationCards {
+			get {
+				foreach (var card in Deck) {
+					yield return card;
+				}
+				foreach (var card in Hand) {
+					yield return card;
+				}
+				foreach (var card in Discards) {
+					yield return card;
+				}
+			}
+		}
+
 		public void HandleCardEvents (object cardEvent)
 		{
 			var type = cardEvent.GetType().Name;
@@ -298,19 +313,26 @@ namespace ForgottenArts.Commerce
 
 		public void Notify (string message)
 		{
-			if (this.Player.RegistrationId != null)
+			try
 			{
-				var rc = new RestClient("https://android.googleapis.com/");
-				var key = Config.GoogleApiKey;
-				rc.AddHeader ("Authorization", "key=" + key);
-				rc.AddHeader ("Content-Type", "application/json");
-				rc.Post ("gcm/send", new {
-					registration_ids = new string[] { this.Player.RegistrationId },
-					data = new {
-						message = message,
-						game_id = this.game.Id
-					}
-				});
+				if (this.Player.RegistrationId != null)
+				{
+					var rc = new RestClient("https://android.googleapis.com/");
+					var key = Config.GoogleApiKey;
+					rc.AddHeader ("Authorization", "key=" + key);
+					rc.AddHeader ("Content-Type", "application/json");
+					rc.Post ("gcm/send", new {
+						registration_ids = new string[] { this.Player.RegistrationId },
+						data = new {
+							message = message,
+							game_id = this.game.Id
+						}
+					});
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine ("Error registering: " + e.Message);
 			}
 		}
 

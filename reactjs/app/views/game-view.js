@@ -169,6 +169,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
               }
             } else {
               this.state.cardsToRedeem[card]++;
+              game.tradeCards[source.props.index].selected = true;
               /*
               // We have already selected the cards, so de-select all of this type.
               game.tradeCards.map(function(c) {
@@ -418,6 +419,16 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       return <section class="log">{entries}</section>;
     },
 
+    buildNationCards: function () {
+      if (!this.state.view || this.state.view != 'nationCards')
+        return;
+      var cards = this.buildCards(this.state.game.nationCards, "nation-cards");
+      return <section key="nation-cards" class="nation-cards">
+        <p>Here are the nation cards you currently own.</p>
+        {cards}
+      </section>; 
+    },
+
     drawMatches: function () {
       var game = this.state.game;
       var canvas = $('#offerCanvas');
@@ -497,7 +508,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
       var tradeCards = this.buildCards(game.tradeCards, "tradeCards", true);
       var technologyCards = this.buildCards(game.technologyCards, "technologyCards");
       var buttons = [];
-      buttons.push(<button onClick={this.doneTrading}>Done Trading</button>);
+      buttons.push(<button onClick={this.doneTrading}>Finish Trading</button>);
       if (this.state.readyToListOffer) {
         buttons.push(<button onClick={this.listOffer}>List Trade Offer</button>); 
         buttons.push(<button onClick={this.cancelOffer}>Cancel Trade Offer</button>); 
@@ -507,6 +518,17 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
 
       return <section class="trading">
         <h2>Trading Phase</h2>
+        <p>Welcome to the trading phase. Trading consists of creating offers and listing them in a marketplace.
+          To create an offfer, select THREE of your trade cards. The third card is outlined in red to indicate
+          that it is a SECRET card. When you have selected three cards, you can choose to list the offer by
+          clicking the button "List Offer".
+         </p>
+         <p> To trade one of your offers with the offer of another player, click
+          both your offer, and their offer, to create a proposed trade match. To accept or decline such a match,
+          click on the accept or cancel buttons on the line between the two offers.</p>
+        <p> When you are finished trading, click "Finished Trading". Trading ends when fewer than two people 
+          still desire to trade.
+        </p>
         {buttons}
         <h3>Your Trade Cards</h3>
         {tradeCards}
@@ -608,7 +630,10 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
               <h2>
                 {players}
                 <MenuItem key="log" onSelect={this.changeView}>
-                  <img src="/images/log-icon.png" width="24" height="24"/>
+                  <img src="/images/log-icon.png"/>
+                </MenuItem>
+                <MenuItem key="nationCards" onSelect={this.changeView}>
+                  <img src="/images/deck-icon.png"/>
                 </MenuItem>
               </h2>
             </section>);
@@ -638,6 +663,7 @@ define(['react', 'game', 'main', 'pubsub', 'jsx/card', 'jsx/hex', 'jquery'],
               {this.buildMyView()}
               {this.buildOtherViews()}
               {this.buildLog()}
+              {this.buildNationCards()}
             </section>
         );
       } else if (game.status == "Trading") {
